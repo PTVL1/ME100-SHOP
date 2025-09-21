@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ makes site scale on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MALUCO - $3</title>
   <style>
     body {
@@ -14,7 +14,7 @@
       height: 100vh;
       margin: 0;
       position: relative;
-      padding: 20px; /* for small phones */
+      padding: 20px;
     }
 
     /* Product card */
@@ -22,21 +22,12 @@
       text-align: center;
       cursor: pointer;
       width: 100%;
-      max-width: 350px; /* bigger on phones */
+      max-width: 350px;
     }
     .product img {
       width: 100%;
       height: auto;
       border-radius: 8px;
-    }
-    .product h1 {
-      font-size: 2em; /* bigger title */
-      margin: 10px 0 5px 0;
-    }
-    .product p {
-      color: #444;
-      font-size: 1em; /* bigger text */
-      margin: 5px 0;
     }
 
     /* Modal */
@@ -57,22 +48,15 @@
       max-width: 400px;
       text-align: center;
     }
-    .modal-content img {
-      width: 80%;
-      height: auto;
-      display: block;
-      margin: 0 auto 15px auto;
-      border-radius: 6px;
-    }
 
-    /* Buttons polished */
+    /* Buttons */
     button {
-      background: #ccc;         
-      color: black;             
+      background: #ccc;
+      color: black;
       border: none;
       border-radius: 20px;
-      padding: 12px 25px;        /* bigger for phones */
-      font-size: 16px;           /* bigger text */
+      padding: 12px 25px;
+      font-size: 16px;
       cursor: pointer;
       transition: background 0.2s;
       margin: 5px 0;
@@ -81,6 +65,7 @@
       background: #bbb;
     }
 
+    /* Inputs */
     input[type="email"] {
       padding: 10px;
       border-radius: 6px;
@@ -89,25 +74,12 @@
       font-size: 16px;
     }
 
-    label {
-      font-size: 16px;
-    }
-
-    /* Copyright */
     .copyright {
       position: absolute;
       bottom: 10px;
       right: 15px;
       font-size: 12px;
       color: #888;
-    }
-
-    /* Optional: make modal scrollable on small phones */
-    @media (max-height: 600px) {
-      .modal-content {
-        max-height: 90vh;
-        overflow-y: auto;
-      }
     }
   </style>
 </head>
@@ -127,7 +99,10 @@
       <h2>MALUCO - $3</h2>
       <img src="400x400.jpg" alt="MALUCO product">
       <p>MALUCO, an album by ME100</p>
+      
+      <!-- ✅ Buy button now has an ID -->
       <button id="buyButton" onclick="showForm()">Buy</button>
+      
       <div id="formArea" style="display:none; margin-top:10px;">
         <form action="https://formspree.io/f/mvgwpkkq" method="POST">
           <input type="email" name="email" placeholder="Your email" required><br><br>
@@ -138,6 +113,7 @@
           <button type="submit">Reserve</button>
         </form>
       </div>
+      
       <br>
       <button onclick="closeModal()">Close</button>
     </div>
@@ -146,22 +122,19 @@
   <div class="copyright">© 2025 ME100</div>
 
   <script>
-  function openModal() {
-    document.getElementById('productModal').style.display = 'flex';
-  }
-  function closeModal() {
-    document.getElementById('productModal').style.display = 'none';
-    document.getElementById('formArea').style.display = 'none';
-    document.getElementById('buyBtn').style.display = 'inline-block'; // show Buy again when closing
-  }
-  function showForm() {
-    document.getElementById('formArea').style.display = 'block';
-    document.getElementById('buyBtn').style.display = 'none'; // hide Buy button
-  }
-</script>
+    function openModal() {
+      document.getElementById('productModal').style.display = 'flex';
+    }
+    function closeModal() {
+      document.getElementById('productModal').style.display = 'none';
+      // Reset state
+      document.getElementById('buyButton').style.display = 'inline-block';
+      document.getElementById('formArea').style.display = 'none';
+    }
+    function showForm() {
+      document.getElementById('formArea').style.display = 'block';
+      document.getElementById('buyButton').style.display = 'none'; // ✅ hides Buy
+    }
+  </script>
 </body>
 </html>
-
-
-
-
