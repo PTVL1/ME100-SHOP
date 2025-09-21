@@ -15,6 +15,7 @@
       margin: 0;
       position: relative;
       padding: 20px;
+      transition: background 0.5s ease; /* smooth bg change */
     }
 
     /* Product card */
@@ -23,11 +24,30 @@
       cursor: pointer;
       width: 100%;
       max-width: 350px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease; /* hover anim */
     }
     .product img {
       width: 100%;
       height: auto;
       border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+    .product:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .product:hover img {
+      transform: scale(1.1);
+    }
+
+    .product h1 {
+      font-size: 2em;
+      margin: 10px 0 5px 0;
+    }
+    .product p {
+      color: #444;
+      font-size: 1em;
+      margin: 5px 0;
     }
 
     /* Modal */
@@ -39,6 +59,12 @@
       justify-content: center;
       align-items: center;
       padding: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease; /* fade in/out */
+    }
+    .modal.show {
+      display: flex;
+      opacity: 1;
     }
     .modal-content {
       background: white;
@@ -47,25 +73,37 @@
       width: 100%;
       max-width: 400px;
       text-align: center;
+      transform: translateY(-20px);
+      transition: transform 0.3s ease;
+    }
+    .modal.show .modal-content {
+      transform: translateY(0);
+    }
+    .modal-content img {
+      width: 80%;
+      height: auto;
+      display: block;
+      margin: 0 auto 15px auto;
+      border-radius: 6px;
     }
 
     /* Buttons */
     button {
-      background: #ccc;
-      color: black;
+      background: #ccc;         
+      color: black;             
       border: none;
       border-radius: 20px;
       padding: 12px 25px;
       font-size: 16px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.2s;
       margin: 5px 0;
     }
     button:hover {
       background: #bbb;
+      transform: scale(1.05);
     }
 
-    /* Inputs */
     input[type="email"] {
       padding: 10px;
       border-radius: 6px;
@@ -74,12 +112,25 @@
       font-size: 16px;
     }
 
+    label {
+      font-size: 16px;
+    }
+
+    /* Copyright */
     .copyright {
       position: absolute;
       bottom: 10px;
       right: 15px;
       font-size: 12px;
       color: #888;
+    }
+
+    /* Optional: make modal scrollable on small phones */
+    @media (max-height: 600px) {
+      .modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
+      }
     }
   </style>
 </head>
@@ -99,10 +150,7 @@
       <h2>MALUCO - $3</h2>
       <img src="400x400.jpg" alt="MALUCO product">
       <p>MALUCO, an album by ME100</p>
-      
-      <!-- ✅ Buy button now has an ID -->
       <button id="buyButton" onclick="showForm()">Buy</button>
-      
       <div id="formArea" style="display:none; margin-top:10px;">
         <form action="https://formspree.io/f/mvgwpkkq" method="POST">
           <input type="email" name="email" placeholder="Your email" required><br><br>
@@ -113,7 +161,6 @@
           <button type="submit">Reserve</button>
         </form>
       </div>
-      
       <br>
       <button onclick="closeModal()">Close</button>
     </div>
@@ -123,18 +170,38 @@
 
   <script>
     function openModal() {
-      document.getElementById('productModal').style.display = 'flex';
+      const modal = document.getElementById('productModal');
+      modal.classList.add('show');
     }
     function closeModal() {
-      document.getElementById('productModal').style.display = 'none';
-      // Reset state
+      const modal = document.getElementById('productModal');
+      modal.classList.remove('show');
+      setTimeout(() => { modal.style.display = 'none'; }, 300); // wait for fade-out
+      // Reset form
       document.getElementById('buyButton').style.display = 'inline-block';
       document.getElementById('formArea').style.display = 'none';
     }
     function showForm() {
       document.getElementById('formArea').style.display = 'block';
-      document.getElementById('buyButton').style.display = 'none'; // ✅ hides Buy
+      document.getElementById('buyButton').style.display = 'none';
     }
+
+    /* 🎮 Konami Code Easter Egg */
+    const konamiCode = [38,38,40,40,37,39,37,39,66,65]; // up up down down left right left right B A
+    let konamiIndex = 0;
+
+    document.addEventListener('keydown', (e) => {
+      if (e.keyCode === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+          document.body.style.background = "lightblue";
+          alert("🌟 Konami code unlocked! Background turned light blue!");
+          konamiIndex = 0; // reset
+        }
+      } else {
+        konamiIndex = 0; // reset if wrong key
+      }
+    });
   </script>
 </body>
 </html>
