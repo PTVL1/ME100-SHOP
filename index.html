@@ -127,7 +127,7 @@
       <h2>MALUCO - $3</h2>
       <img src="400x400.jpg" alt="MALUCO product">
       <p>MALUCO, an album by ME100</p>
-      <button onclick="showForm()">Buy</button>
+      <button id="buyButton" onclick="showForm()">Buy</button>
       <div id="formArea" style="display:none; margin-top:10px;">
         <form action="https://formspree.io/f/mvgwpkkq" method="POST">
           <input type="email" name="email" placeholder="Your email" required><br><br>
@@ -146,18 +146,22 @@
   <div class="copyright">© 2025 ME100</div>
 
   <script>
-    function openModal() {
-      document.getElementById('productModal').style.display = 'flex';
-    }
-    function closeModal() {
-      document.getElementById('productModal').style.display = 'none';
-    }
-    function showForm() {
-      document.getElementById('formArea').style.display = 'block';
-    }
-  </script>
+  function openModal() {
+    document.getElementById('productModal').style.display = 'flex';
+  }
+  function closeModal() {
+    document.getElementById('productModal').style.display = 'none';
+    document.getElementById('formArea').style.display = 'none';
+    document.getElementById('buyBtn').style.display = 'inline-block'; // show Buy again when closing
+  }
+  function showForm() {
+    document.getElementById('formArea').style.display = 'block';
+    document.getElementById('buyBtn').style.display = 'none'; // hide Buy button
+  }
+</script>
 </body>
 </html>
+
 
 
 
