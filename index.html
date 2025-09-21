@@ -159,40 +159,54 @@ label { font-size:16px; }
   </div>
 </div>
 
-<!-- Voting Section at bottom -->
-<div id="votingSection" style="text-align:center; max-width:800px; margin:50px auto 50px auto;">
-  <h2>Which CD album should I make next?</h2>
-  <form id="voteForm" style="display:flex; justify-content:center; gap:20px; margin-top:20px; flex-wrap:wrap;">
+<body>
+  <!-- Wrapper to center album -->
+  <div class="pageWrapper" style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; padding:50px 20px; box-sizing:border-box;">
+
+    <!-- Album Section -->
+    <div class="album-section" style="text-align:center; margin-bottom:100px;">
+      <div class="product" onclick="openModal()">
+        <img src="400x400.jpg" alt="MALUCO product" style="border-radius:8px; max-width:350px; width:100%;">
+        <h1>MALUCO</h1>
+        <p>$3</p>
+        <p>pre-orders available now</p>
+      </div>
+    </div>
+
+    <!-- Voting Section -->
+    <div id="votingSection" style="text-align:center; max-width:900px; width:100%;">
+      <h2>Which CD album should I make next?</h2>
+      <form id="voteForm" style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:20px;">
+        
+        <!-- Option 1 -->
+        <label class="voteOption" style="flex:1; min-width:200px; cursor:pointer; border:1px solid #ccc; border-radius:10px; padding:10px;">
+          <input type="radio" name="albumVote" value="FPAC" style="display:none;" required>
+          <img src="https://via.placeholder.com/150" alt="FPAC album" style="width:100%; border-radius:8px;">
+          <h3>FPAC</h3>
+          <p>Chill and experimental vibes, the classic FPAC style.</p>
+        </label>
+
+        <!-- Option 2 -->
+        <label class="voteOption" style="flex:1; min-width:200px; cursor:pointer; border:1px solid #ccc; border-radius:10px; padding:10px;">
+          <input type="radio" name="albumVote" value="FPAC Y-5" style="display:none;" required>
+          <img src="https://via.placeholder.com/150" alt="FPAC Y-5 album" style="width:100%; border-radius:8px;">
+          <h3>FPAC Y-5</h3>
+          <p>The continuation of the FPAC journey, full of new sounds.</p>
+        </label>
+
+        <!-- Option 3 -->
+        <label class="voteOption" style="flex:1; min-width:200px; cursor:pointer; border:1px solid #ccc; border-radius:10px; padding:10px;">
+          <input type="radio" name="albumVote" value="MEXTAPE100" style="display:none;" required>
+          <img src="https://via.placeholder.com/150" alt="MEXTAPE100 album" style="width:100%; border-radius:8px;">
+          <h3>MEXTAPE100</h3>
+          <p>A mixtape full of fun beats and experimental sounds.</p>
+        </label>
+
+      </form>
+
+      <button type="submit" form="voteForm" style="background:#ccc; color:black; border:none; border-radius:20px; padding:12px 25px; font-size:16px; cursor:pointer; margin-top:20px;">Confirm Vote</button>
+    </div>
     
-    <!-- Option 1 -->
-    <label class="voteOption" style="flex:1; min-width:200px;">
-      <input type="radio" name="albumVote" value="FPAC" style="display:none;" required>
-      <img src="https://static.qobuz.com/images/covers/pb/v6/ht5ebf8k2v6pb_600.jpg" alt="FPAC album">
-      <h3>FPAC</h3>
-      <p>Chill and experimental vibes, the classic FPAC style.</p>
-    </label>
-
-    <!-- Option 2 -->
-    <label class="voteOption" style="flex:1; min-width:200px;">
-      <input type="radio" name="albumVote" value="FPAC Y-5" style="display:none;" required>
-      <img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/e5/87/e4/e587e4f8-2678-9c29-550b-dbae05db078f/5063585823544_cover.jpg/592x592bb.webp" alt="FPAC Y-5 album">
-      <h3>FPAC Y-5</h3>
-      <p>The continuation of the FPAC journey, full of new sounds.</p>
-    </label>
-
-    <!-- Option 3 -->
-    <label class="voteOption" style="flex:1; min-width:200px;">
-      <input type="radio" name="albumVote" value="MEXTAPE100" style="display:none;" required>
-      <img src="https://static.qobuz.com/images/covers/vb/jl/bpk7v6yamjlvb_600.jpg" alt="MEXTAPE100 album">
-      <h3>MEXTAPE100</h3>
-      <p>A mixtape full of fun beats and experimental sounds.</p>
-    </label>
-
-  </form>
-
-  <button type="submit" form="voteForm" style="background:#ccc; color:black; border:none; border-radius:20px; padding:12px 25px; font-size:16px; cursor:pointer; margin-top:20px;">Confirm Vote</button>
-</div>
-
 <!-- Popup -->
 <div id="votePopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:white; padding:25px 40px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.3); font-size:18px; text-align:center; z-index:1000;">
   Thanks for voting!
@@ -266,4 +280,5 @@ document.getElementById('voteForm').addEventListener('submit', function(e){
 </script>
 </body>
 </html>
+
 
