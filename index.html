@@ -24,7 +24,7 @@
       cursor: pointer;
       width: 100%;
       max-width: 350px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease; /* hover anim */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .product img {
       width: 100%;
@@ -60,7 +60,7 @@
       align-items: center;
       padding: 10px;
       opacity: 0;
-      transition: opacity 0.3s ease; /* fade in/out */
+      transition: opacity 0.3s ease;
     }
     .modal.show {
       display: flex;
@@ -85,6 +85,10 @@
       display: block;
       margin: 0 auto 15px auto;
       border-radius: 6px;
+      transition: transform 1s ease; /* spin transition */
+    }
+    .spin {
+      transform: rotate(360deg);
     }
 
     /* Buttons */
@@ -148,7 +152,7 @@
   <div class="modal" id="productModal">
     <div class="modal-content">
       <h2>MALUCO - $3</h2>
-      <img src="400x400.jpg" alt="MALUCO product">
+      <img id="albumCover" src="400x400.jpg" alt="MALUCO product">
       <p>MALUCO, an album by ME100</p>
       <button id="buyButton" onclick="showForm()">Buy</button>
       <div id="formArea" style="display:none; margin-top:10px;">
@@ -176,8 +180,7 @@
     function closeModal() {
       const modal = document.getElementById('productModal');
       modal.classList.remove('show');
-      setTimeout(() => { modal.style.display = 'none'; }, 300); // wait for fade-out
-      // Reset form
+      setTimeout(() => { modal.style.display = 'none'; }, 300);
       document.getElementById('buyButton').style.display = 'inline-block';
       document.getElementById('formArea').style.display = 'none';
     }
@@ -187,7 +190,7 @@
     }
 
     /* 🎮 Konami Code Easter Egg */
-    const konamiCode = [38,38,40,40,37,39,37,39,66,65]; // up up down down left right left right B A
+    const konamiCode = [38,38,40,40,37,39,37,39,66,65];
     let konamiIndex = 0;
 
     document.addEventListener('keydown', (e) => {
@@ -195,11 +198,13 @@
         konamiIndex++;
         if (konamiIndex === konamiCode.length) {
           document.body.style.background = "lightblue";
-          alert("🌟 Konami code unlocked! Background turned light blue!");
-          konamiIndex = 0; // reset
+          const album = document.getElementById("albumCover");
+          album.classList.add("spin");
+          setTimeout(() => album.classList.remove("spin"), 1000); // reset spin
+          konamiIndex = 0;
         }
       } else {
-        konamiIndex = 0; // reset if wrong key
+        konamiIndex = 0;
       }
     });
   </script>
