@@ -50,35 +50,42 @@
       margin: 5px 0;
     }
 
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .modal.show {
-      display: flex;
-      opacity: 1;
-    }
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* fallback */
+  background: linear-gradient(
+      rgba(0,0,0,0.4), 
+      rgba(50,50,50,0.6)
+  ); /* subtle gradient */
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.4s ease; /* smooth fade */
+}
+.modal.show {
+  display: flex;
+  opacity: 1;
+}
+
     .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-      transform: translateY(-20px);
-      transition: transform 0.3s ease;
-    }
-    .modal.show .modal-content {
-      transform: translateY(0);
-    }
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  transform: translateY(-20px) scale(0.95);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+}
+.modal.show .modal-content {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
     .modal-content img {
       width: 80%;
       height: auto;
@@ -213,6 +220,7 @@
 </script>
 </body>
 </html>
+
 
 
 
