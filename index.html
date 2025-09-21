@@ -179,6 +179,89 @@
 
   <div class="copyright">© 2025 ME100</div>
 
+<!-- Voting Section -->
+<div id="votingSection" style="margin-top:50px; text-align:center;">
+  <h2>Which CD album should I make next?</h2>
+
+  <form id="voteForm" style="display:flex; flex-direction:column; align-items:center; gap:15px; margin-top:20px; max-width:400px; margin-left:auto; margin-right:auto;">
+    
+    <!-- Option 1 -->
+    <label class="voteOption" style="cursor:pointer; width:100%; text-align:center; border:1px solid #ccc; border-radius:10px; padding:10px; transition: transform 0.2s;">
+      <input type="radio" name="albumVote" value="FPAC" style="display:none;" required>
+      <img src="https://via.placeholder.com/150" alt="FPAC album" style="width:100%; border-radius:8px;">
+      <h3>FPAC</h3>
+      <p>Chill and experimental vibes, the classic FPAC style.</p>
+    </label>
+
+    <!-- Option 2 -->
+    <label class="voteOption" style="cursor:pointer; width:100%; text-align:center; border:1px solid #ccc; border-radius:10px; padding:10px; transition: transform 0.2s;">
+      <input type="radio" name="albumVote" value="FPAC Y-5" style="display:none;" required>
+      <img src="https://via.placeholder.com/150" alt="FPAC Y-5 album" style="width:100%; border-radius:8px;">
+      <h3>FPAC Y-5</h3>
+      <p>The continuation of the FPAC journey, full of new sounds.</p>
+    </label>
+
+    <!-- Option 3 -->
+    <label class="voteOption" style="cursor:pointer; width:100%; text-align:center; border:1px solid #ccc; border-radius:10px; padding:10px; transition: transform 0.2s;">
+      <input type="radio" name="albumVote" value="MEXTAPE100" style="display:none;" required>
+      <img src="https://via.placeholder.com/150" alt="MEXTAPE100 album" style="width:100%; border-radius:8px;">
+      <h3>MEXTAPE100</h3>
+      <p>A mixtape full of fun beats and experimental sounds.</p>
+    </label>
+
+    <!-- Confirm Button -->
+    <button type="submit" style="background:#ccc; color:black; border:none; border-radius:20px; padding:12px 25px; font-size:16px; cursor:pointer; margin-top:15px;">Confirm Vote</button>
+
+  </form>
+</div>
+
+<!-- Popup -->
+<div id="votePopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:25px 40px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.3); font-size:18px; text-align:center; z-index:1000;">
+  Thanks for voting!
+</div>
+
+<script>
+  const options = document.querySelectorAll('.voteOption');
+  let selectedValue = '';
+
+  // Highlight selected option
+  options.forEach(option => {
+    option.addEventListener('click', () => {
+      options.forEach(o => o.style.background = 'white'); // reset all
+      option.style.background = '#eee'; // highlight clicked
+      selectedValue = option.querySelector('input').value;
+      option.querySelector('input').checked = true;
+    });
+  });
+
+  // Confirm vote
+  document.getElementById('voteForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!selectedValue) return; // safety
+
+    // Send vote via Formspree (or email)
+    fetch("https://formspree.io/f/mvgwpkkq", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ albumVote: selectedValue })
+    });
+
+    // Hide voting section
+    document.getElementById('votingSection').style.display = 'none';
+
+    // Show popup
+    const popup = document.getElementById('votePopup');
+    popup.innerText = `Thanks for voting for ${selectedValue}!`;
+    popup.style.display = 'block';
+
+    // Hide popup after 2 seconds
+    setTimeout(() => {
+      popup.style.display = 'none';
+    }, 2000);
+  });
+</script>
+
+
   <script>
   function openModal() {
     const modal = document.getElementById('productModal');
@@ -220,9 +303,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
