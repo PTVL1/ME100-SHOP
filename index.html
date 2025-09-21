@@ -173,40 +173,44 @@
   <div class="copyright">© 2025 ME100</div>
 
   <script>
-    function openModal() {
-      const modal = document.getElementById('productModal');
-      modal.classList.add('show');
-    }
-    function closeModal() {
-      const modal = document.getElementById('productModal');
-      modal.classList.remove('show');
-      setTimeout(() => { modal.style.display = 'none'; }, 300);
-      document.getElementById('buyButton').style.display = 'inline-block';
-      document.getElementById('formArea').style.display = 'none';
-    }
-    function showForm() {
-      document.getElementById('formArea').style.display = 'block';
-      document.getElementById('buyButton').style.display = 'none';
-    }
+  function openModal() {
+    const modal = document.getElementById('productModal');
+    modal.style.display = 'flex';        // ✅ force show again
+    setTimeout(() => modal.classList.add('show'), 10); // allow fade-in
+  }
 
-    /* 🎮 Konami Code Easter Egg */
-    const konamiCode = [38,38,40,40,37,39,37,39,66,65];
-    let konamiIndex = 0;
+  function closeModal() {
+    const modal = document.getElementById('productModal');
+    modal.classList.remove('show');
+    setTimeout(() => { modal.style.display = 'none'; }, 300); // fade-out delay
+    document.getElementById('buyButton').style.display = 'inline-block';
+    document.getElementById('formArea').style.display = 'none';
+  }
 
-    document.addEventListener('keydown', (e) => {
-      if (e.keyCode === konamiCode[konamiIndex]) {
-        konamiIndex++;
-        if (konamiIndex === konamiCode.length) {
-          document.body.style.background = "lightblue";
-          const album = document.getElementById("albumCover");
-          album.classList.add("spin");
-          setTimeout(() => album.classList.remove("spin"), 1000); // reset spin
-          konamiIndex = 0;
-        }
-      } else {
+  function showForm() {
+    document.getElementById('formArea').style.display = 'block';
+    document.getElementById('buyButton').style.display = 'none';
+  }
+
+  /* 🎮 Konami Code Easter Egg */
+  const konamiCode = [38,38,40,40,37,39,37,39,66,65];
+  let konamiIndex = 0;
+
+  document.addEventListener('keydown', (e) => {
+    if (e.keyCode === konamiCode[konamiIndex]) {
+      konamiIndex++;
+      if (konamiIndex === konamiCode.length) {
+        document.body.style.background = "lightblue";
+        const album = document.getElementById("albumCover");
+        album.classList.add("spin");
+        setTimeout(() => album.classList.remove("spin"), 1000);
         konamiIndex = 0;
       }
-    });
-  </script>
+    } else {
+      konamiIndex = 0;
+    }
+  });
+</script>
 </body>
 </html>
+
