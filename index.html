@@ -524,7 +524,7 @@
 <script defer>
   // Nav link animation + smooth scrolling + section pulse
   (function initNavSmoothScroll(){
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     document.querySelectorAll('.nav-link').forEach(link=>{
       link.addEventListener('click', (e)=>{
@@ -716,4 +716,3 @@
 </script>
 </body>
 </html>
-
