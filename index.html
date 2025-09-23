@@ -522,38 +522,19 @@
 
 <!-- ===== Site logic ===== -->
 <script defer>
-  // Smooth nav + underline pulse + close mobile
-  (function initNavSmoothScroll(){
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  (function initTheme(){
+    try{
+      const saved=localStorage.getItem('theme');
+      const prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if((saved==='dark')||(!saved&&prefersDark)) document.body.classList.add('dark');
+    }catch(e){}
+  })();
 
-    document.querySelectorAll('.nav-link').forEach(link=>{
-      link.addEventListener('click', (e)=>{
-        e.preventDefault();
-        link.classList.add('clicked');
-        setTimeout(()=>link.classList.remove('clicked'), 400);
-
-        const id = link.getAttribute('data-target');
-        const section = document.getElementById(id);
-        if (!section) return;
-
-        if (prefersReduced) section.scrollIntoView();
-        else section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        setTimeout(()=>{
-          section.classList.add('target-pulse');
-          setTimeout(()=>section.classList.remove('target-pulse'), 800);
-        }, 200);
-
-        history.pushState(null, '', `#${id}`);
-
-        const menu = document.getElementById('mainmenu');
-        const btn  = document.querySelector('.menu-toggle');
-        if (menu?.classList.contains('show')) {
-          menu.classList.remove('show');
-          btn?.setAttribute('aria-expanded', 'false');
-        }
-      });
-    });
+  (function revealOnScroll(){
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+    },{rootMargin:'0px 0px -100px 0px'});
+    document.querySelectorAll('.section').forEach(s=>io.observe(s));
   })();
 
   function next26th(from=new Date()){
@@ -587,6 +568,7 @@
     const img=document.getElementById('modalAlbum');
     const tracklist=document.getElementById('tracklist');
 
+    // Use your exact tracklist for both editions
     const tracksHTML = `
       <h3>Tracklist — ${type==='definitive' ? 'MALUCO (Definitive)' : 'MALUCO'}</h3>
       <ol>
@@ -661,6 +643,15 @@
     const open=menu.classList.toggle("show"); btn.setAttribute("aria-expanded",String(open));
   }
   window.toggleMenu=toggleMenu;
+
+  // Nav link animation + section pulse
+  document.querySelectorAll('.nav-link').forEach(link=>{
+    link.addEventListener('click', ()=>{
+      link.classList.add('clicked'); setTimeout(()=>link.classList.remove('clicked'),400);
+      const id=link.getAttribute('data-target'); const section=document.getElementById(id);
+      setTimeout(()=>{ section.classList.add('target-pulse'); setTimeout(()=>section.classList.remove('target-pulse'),800); },200);
+    });
+  });
 
   // Keyboard shortcuts
   window.addEventListener('keydown',(e)=>{
