@@ -7,254 +7,103 @@
 <meta name="description" content="MALUCO — pre-reservations of the album (standard and definitive edition)." />
 <link rel="icon" href="favicon.ico" />
 
-<!-- Performance -->
+<!-- Performance: preconnects -->
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
 
-<!-- Open Graph -->
+<!-- Open Graph (kept) -->
 <meta property="og:title" content="MALUCO" />
 <meta property="og:description" content="Pre-reservations available. See the product, choose an edition, and reserve with no cost." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="400x400.jpg" />
 
 <style>
-  :root {
-    --bg-light: linear-gradient(120deg, #fdfbfb, #ebedee);
-    --bg-dark:  linear-gradient(120deg, #1e1e1e, #121212);
-    --text-light: #000;
-    --text-dark:  #fff;
-    --muted: #444;
-    --muted-dark: #ccc;
-    --card: #fff;
-    --card-dark: #222;
-    --btn: #ccc;
-    --btn-dark: #444;
-    --btn-hover: #bbb;
-    --btn-dark-hover: #555;
-    --shadow: 0 2px 6px rgba(0,0,0,0.1);
-    --shadow-lg: 0 8px 20px rgba(0,0,0,0.2);
-    --focus: #6aa9ff;
-    --nav-light: #f5f5f5;
-    --nav-dark: #222;
-    --accent: #6aa9ff33;
+  :root{
+    --bg-light:linear-gradient(120deg,#fdfbfb,#ebedee);
+    --bg-dark:linear-gradient(120deg,#1e1e1e,#121212);
+    --text-light:#000; --text-dark:#fff;
+    --muted:#444; --muted-dark:#ccc;
+    --card:#fff; --card-dark:#222;
+    --btn:#ccc; --btn-dark:#444;
+    --btn-hover:#bbb; --btn-dark-hover:#555;
+    --shadow:0 2px 6px rgba(0,0,0,.1);
+    --shadow-lg:0 8px 20px rgba(0,0,0,.2);
+    --focus:#6aa9ff; --nav-light:#f5f5f5; --nav-dark:#222;
+    --accent:#6aa9ff33;
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;font-family:'Trebuchet MS',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg-light);color:var(--text-light);scroll-behavior:smooth;transition:background .5s,color .5s;overflow-x:hidden}
+  body.dark{background:var(--bg-dark);color:var(--text-dark)}
+  :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+
+  nav{background:var(--nav-light);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:var(--shadow)}
+  body.dark nav{background:var(--nav-dark)}
+  .brand{font-weight:800;letter-spacing:.5px}
+  .menu{display:flex;gap:20px;align-items:center}
+  .menu a,.menu button.btn-link{background:none;border:none;padding:0;text-decoration:none;color:inherit;font-size:16px;font-weight:700;transition:opacity .2s;cursor:pointer;position:relative}
+  .menu a:hover,.menu button.btn-link:hover{opacity:.7}
+  .menu a::after,.menu button.btn-link::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;height:2px;background:currentColor;transition:right .3s}
+  .menu a.clicked::after,.menu button.btn-link.clicked::after{right:0}
+  .menu-toggle{display:block;background:none;border:none;font-size:28px;cursor:pointer;color:inherit}
+  @media (min-width:769px){.menu-toggle{display:none} nav .menu{display:flex!important}}
+  @media (max-width:768px){
+    nav{flex-wrap:wrap;gap:8px}
+    nav .menu{display:none;width:100%;flex-direction:column;gap:12px;margin-top:8px}
+    nav .menu.show{display:flex}
   }
 
-  * { box-sizing: border-box; }
-  html, body { height: 100%; }
+  .section{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:56px 20px;opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s,box-shadow .6s;text-align:center;scroll-margin-top:80px}
+  .section.visible{opacity:1;transform:translateY(0)}
+  @keyframes targetHighlight{0%{box-shadow:0 0 0 0 var(--accent)}50%{box-shadow:0 0 0 16px var(--accent)}100%{box-shadow:0 0 0 0 var(--accent)}}
+  .section.target-pulse{animation:targetHighlight 800ms ease;border-radius:14px}
 
-  body {
-    margin: 0;
-    font-family: 'Trebuchet MS', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    background: var(--bg-light);
-    color: var(--text-light);
-    scroll-behavior: smooth;
-    transition: background 0.5s ease, color 0.5s ease;
-    overflow-x: hidden;
-  }
-  body.dark { background: var(--bg-dark); color: var(--text-dark); }
+  #home h1{font-size:clamp(2rem,4vw,3rem);margin:10px 0 10px}
+  #countdown{font-size:1.25rem;margin:16px 0 8px;display:flex;gap:6px}
+  .flip-digit{background:var(--card);color:var(--text-light);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);display:inline-block;perspective:1000px;position:relative;min-width:60px}
+  .flip-digit-inner{display:block;transition:transform .6s;transform-style:preserve-3d}
+  .flip-digit-top,.flip-digit-bottom{backface-visibility:hidden;display:block}
+  .flip-digit-bottom{transform:rotateX(180deg);position:absolute;inset:0}
+  body.dark .flip-digit{background:#333;color:#fff}
+  body.dark .flip-digit-top,body.dark .flip-digit-bottom{color:#fff}
 
-  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+  .hero-img{border-radius:12px;box-shadow:var(--shadow);cursor:pointer;margin-top:12px;max-width:90vw;height:auto}
 
-  /* Navigation */
-  nav {
-    background: var(--nav-light);
-    padding: 12px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: var(--shadow);
-  }
-  body.dark nav { background: var(--nav-dark); }
-  .brand { font-weight: 800; letter-spacing: 0.5px; }
-  .menu { display: flex; gap: 20px; align-items: center; }
-  .menu a, .menu button.btn-link {
-    background: none; border: none; padding: 0;
-    text-decoration: none; color: inherit; font-size: 16px; font-weight: 700;
-    transition: opacity 0.2s ease;
-    cursor: pointer;
-    position: relative;
-  }
-  .menu a:hover, .menu button.btn-link:hover { opacity: 0.7; }
-  /* underline slide animation on click */
-  .menu a::after, .menu button.btn-link::after {
-    content:""; position:absolute; left:0; right:100%; bottom:-4px; height:2px;
-    background: currentColor; transition:right .3s ease;
-  }
-  .menu a.clicked::after, .menu button.btn-link.clicked::after { right:0; }
+  .shop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;width:min(1100px,92vw);margin:0 auto}
+  .product{background:var(--card);color:inherit;border:none;text-align:center;cursor:pointer;width:100%;padding:14px;border-radius:12px;transition:transform .2s,box-shadow .2s;box-shadow:var(--shadow)}
+  .product:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+  .product img{width:100%;height:auto;border-radius:10px;transition:transform .25s}
+  .product:hover img{transform:scale(1.03)}
+  .product h2{font-size:1.35rem;margin:10px 0 6px}
+  .product p{margin:4px 0;color:var(--muted)}
+  body.dark .product{background:var(--card-dark)}
+  body.dark .product p{color:var(--muted-dark)}
 
-  .menu-toggle {
-    display: block;
-    background: none;
-    border: none;
-    font-size: 28px;
-    cursor: pointer;
-    color: inherit;
-  }
-  @media (min-width: 769px) {
-    .menu-toggle { display: none; }
-    nav .menu { display: flex !important; }
-  }
-  @media (max-width: 768px) {
-    nav { flex-wrap: wrap; gap: 8px; }
-    nav .menu {
-      display: none;
-      width: 100%;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 8px;
-    }
-    nav .menu.show { display: flex; }
-  }
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);justify-content:center;align-items:center;padding:12px;opacity:0;transition:opacity .35s}
+  .modal.show{display:flex;opacity:1}
+  .modal-content{background:var(--card);color:inherit;padding:20px;border-radius:12px;width:100%;max-width:480px;text-align:center;transform:translateY(-16px) scale(.96);transition:transform .35s,opacity .35s;opacity:0;box-shadow:var(--shadow-lg)}
+  .modal.show .modal-content{transform:translateY(0) scale(1);opacity:1}
+  .modal-content img{width:80%;height:auto;margin:0 auto 14px;border-radius:10px;display:block}
+  body.dark .modal-content{background:var(--card-dark)}
 
-  /* Sections */
-  .section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    padding: 56px 20px;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease, box-shadow .6s ease;
-    scroll-margin-top: 80px;
-    text-align: center;
-  }
-  .section.visible { opacity: 1; transform: translateY(0); }
+  button,.btn{background:var(--btn);color:#000;border:none;border-radius:22px;padding:12px 22px;font-size:16px;cursor:pointer;transition:background .2s,transform .15s}
+  button:hover,.btn:hover{background:var(--btn-hover);transform:translateY(-1px)}
+  body.dark button,body.dark .btn{background:var(--btn-dark);color:#fff}
+  body.dark button:hover,body.dark .btn:hover{background:var(--btn-dark-hover)}
 
-  /* (nav click) highlight animation on target section */
-  @keyframes targetHighlight {
-    0%   { box-shadow: 0 0 0 0 var(--accent); }
-    50%  { box-shadow: 0 0 0 16px var(--accent); }
-    100% { box-shadow: 0 0 0 0 var(--accent); }
-  }
-  .section.target-pulse { animation: targetHighlight 800ms ease; border-radius: 14px; }
+  #settings h2{margin-bottom:16px}
+  .audioControl{margin-top:12px;font-size:18px;display:flex;flex-direction:column;align-items:center;gap:10px}
+  input[type=range]{width:220px}
+  @media (max-width:768px){#volumeSlider{display:none}}
 
-  /* Home */
-  #home h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 10px 0 10px; }
-  #countdown { font-size: 1.25rem; margin: 16px 0 8px; display: flex; gap: 6px; }
-  .flip-digit {
-    background: var(--card);
-    color: var(--text-light);
-    padding: 10px 14px;
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-    display: inline-block;
-    perspective: 1000px;
-    position: relative;
-    min-width: 60px;
-  }
-  .flip-digit-inner { display: block; transition: transform 0.6s; transform-style: preserve-3d; }
-  .flip-digit-top, .flip-digit-bottom { backface-visibility: hidden; display: block; }
-  .flip-digit-bottom { transform: rotateX(180deg); position: absolute; inset: 0; }
-  body.dark .flip-digit { background: #333; color: #fff; }
-  body.dark .flip-digit-top, body.dark .flip-digit-bottom { color: #fff; }
+  .copyright{text-align:center;margin:24px 0 10px;font-size:12px;color:#888}
 
-  .hero-img {
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    cursor: pointer;
-    margin-top: 12px;
-    max-width: 90vw;
-    height: auto;
-  }
+  .toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:#1f9d55;color:#fff;padding:10px 16px;border-radius:10px;box-shadow:var(--shadow-lg);z-index:2000;opacity:0;transition:opacity .3s}
+  .toast.show{opacity:1}
 
-  /* Shop */
-  .shop-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 28px;
-    width: min(1100px, 92vw);
-    margin: 0 auto;
-  }
-  .product {
-    background: var(--card);
-    color: inherit;
-    border: none;
-    text-align: center;
-    cursor: pointer;
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: var(--shadow);
-  }
-  .product:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-  .product img { width: 100%; height: auto; border-radius: 10px; transition: transform 0.25s ease; }
-  .product:hover img { transform: scale(1.03); }
-  .product h2 { font-size: 1.35rem; margin: 10px 0 6px; }
-  .product p { margin: 4px 0; color: var(--muted); }
-  body.dark .product { background: var(--card-dark); }
-  body.dark .product p { color: var(--muted-dark); }
-
-  /* Modal (product & auth share same base classes) */
-  .modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    justify-content: center;
-    align-items: center;
-    padding: 12px;
-    opacity: 0;
-    transition: opacity 0.35s ease;
-  }
-  .modal.show { display: flex; opacity: 1; }
-  .modal-content {
-    background: var(--card);
-    color: inherit;
-    padding: 20px;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 480px;
-    text-align: left;
-    transform: translateY(-16px) scale(0.96);
-    transition: transform 0.35s ease, opacity 0.35s ease;
-    opacity: 0;
-    box-shadow: var(--shadow-lg);
-  }
-  .modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; }
-  .modal-content img { width: 80%; height: auto; margin: 0 auto 14px; border-radius: 10px; display: block; }
-  body.dark .modal-content { background: var(--card-dark); }
-
-  /* Buttons */
-  button, .btn {
-    background: var(--btn);
-    color: #000;
-    border: none;
-    border-radius: 22px;
-    padding: 12px 22px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-  }
-  button:hover, .btn:hover { background: var(--btn-hover); transform: translateY(-1px); }
-  body.dark button, body.dark .btn { background: var(--btn-dark); color: #fff; }
-  body.dark button:hover, body.dark .btn:hover { background: var(--btn-dark-hover); }
-
-  /* Settings */
-  #settings h2 { margin-bottom: 16px; }
-  .audioControl { margin-top: 12px; font-size: 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  input[type=range] { width: 220px; }
-  @media (max-width: 768px) { #volumeSlider { display: none; } }
-
-  /* Footer */
-  .copyright { text-align: center; margin: 24px 0 10px; font-size: 12px; color: #888; }
-
-  /* Toast */
-  .toast {
-    position: fixed; left: 50%; top: 14px; transform: translateX(-50%);
-    background: #1f9d55; color: #fff; padding: 10px 16px; border-radius: 10px;
-    box-shadow: var(--shadow-lg); z-index: 2000; opacity: 0; transition: opacity .3s ease;
-  }
-  .toast.show { opacity: 1; }
-
-  /* Small helper text */
-  .muted { color: var(--muted); font-size: 12px; margin-top: 4px; }
-  .tracklist { margin: 8px 0 0 0; padding-left: 18px; }
-  .tracklist li { margin: 2px 0; }
+  /* Tracklist area */
+  .tracklist{display:none;text-align:left;margin:10px auto 0;max-width:360px}
+  .tracklist h3{margin:8px 0 6px;font-size:1rem}
+  .tracklist ol{padding-left:20px;text-align:left}
 </style>
 </head>
 <body>
@@ -271,7 +120,7 @@
   </nav>
 
   <!-- Home -->
-  <section id="home" class="section" tabindex="-1">
+  <section id="home" class="section">
     <h1>MALUCO</h1>
     <div id="countdown" aria-live="polite">
       <div class="flip-digit" aria-label="Days"><div class="flip-digit-inner"><span class="flip-digit-top">0d</span><span class="flip-digit-bottom">0d</span></div></div>
@@ -282,11 +131,10 @@
 
     <img class="hero-img" src="400x400.jpg" alt="MALUCO album" width="400" height="400"
          onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" />
-    <p class="muted">Shortcuts: H=Home, S=Shop, E=Settings, A=Account, M=Music, T=Theme, Esc=Close</p>
   </section>
 
   <!-- Shop -->
-  <section id="shop" class="section" tabindex="-1">
+  <section id="shop" class="section">
     <div class="shop-grid">
       <button class="product" type="button" onclick="openModal('standard')">
         <img src="400x400.jpg" alt="MALUCO standard edition" width="400" height="400" loading="lazy" />
@@ -305,55 +153,60 @@
   </section>
 
   <!-- Settings -->
-  <section id="settings" class="section" tabindex="-1">
+  <section id="settings" class="section">
     <h2>Settings</h2>
     <div class="audioControl">
       <button type="button" onclick="toggleMusic()">Play / Pause Music</button>
       <label for="volumeSlider">Volume:</label>
       <input type="range" min="0" max="1" step="0.01" id="volumeSlider" onchange="setVolume(this.value)" />
       <button type="button" onclick="toggleTheme()">Toggle Dark Theme</button>
+      <!-- Keyboard shortcuts list -->
+      <div style="margin-top:14px; font-size:14px; opacity:.9; text-align:left">
+        <strong>Keyboard shortcuts</strong>
+        <ul style="list-style: none; padding-left: 0; line-height:1.7;">
+          <li><kbd>H</kbd> Home &nbsp; <kbd>S</kbd> Shop &nbsp; <kbd>E</kbd> Settings</li>
+          <li><kbd>M</kbd> Play/Pause music &nbsp; <kbd>T</kbd> Toggle dark theme</li>
+          <li><kbd>A</kbd> Account &nbsp; <kbd>Esc</kbd> Close modal</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <!-- Product Modal -->
   <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-content" role="document">
+    <div class="modal-content">
       <h2 id="modalTitle">MALUCO — $3</h2>
       <img id="modalAlbum" src="400x400.jpg" alt="Album" width="400" height="400" />
-      <div id="tracklistWrap">
-        <strong>Tracklist</strong>
-        <ol id="tracklist" class="tracklist"></ol>
-      </div>
       <p>This is a reservation — <strong>we won't charge you now</strong>.</p>
 
-      <button id="buyButton" type="button" class="btn" onclick="showForm()">Reserve</button>
+      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+        <button id="buyButton" type="button" class="btn" onclick="showForm()">Reserve</button>
+        <button id="tracklistBtn" type="button" class="btn" onclick="toggleTracklist()">Tracklist</button>
+      </div>
+
+      <!-- Tracklist -->
+      <div id="tracklist" class="tracklist" aria-live="polite"></div>
 
       <div id="formArea" style="display:none; margin-top:10px;">
-        <form id="preorderForm" action="https://formspree.io/f/mvgwpkkq" method="POST" novalidate>
-          <!-- Honeypot anti-spam -->
+        <form id="preorderForm" action="https://formspree.io/f/mvgwpkkq" method="POST">
+          <!-- Honeypot -->
           <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
           <label for="email">Email</label><br />
           <input id="email" type="email" name="email" placeholder="your@email.com" required /><br /><br />
           <label><input type="checkbox" name="interest" required /> I want to reserve this product</label><br /><br />
-          <!-- Human check appears only if needed -->
-          <div id="humanCheck" style="display:none; margin:6px 0;">
-            <label>What is 3 + 4? <input type="number" id="humanAnswer" inputmode="numeric" style="width:70px"></label>
-          </div>
           <button id="submitBtn" type="submit" class="btn">Confirm Reservation</button>
-          <div id="formStatus" class="muted" aria-live="polite"></div>
         </form>
+        <div id="formStatus" style="margin-top:10px;"></div>
       </div>
 
       <br />
-      <div style="display:flex; gap:8px; justify-content:flex-end;">
-        <button type="button" class="btn" onclick="closeModal()">Close</button>
-      </div>
+      <button type="button" class="btn" onclick="closeModal()">Close</button>
     </div>
   </div>
 
   <!-- Account / Auth Modal -->
   <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true">
-    <div class="modal-content" role="document">
+    <div class="modal-content">
       <h2 id="authTitle">Sign in</h2>
 
       <button type="button" class="btn" id="googleSignInBtn">Continue with Google</button>
@@ -370,15 +223,12 @@
           <button type="button" class="btn" id="emailSignUpBtn">Create account</button>
           <button type="button" class="btn" id="resetBtn" title="Reset password via email">Reset password</button>
         </div>
-        <p id="verifyNotice" class="muted" style="display:none;">Please verify your email. <button type="button" class="btn" id="resendVerifyBtn">Resend verification</button></p>
       </form>
 
       <div id="authError" style="color:#c0392b; margin-top:10px; min-height:1.2em;"></div>
 
       <br />
-      <div style="display:flex; gap:8px; justify-content:flex-end;">
-        <button type="button" class="btn" onclick="closeAuthModal()">Close</button>
-      </div>
+      <button type="button" class="btn" onclick="closeAuthModal()">Close</button>
     </div>
   </div>
 
@@ -388,10 +238,10 @@
     Your browser does not support audio.
   </audio>
 
-  <!-- toast -->
+  <!-- Toast -->
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <!-- Signed-in indicator (optional) -->
+  <!-- Signed-in indicator -->
   <div id="whoami" class="copyright"></div>
   <div class="copyright">© 2025 ME100</div>
 
@@ -404,9 +254,7 @@
     signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword,
     sendPasswordResetEmail, sendEmailVerification
   } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-  import {
-    getFirestore, doc, setDoc, serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBUBMX0Nkaml4BoDgTBZsLv15rXd4-yaB0",
@@ -423,424 +271,378 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const $ = (sel) => document.querySelector(sel);
-  const toastEl = $("#toast");
-  const whoami = $("#whoami");
-  const accountBtn = $("#accountBtn");
+  const $ = (sel)=>document.querySelector(sel);
+  const authModal=$("#authModal"), accountBtn=$("#accountBtn"), whoami=$("#whoami"), toastEl=$("#toast");
 
-  /* ---------- Tracklists (edit these names whenever you want) ---------- */
-  const TRACKS = {
-    standard: [
-      "I DRUGGED MYSELF TO DEATH", "MESSED UP", "MOVE ON!", "FALL BENEATH MY SPELL", "YOUR HEART HAS BEEN BROKEN???",
-      "ALONE", "DO YOU LOVE ME?", "ONE MORE CHANCE", "EVERY TIME I NEED UUU"
-    ],
-    definitive: [
-      "Intro", "Alone", "City Lights", "Maluco", "Echoes",
-      "Late Night Calls", "Overdrive", "Crossfire",
-      "Day 26", "Neon Dreams", "Home Again", "Outro (Extended)"
-    ]
-  };
+  function showToast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); setTimeout(()=>toastEl.classList.remove('show'),2200); }
 
-  function showToast(msg){
-    toastEl.textContent = msg;
-    toastEl.classList.add('show');
-    setTimeout(()=> toastEl.classList.remove('show'), 2200);
-  }
-
-  /* -------------------- AUTH MODAL OPEN/CLOSE + FOCUS TRAP -------------------- */
-  const authModal = $("#authModal");
-  const productModal = $("#productModal");
-  let lastFocus = null;
-  let activeTrap = null;
-
-  function trapFocus(container){
-    const focusable = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-    const loop = (e)=>{
-      if (e.key !== 'Tab') return;
-      const items = Array.from(focusable).filter(el => !el.disabled && el.offsetParent !== null);
-      if (!items.length) return;
-      const first = items[0], last = items[items.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    };
-    container.addEventListener('keydown', loop);
-    return () => container.removeEventListener('keydown', loop);
-  }
-
-  function showModal(modalEl){
-    lastFocus = document.activeElement;
-    modalEl.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    requestAnimationFrame(()=> {
-      modalEl.classList.add('show');
-      modalEl.setAttribute('aria-hidden','false');
-      const firstBtn = modalEl.querySelector('button, [href], input, [tabindex]:not([tabindex="-1"])');
-      firstBtn?.focus();
-    });
-    activeTrap = trapFocus(modalEl);
-  }
-  function hideModal(modalEl){
-    modalEl.classList.remove('show');
-    modalEl.setAttribute('aria-hidden','true');
-    document.body.style.overflow = '';
-    setTimeout(()=>{ modalEl.style.display = 'none'; }, 300);
-    activeTrap?.(); activeTrap = null;
-    lastFocus?.focus();
-  }
-
-  /* ----------------------------- ACCOUNT / AUTH ----------------------------- */
-  function openAuthModal() {
-    $("#authError").textContent = "";
-    const user = auth.currentUser;
-    if (user) {
-      $("#authTitle").innerText = "Your account";
-      $("#emailAuthForm").style.display = "block";
-      $("#googleSignInBtn").style.display = "none";
-      $("#verifyNotice").style.display = user.emailVerified ? "none" : "block";
-      // Replace buttons area with a Sign out if not already
-      if (!document.getElementById('signOutBtn')) {
-        const btns = document.createElement('div');
-        btns.style.marginTop = "10px";
-        btns.innerHTML = `<button type="button" class="btn" id="signOutBtn">Sign out</button>`;
-        authModal.querySelector('.modal-content').appendChild(btns);
-        document.getElementById('signOutBtn').onclick = async () => { await signOut(auth); hideModal(authModal); showToast("Signed out"); };
+  /* ---------- Focus trap for modals (accessibility) ---------- */
+  function activateFocusTrap(modal){
+    const focusables = modal.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+    if(!focusables.length) return;
+    const first = focusables[0], last = focusables[focusables.length-1];
+    function onKey(e){
+      if(e.key === 'Tab'){
+        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      } else if(e.key === 'Escape'){ // universal close
+        if(modal.id === 'productModal') window.closeModal();
+        if(modal.id === 'authModal') closeAuthModal();
       }
-    } else {
-      $("#authTitle").innerText = "Sign in";
-      $("#googleSignInBtn").style.display = "inline-block";
-      $("#verifyNotice").style.display = "none";
-      document.getElementById('signOutBtn')?.remove();
     }
-    showModal(authModal);
+    modal.__trapHandler = onKey;
+    modal.addEventListener('keydown', onKey);
+  }
+  function deactivateFocusTrap(modal){
+    if(modal.__trapHandler){ modal.removeEventListener('keydown', modal.__trapHandler); modal.__trapHandler = null; }
+  }
+
+  /* ---------- Auth modal open/close ---------- */
+  function showAuthModal(){
+    authModal.style.display='flex';
+    document.body.style.overflow='hidden';
+    requestAnimationFrame(()=>{
+      authModal.classList.add('show');
+      authModal.setAttribute('aria-hidden','false');
+      activateFocusTrap(authModal);
+      // focus first control
+      ($("#googleSignInBtn")||authModal.querySelector('button, input'))?.focus();
+    });
+  }
+  function closeAuthModal(){
+    deactivateFocusTrap(authModal);
+    authModal.classList.remove('show');
+    authModal.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+    setTimeout(()=>{ authModal.style.display='none'; },300);
+  }
+  window.closeAuthModal = closeAuthModal;
+
+  function openAuthModal(){
+    const user = auth.currentUser;
+    $("#authError").textContent="";
+    if(user){
+      $("#authTitle").innerText="Your account";
+      $("#emailAuthForm").style.display="none";
+      $("#googleSignInBtn").style.display="none";
+      $("#signoutArea")?.remove();
+      $("#authModal .modal-content").insertAdjacentHTML("beforeend",
+        `<div id="signoutArea" style="margin-top:10px;">
+           <button type="button" class="btn" id="signOutBtn">Sign out</button>
+         </div>`);
+      showAuthModal();
+      $("#signOutBtn").onclick = async ()=>{ await signOut(auth); closeAuthModal(); showToast("Signed out"); };
+    } else {
+      $("#authTitle").innerText="Sign in";
+      $("#emailAuthForm").style.display="block";
+      $("#googleSignInBtn").style.display="inline-block";
+      $("#signoutArea")?.remove();
+      showAuthModal();
+    }
   }
   window.openAuthModal = openAuthModal;
 
+  /* ---------- Auth actions ---------- */
   $("#googleSignInBtn")?.addEventListener("click", async ()=>{
-    try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
-      hideModal(authModal);
-      showToast("Signed in with Google");
-    } catch (e) { showAuthError(e); }
-  });
-  $("#emailSignInBtn")?.addEventListener("click", async ()=>{
-    const email = $("#authEmail").value.trim();
-    const pass  = $("#authPass").value;
-    try {
-      await signInWithEmailAndPassword(auth, email, pass);
-      hideModal(authModal);
-      showToast("Signed in");
-    } catch (e) { showAuthError(e); }
-  });
-  $("#emailSignUpBtn")?.addEventListener("click", async ()=>{
-    const email = $("#authEmail").value.trim();
-    const pass  = $("#authPass").value;
-    try {
-      await createUserWithEmailAndPassword(auth, email, pass);
-      try { await sendEmailVerification(auth.currentUser); } catch {}
-      $("#verifyNotice").style.display = "block";
-      showToast("Account created — verify your email");
-    } catch (e) { showAuthError(e); }
-  });
-  $("#resetBtn")?.addEventListener("click", async ()=>{
-    const email = $("#authEmail").value.trim();
-    if (!email) { $("#authError").textContent = "Enter your email above first."; return; }
-    try { await sendPasswordResetEmail(auth, email); $("#authError").textContent = ""; showToast("Password reset email sent"); }
+    try{ await signInWithPopup(auth,new GoogleAuthProvider()); closeAuthModal(); showToast("Signed in with Google"); }
     catch(e){ showAuthError(e); }
   });
-  document.getElementById('resendVerifyBtn')?.addEventListener('click', async ()=>{
-    try { await sendEmailVerification(auth.currentUser); showToast("Verification email sent"); }
+
+  $("#emailSignInBtn")?.addEventListener("click", async ()=>{
+    const email=$("#authEmail").value.trim(), pass=$("#authPass").value;
+    try{ await signInWithEmailAndPassword(auth,email,pass); closeAuthModal(); showToast("Signed in"); }
+    catch(e){ showAuthError(e); }
+  });
+
+  $("#emailSignUpBtn")?.addEventListener("click", async ()=>{
+    const email=$("#authEmail").value.trim(), pass=$("#authPass").value;
+    try{
+      await createUserWithEmailAndPassword(auth,email,pass);
+      try{ await sendEmailVerification(auth.currentUser); }catch{}
+      closeAuthModal(); showToast("Account created — verify your email");
+    }catch(e){ showAuthError(e); }
+  });
+
+  $("#resetBtn")?.addEventListener("click", async ()=>{
+    const email=$("#authEmail").value.trim();
+    if(!email){ $("#authError").textContent="Enter your email above first."; return; }
+    try{ await sendPasswordResetEmail(auth,email); $("#authError").textContent=""; showToast("Password reset email sent"); }
     catch(e){ showAuthError(e); }
   });
 
   function showAuthError(err){
-    const code = err?.code || "";
-    const map = {
-      "auth/popup-closed-by-user": "Sign-in window was closed.",
-      "auth/account-exists-with-different-credential": "This email is linked to another sign-in method.",
-      "auth/invalid-credential": "Invalid credentials.",
-      "auth/invalid-login-credentials": "Invalid email or password.",
-      "auth/email-already-in-use": "Email already in use.",
-      "auth/weak-password": "Password should be at least 6 characters."
+    const map={
+      "auth/popup-closed-by-user":"Sign-in window was closed.",
+      "auth/account-exists-with-different-credential":"This email is linked to another sign-in method.",
+      "auth/invalid-credential":"Invalid credentials.",
+      "auth/invalid-login-credentials":"Invalid email or password.",
+      "auth/email-already-in-use":"Email already in use.",
+      "auth/weak-password":"Password should be at least 6 characters."
     };
-    $("#authError").textContent = map[code] || err?.message || "Something went wrong.";
+    $("#authError").textContent = map[err?.code] || err?.message || "Something went wrong.";
   }
 
-  onAuthStateChanged(auth, (user)=>{
-    if (user) {
-      const name = user.displayName || user.email || "User";
-      accountBtn.textContent = (name.split("@")[0] || "Account");
-      whoami && (whoami.textContent = `Signed in as ${name}` + (user.emailVerified ? "" : " (unverified)"));
-    } else {
-      accountBtn.textContent = "Account";
-      whoami && (whoami.textContent = "");
+  onAuthStateChanged(auth,(user)=>{
+    if(user){
+      const name=user.displayName||user.email||"User";
+      accountBtn.textContent=(name.split("@")[0]||"Account");
+      whoami && (whoami.textContent=`Signed in as ${name}`);
+    }else{
+      accountBtn.textContent="Account";
+      whoami && (whoami.textContent="");
     }
   });
 
-  /* ------------------------------ PRODUCT MODAL ----------------------------- */
-  let currentSku = 'standard';
-  let formShownAt = 0; // (6) time-based guard
+  /* ---------- (1) Reserve gate: sign-in required; email verified only for Email/Password ---------- */
+  let formShownAt = 0; // (6) time-guard
 
-  function renderTracklist(sku){
-    const list = document.getElementById('tracklist');
-    list.innerHTML = "";
-    (TRACKS[sku] || []).forEach((t, i)=>{
-      const li = document.createElement('li');
-      li.textContent = `${i+1}. ${t}`;
-      list.appendChild(li);
-    });
-  }
+  window.showForm = function(){
+    const user = auth.currentUser;
+    if(!user){ openAuthModal(); return; }
 
-  function openModal(type) {
-    currentSku = (type === 'definitive') ? 'definitive' : 'standard';
-    const title = document.getElementById('modalTitle');
-    const img   = document.getElementById('modalAlbum');
-
-    if (currentSku === 'standard') {
-      title.innerText = 'MALUCO — $3';
-      img.src = '400x400.jpg';
-      img.alt = 'MALUCO standard edition';
-      img.width = 400; img.height = 400;
-    } else {
-      title.innerText = 'MALUCO (Definitive Edition) — $5';
-      img.src = '500x500.jpg';
-      img.alt = 'MALUCO definitive edition';
-      img.width = 500; img.height = 500;
-    }
-
-    // Reset form area
-    document.getElementById('buyButton').style.display='inline-block';
-    document.getElementById('formArea').style.display='none';
-    document.getElementById('formStatus').textContent = '';
-    const hc = document.getElementById('humanCheck'); hc.style.display='none'; $("#humanAnswer").value='';
-
-    renderTracklist(currentSku);
-    showModal(productModal);
-  }
-  window.openModal = openModal;
-
-  function closeModal(){ hideModal(productModal); }
-  window.closeModal = closeModal;
-
-  // close on backdrop click
-  document.getElementById('productModal').addEventListener('click', (e)=>{
-    if (e.target.id === 'productModal') closeModal();
-  });
-  document.getElementById('authModal').addEventListener('click', (e)=>{
-    if (e.target.id === 'authModal') hideModal(authModal);
-  });
-  // global Esc
-  window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') { hideModal(productModal); hideModal(authModal); } }, { passive: true });
-
-  /* (1) Require sign-in + verified email before showing reservation form */
-  function showForm(){
-    const u = auth.currentUser;
-    if (!u) { openAuthModal(); return; }
-    if (!u.emailVerified) {
-      $("#verifyNotice").style.display = "block";
-      openAuthModal();
+    // Determine if they signed in via email/password
+    const usesPassword = (user.providerData||[]).some(p=>p.providerId==="password");
+    if(usesPassword && !user.emailVerified){
+      alert("Please verify your email first (check your inbox).");
       return;
     }
+
     document.getElementById('formArea').style.display='block';
     document.getElementById('buyButton').style.display='none';
     formShownAt = Date.now(); // start timer for anti-spam
-  }
-  window.showForm = showForm;
+    // focus email field
+    document.getElementById('email')?.focus();
+  };
 
-  /* -------------------------- FORM SUBMIT (1 + 6) -------------------------- */
+  /* ---------- (1 & 6) Submit with Firestore + time-based guard + lock button ---------- */
   const preorderForm = document.querySelector('#preorderForm');
   const submitBtn = document.querySelector('#submitBtn');
+  const formArea = document.querySelector('#formArea');
+  const formStatus = document.querySelector('#formStatus');
 
   preorderForm?.addEventListener('submit', async (e)=>{
     e.preventDefault();
 
-    // (6) Honeypot
-    if (preorderForm.querySelector('input[name="_gotcha"]')?.value) return;
+    // Honeypot
+    if(preorderForm.querySelector('input[name="_gotcha"]')?.value) return;
 
-    // (6) Time-based guard (>= 4s after form shown)
-    if (!formShownAt || (Date.now() - formShownAt) < 4000) {
-      // Ask a small human check instead
-      document.getElementById('humanCheck').style.display = 'block';
-      document.getElementById('formStatus').textContent = "Please answer the question above.";
+    // (6) Time guard: at least 3s since form shown
+    if(!formShownAt || (Date.now()-formShownAt)<3000){
+      formStatus.textContent = "Please take a moment before submitting.";
       return;
-    }
-
-    // (6) Human check if visible
-    const hc = document.getElementById('humanCheck');
-    if (hc.style.display !== 'none') {
-      const ans = Number(document.getElementById('humanAnswer').value);
-      if (ans !== 7) { document.getElementById('formStatus').textContent = "Human check failed."; return; }
     }
 
     submitBtn.disabled = true;
     const oldText = submitBtn.textContent;
-    submitBtn.textContent = "Submitting…";
+    submitBtn.textContent="Submitting…";
 
     const fd = new FormData(preorderForm);
-    try {
-      // Optional Firestore logging if signed in
+    try{
       const user = auth.currentUser;
-      if (user) {
-        await setDoc(doc(db, 'preorders', `${user.uid}-${Date.now()}`), {
-          uid: user.uid,
-          email: fd.get('email'),
-          sku: currentSku,
-          priceUSD: currentSku === 'definitive' ? 5 : 3,
-          createdAt: serverTimestamp()
+      if(user){
+        const isDef = document.getElementById('modalTitle').innerText.includes('Definitive');
+        await setDoc(doc(db,'preorders',`${user.uid}-${Date.now()}`),{
+          uid:user.uid,email:fd.get('email'),
+          sku:isDef?'definitive':'standard',
+          priceUSD:isDef?5:3,
+          createdAt:serverTimestamp()
         });
       }
-
-      // Send to Formspree
-      const res = await fetch(preorderForm.action, {
-        method: 'POST',
-        body: fd,
-        headers: { 'Accept': 'application/json' }
-      });
-
-      if (res.ok) {
-        document.getElementById('formArea').innerHTML = '<p style="font-weight:700">✅ Reservation received! Check your inbox for confirmation.</p>';
+      const res = await fetch(preorderForm.action,{ method:'POST', body:fd, headers:{Accept:'application/json'} });
+      if(res.ok){
+        formArea.innerHTML = '<p style="font-weight:700">✅ Reservation received! Check your inbox for confirmation.</p>';
         showToast("Reservation received");
-      } else {
-        document.getElementById('formStatus').textContent = "Could not submit reservation. Please try again.";
-        submitBtn.disabled = false; submitBtn.textContent = oldText;
+      }else{
+        formStatus.textContent="Could not submit reservation. Please try again.";
+        submitBtn.disabled=false; submitBtn.textContent=oldText;
       }
-    } catch (err) {
-      document.getElementById('formStatus').textContent = "Something went wrong. Please try again.";
-      submitBtn.disabled = false; submitBtn.textContent = oldText;
+    }catch(err){
+      console.warn(err);
+      formStatus.textContent="Something went wrong. Please try again.";
+      submitBtn.disabled=false; submitBtn.textContent=oldText;
     }
   });
 
-  /* --------------------------- UI SYNC + SHORTCUTS -------------------------- */
-  onAuthStateChanged(auth, (user)=>{
-    if (user) {
-      const name = user.displayName || user.email || "User";
-      accountBtn.textContent = (name.split("@")[0] || "Account");
-      whoami && (whoami.textContent = `Signed in as ${name}` + (user.emailVerified ? "" : " (unverified)"));
-    } else {
-      accountBtn.textContent = "Account";
-      whoami && (whoami.textContent = "");
-    }
-  });
-
-  // Keyboard shortcuts: H,S,E,A,M,T
-  window.addEventListener('keydown', (e)=>{
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
-    const k = e.key.toLowerCase();
-    if (k === 'h') document.getElementById('home')?.scrollIntoView({behavior:'smooth'});
-    if (k === 's') document.getElementById('shop')?.scrollIntoView({behavior:'smooth'});
-    if (k === 'e') document.getElementById('settings')?.scrollIntoView({behavior:'smooth'});
-    if (k === 'a') openAuthModal();
-    if (k === 'm') document.getElementById('bgMusic').paused ? document.getElementById('bgMusic').play().catch(()=>{}) : document.getElementById('bgMusic').pause();
-    if (k === 't') document.body.classList.toggle('dark');
-  });
+  // Expose for site script
+  window.__focusTrap = { activate: activateFocusTrap, deactivate: deactivateFocusTrap };
 </script>
 
 <!-- ===== Site logic ===== -->
 <script defer>
   (function initTheme(){
-    try {
-      const saved = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if ((saved === 'dark') || (!saved && prefersDark)) document.body.classList.add('dark');
-    } catch(e) {}
+    try{
+      const saved=localStorage.getItem('theme');
+      const prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if((saved==='dark')||(!saved&&prefersDark)) document.body.classList.add('dark');
+    }catch(e){}
   })();
 
   (function revealOnScroll(){
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { rootMargin: '0px 0px -100px 0px' });
-    document.querySelectorAll('.section').forEach(s => io.observe(s));
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+    },{rootMargin:'0px 0px -100px 0px'});
+    document.querySelectorAll('.section').forEach(s=>io.observe(s));
   })();
 
-  function next26th(from = new Date()) {
-    const y = from.getFullYear(), m = from.getMonth();
-    const candidate = new Date(y, m, 26, 0, 0, 0);
-    return (from <= candidate) ? candidate : new Date(y, m + 1, 26, 0, 0, 0);
+  function next26th(from=new Date()){
+    const y=from.getFullYear(), m=from.getMonth();
+    const candidate=new Date(y,m,26,0,0,0);
+    return (from<=candidate)?candidate:new Date(y,m+1,26,0,0,0);
   }
-
-  function updateCountdown() {
-    const target = next26th();
-    const now    = new Date();
-    const diff   = target - now;
-
-    const days    = Math.floor(diff / 86400000);
-    const hours   = Math.floor((diff % 86400000) / 3600000);
-    const minutes = Math.floor((diff % 3600000) / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
-
-    const values = [`${days}d`, `${hours}h`, `${minutes}m`, `${seconds}s`];
-
-    document.querySelectorAll(".flip-digit").forEach((digit, i) => {
-      const inner  = digit.querySelector('.flip-digit-inner');
-      const top    = inner.querySelector('.flip-digit-top');
-      const bottom = inner.querySelector('.flip-digit-bottom');
-      if (top.innerText !== values[i]) {
-        bottom.innerText = values[i];
-        inner.style.transform = 'rotateX(-180deg)';
-        setTimeout(() => {
-          top.innerText = values[i];
-          inner.style.transform = 'rotateX(0deg)';
-        }, 300);
+  function updateCountdown(){
+    const target=next26th(), now=new Date(), diff=target-now;
+    const days=Math.floor(diff/86400000);
+    const hours=Math.floor((diff%86400000)/3600000);
+    const minutes=Math.floor((diff%3600000)/60000);
+    const seconds=Math.floor((diff%60000)/1000);
+    const values=[`${days}d`,`${hours}h`,`${minutes}m`,`${seconds}s`];
+    document.querySelectorAll(".flip-digit").forEach((digit,i)=>{
+      const inner=digit.querySelector('.flip-digit-inner'), top=inner.querySelector('.flip-digit-top'), bottom=inner.querySelector('.flip-digit-bottom');
+      if(top.innerText!==values[i]){
+        bottom.innerText=values[i];
+        inner.style.transform='rotateX(-180deg)';
+        setTimeout(()=>{ top.innerText=values[i]; inner.style.transform='rotateX(0deg)'; },300);
       }
     });
   }
-  setInterval(updateCountdown, 1000);
-  updateCountdown();
+  setInterval(updateCountdown,1000); updateCountdown();
 
-  // Menu underline & section pulse on click
+  /* Product modal (with focus trap calls from Firebase block) */
+  let lastFocus;
+  function openModal(type){
+    lastFocus=document.activeElement;
+    const modal=document.getElementById('productModal');
+    const title=document.getElementById('modalTitle');
+    const img=document.getElementById('modalAlbum');
+    const tracklist=document.getElementById('tracklist');
+
+    if(type==='standard'){
+      title.innerText='MALUCO — $3';
+      img.src='400x400.jpg'; img.alt='MALUCO standard edition'; img.width=400; img.height=400;
+      // Standard edition tracklist
+      tracklist.innerHTML = `
+        <h3>Tracklist — MALUCO</h3>
+        <ol>
+          <li>Intro</li>
+          <li>Neon City</li>
+          <li>Run It</li>
+          <li>Midnight Drive</li>
+          <li>Echoes</li>
+          <li>ALONE</li>
+          <li>Afterglow</li>
+          <li>Outro</li>
+        </ol>`;
+    }else{
+      title.innerText='MALUCO (Definitive Edition) — $5';
+      img.src='500x500.jpg'; img.alt='MALUCO definitive edition'; img.width=500; img.height=500;
+      // Definitive adds bonus tracks
+      tracklist.innerHTML = `
+        <h3>Tracklist — MALUCO (Definitive)</h3>
+        <ol>
+          <li>Intro</li>
+          <li>Neon City</li>
+          <li>Run It</li>
+          <li>Midnight Drive</li>
+          <li>Echoes</li>
+          <li>ALONE</li>
+          <li>Afterglow</li>
+          <li>Outro</li>
+          <li>Bonus: Night Shift</li>
+          <li>Bonus: Skyline (Remix)</li>
+        </ol>`;
+    }
+
+    document.getElementById('buyButton').style.display='inline-block';
+    document.getElementById('formArea').style.display='none';
+    tracklist.style.display='none';
+
+    const pm=document.getElementById('productModal');
+    pm.style.display='flex'; document.body.style.overflow='hidden';
+    requestAnimationFrame(()=>{
+      pm.classList.add('show'); pm.setAttribute('aria-hidden','false');
+      window.__focusTrap?.activate(pm);
+      document.getElementById('buyButton').focus();
+    });
+  }
+  function closeModal(){
+    const pm=document.getElementById('productModal');
+    window.__focusTrap?.deactivate(pm);
+    pm.classList.remove('show'); pm.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+    setTimeout(()=>{ pm.style.display='none'; },300);
+    if(lastFocus) lastFocus.focus();
+  }
+  window.openModal=openModal; window.closeModal=closeModal;
+
+  // backdrop + Esc handled by focus trap; also close on backdrop click:
+  document.getElementById('productModal').addEventListener('click', (e)=>{ if(e.target.id==='productModal') closeModal(); });
+
+  function toggleTracklist(){
+    const tl=document.getElementById('tracklist');
+    tl.style.display = (tl.style.display==='none' || !tl.style.display) ? 'block' : 'none';
+  }
+  window.toggleTracklist = toggleTracklist;
+
+  // Note: showForm is defined in Firebase module to enforce auth/verification.
+
+  function toggleMusic(){
+    const music=document.getElementById('bgMusic');
+    if(music.paused){ music.play().catch(()=>{}); } else { music.pause(); }
+  }
+  function setVolume(v){ document.getElementById('bgMusic').volume=parseFloat(v); }
+  window.toggleMusic=toggleMusic; window.setVolume=setVolume;
+
+  function toggleTheme(){
+    const dark=document.body.classList.toggle('dark');
+    try{ localStorage.setItem('theme',dark?'dark':'light'); }catch(e){}
+  }
+  window.toggleTheme=toggleTheme;
+
+  function toggleMenu(){
+    const menu=document.getElementById("mainmenu"); const btn=document.querySelector(".menu-toggle");
+    const open=menu.classList.toggle("show"); btn.setAttribute("aria-expanded",String(open));
+  }
+  window.toggleMenu=toggleMenu;
+
+  // Nav link animation + section pulse
   document.querySelectorAll('.nav-link').forEach(link=>{
-    link.addEventListener('click', (e)=>{
-      link.classList.add('clicked');
-      setTimeout(()=> link.classList.remove('clicked'), 400);
-      const id = link.getAttribute('data-target');
-      const section = document.getElementById(id);
-      if (!section) return;
-      setTimeout(()=>{
-        section.classList.add('target-pulse');
-        setTimeout(()=> section.classList.remove('target-pulse'), 800);
-        section.focus({preventScroll:true});
-      }, 200);
+    link.addEventListener('click', ()=>{
+      link.classList.add('clicked'); setTimeout(()=>link.classList.remove('clicked'),400);
+      const id=link.getAttribute('data-target'); const section=document.getElementById(id);
+      setTimeout(()=>{ section.classList.add('target-pulse'); setTimeout(()=>section.classList.remove('target-pulse'),800); },200);
     });
   });
 
-  // Music + Theme helpers attached earlier
-  function toggleMusic(){
-    const music = document.getElementById('bgMusic');
-    if (music.paused) music.play().catch(()=>{});
-    else music.pause();
-  }
-  function setVolume(v){ document.getElementById('bgMusic').volume = parseFloat(v); }
-  window.toggleMusic = toggleMusic;
-  window.setVolume = setVolume;
+  // Keyboard shortcuts
+  window.addEventListener('keydown',(e)=>{
+    const tag=(e.target.tagName||'').toLowerCase();
+    if(tag==='input' || tag==='textarea') return; // don't hijack typing in forms
+    const key=e.key.toLowerCase();
+    if(key==='h'){ document.getElementById('home').scrollIntoView({behavior:'smooth'}); }
+    else if(key==='s'){ document.getElementById('shop').scrollIntoView({behavior:'smooth'}); }
+    else if(key==='e'){ document.getElementById('settings').scrollIntoView({behavior:'smooth'}); }
+    else if(key==='m'){ toggleMusic(); }
+    else if(key==='t'){ toggleTheme(); }
+    else if(key==='a'){ openAuthModal(); }
+    else if(key==='escape'){
+      const authOpen = document.getElementById('authModal').classList.contains('show');
+      const prodOpen = document.getElementById('productModal').classList.contains('show');
+      if(authOpen) window.closeAuthModal();
+      if(prodOpen) closeModal();
+    }
+  },{passive:true});
 
-  function toggleTheme(){
-    const dark = document.body.classList.toggle('dark');
-    try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch(e) {}
-  }
-  window.toggleTheme = toggleTheme;
-
-  function toggleMenu() {
-    const menu = document.getElementById("mainmenu");
-    const btn  = document.querySelector(".menu-toggle");
-    const open = menu.classList.toggle("show");
-    btn.setAttribute("aria-expanded", String(open));
-  }
-  window.toggleMenu = toggleMenu;
-
-  // Konami (just for fun)
+  // Konami fun
   (function konamiInit(){
-    const seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-    let pos = 0;
-    window.addEventListener('keydown', (e)=>{
-      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-      const normalized = (key.length === 1) ? key : e.key;
-      pos = (normalized === seq[pos]) ? pos + 1 : (normalized === seq[0] ? 1 : 0);
-      if (pos === seq.length) {
-        document.body.style.background = 'linear-gradient(120deg, #6dc8eb, #66c2ef)';
-        pos = 0;
-      }
-    }, { passive: true });
+    const seq=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let pos=0;
+    window.addEventListener('keydown',(e)=>{
+      const key=e.key.length===1?e.key.toLowerCase():e.key;
+      const normalized=(key.length===1)?key:e.key;
+      pos=(normalized===seq[pos])?pos+1:(normalized===seq[0]?1:0);
+      if(pos===seq.length){ document.body.style.background='linear-gradient(120deg,#6dc8eb,#66c2ef)'; pos=0; }
+    },{passive:true});
   })();
 </script>
 </body>
 </html>
-
