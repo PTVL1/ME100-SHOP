@@ -3,17 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MALUCO - $3</title>
+<title>MALUCO - Website</title>
 <style>
 body {
   background: white;
   font-family: 'Trebuchet MS', sans-serif;
   margin: 0;
-  padding: 20px;
+  padding: 0;
   transition: background 0.5s ease;
+  scroll-behavior: smooth;
 }
 
-/* Product card */
+/* Menu */
+nav {
+  background: #f5f5f5;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+nav a {
+  text-decoration: none;
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+nav a:hover {
+  color: gray;
+}
+
+/* Section wrappers */
+.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 50px 20px;
+  box-sizing: border-box;
+}
+
+/* Home Section */
+#home h1 {
+  font-size: 2.5em;
+  margin: 20px 0 10px 0;
+}
+#countdown {
+  font-size: 1.5em;
+  margin: 15px 0;
+  color: #333;
+}
+#home img {
+  max-width: 350px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+#home img:hover { transform: scale(1.05); }
+
+/* Shop Section (product card) */
 .product {
   text-align: center;
   cursor: pointer;
@@ -31,9 +84,7 @@ body {
   transform: scale(1.05);
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
-.product:hover img {
-  transform: scale(1.1);
-}
+.product:hover img { transform: scale(1.1); }
 .product h1 { font-size: 2em; margin: 10px 0 5px 0; }
 .product p { color: #444; font-size: 1em; margin: 5px 0; }
 
@@ -50,7 +101,6 @@ body {
   transition: opacity 0.4s ease;
 }
 .modal.show { display:flex; opacity:1; }
-
 .modal-content {
   background: white;
   padding: 20px;
@@ -63,16 +113,12 @@ body {
   opacity: 0;
 }
 .modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; }
-
 .modal-content img {
   width: 80%;
   height: auto;
-  display: block;
   margin: 0 auto 15px auto;
   border-radius: 6px;
-  transition: transform 1s ease;
 }
-.spin { transform: rotate(360deg); }
 
 /* Buttons */
 button {
@@ -88,88 +134,64 @@ button {
 }
 button:hover { background:#bbb; transform:scale(1.05); }
 
-input[type="email"] {
-  padding:10px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  width:90%;
-  font-size:16px;
+/* Settings */
+#settings h2 {
+  margin-bottom: 15px;
 }
-label { font-size:16px; }
-
-.voteOption {
-  cursor:pointer;
-  width:100%;
-  text-align:center;
-  border:1px solid #ccc;
-  border-radius:10px;
-  padding:10px;
-  transition: transform 0.2s;
-  margin-bottom:10px;
+.audioControl {
+  margin-top: 20px;
+  font-size: 18px;
 }
-.voteOption img { width:100%; border-radius:8px; }
 
 /* Copyright */
 .copyright {
   text-align: center;
-  margin-top:20px;
-  font-size:12px;
-  color:#888;
+  margin: 40px 0 20px 0;
+  font-size: 12px;
+  color: #888;
 }
 </style>
 </head>
 <body>
 
-<!-- Wrapper to center album -->
-<div class="pageWrapper" style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:100vh; padding:50px 20px; box-sizing:border-box;">
+<!-- Navigation -->
+<nav>
+  <a href="#home">Home</a>
+  <a href="#shop">Shop</a>
+  <a href="#settings">Settings</a>
+  <a href="#">Account (soon)</a>
+</nav>
 
-  <!-- Album Section -->
-  <div class="album-section" style="text-align:center; margin-bottom:100px;">
-    <div class="product" onclick="openModal()">
-      <img id="albumCover" src="400x400.jpg" alt="MALUCO product" style="border-radius:8px; max-width:350px; width:100%;">
-      <h1>MALUCO</h1>
-      <p>$3</p>
-      <p>pre-orders available now</p>
-    </div>
+<!-- Home Section -->
+<section id="home" class="section">
+  <h1>MALUCO</h1>
+  <p id="countdown">Countdown loading...</p>
+  <img src="400x400.jpg" alt="MALUCO album" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+</section>
+
+<!-- Shop Section -->
+<section id="shop" class="section">
+  <div class="product" onclick="openModal()">
+    <img id="albumCover" src="400x400.jpg" alt="MALUCO product">
+    <h1>MALUCO</h1>
+    <p>$3</p>
+    <p>pre-orders available now</p>
   </div>
+</section>
 
-  <!-- Voting Section -->
-  <div id="votingSection" style="text-align:center; max-width:900px; width:100%;">
-    <h2>Which CD album should I make next?</h2>
-    <form id="voteForm" style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:20px;">
-      
-      <label class="voteOption" style="flex:1; min-width:200px;">
-        <input type="radio" name="albumVote" value="FPAC" style="display:none;" required>
-        <img src="https://static.qobuz.com/images/covers/pb/v6/ht5ebf8k2v6pb_600.jpg" alt="FPAC album">
-        <h3>FPAC</h3>
-        <p>Chill and experimental vibes, the classic FPAC style.</p>
-      </label>
-
-      <label class="voteOption" style="flex:1; min-width:200px;">
-        <input type="radio" name="albumVote" value="FPAC Y-5" style="display:none;" required>
-        <img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/e5/87/e4/e587e4f8-2678-9c29-550b-dbae05db078f/5063585823544_cover.jpg/592x592bb.webp" alt="FPAC Y-5 album">
-        <h3>FPAC Y-5</h3>
-        <p>The continuation of the FPAC journey, full of new sounds.</p>
-      </label>
-
-      <label class="voteOption" style="flex:1; min-width:200px;">
-        <input type="radio" name="albumVote" value="MEXTAPE100" style="display:none;" required>
-        <img src="https://static.qobuz.com/images/covers/vb/jl/bpk7v6yamjlvb_600.jpg" alt="MEXTAPE100 album">
-        <h3>MEXTAPE100</h3>
-        <p>A mixtape full of fun beats and experimental sounds.</p>
-      </label>
-
-    </form>
-    <button type="submit" form="voteForm">Confirm Vote</button>
+<!-- Settings Section -->
+<section id="settings" class="section">
+  <h2>Settings</h2>
+  <div class="audioControl">
+    <button onclick="toggleMusic()">Play / Pause Music</button>
   </div>
-
-</div> <!-- end wrapper -->
+</section>
 
 <!-- Modal -->
 <div class="modal" id="productModal">
   <div class="modal-content">
     <h2>MALUCO - $3</h2>
-    <img id="modalAlbum" src="400x400.jpg" alt="MALUCO product">
+    <img src="400x400.jpg" alt="MALUCO product">
     <p>This is a reservation, we won't charge you</p>
     <button id="buyButton" onclick="showForm()">Buy</button>
     <div id="formArea" style="display:none; margin-top:10px;">
@@ -184,14 +206,32 @@ label { font-size:16px; }
   </div>
 </div>
 
-<!-- Popup -->
-<div id="votePopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:white; padding:25px 40px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.3); font-size:18px; text-align:center; z-index:1000;">
-  Thanks for voting!
-</div>
+<!-- Music -->
+<audio id="bgMusic" loop>
+  <source src="ALONE.wav" type="audio/mpeg">
+</audio>
 
 <div class="copyright">© 2025 ME100</div>
 
 <script>
+// Countdown
+function updateCountdown() {
+  const target = new Date(new Date().getFullYear(), new Date().getMonth(), 26, 0, 0, 0);
+  const now = new Date();
+  let diff = target - now;
+  if (diff < 0) diff += 30*24*60*60*1000; // if past, push to next month
+
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const seconds = Math.floor((diff % (1000*60)) / 1000);
+
+  document.getElementById("countdown").innerText =
+    `${days}d ${hours}h ${minutes}m ${seconds}s until release`;
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
 // Modal controls
 function openModal() {
   const modal = document.getElementById('productModal');
@@ -210,49 +250,17 @@ function showForm() {
   document.getElementById('buyButton').style.display='none';
 }
 
-// Konami Code Easter egg
-const konamiCode = [38,38,40,40,37,39,37,39,66,65];
-let konamiIndex=0;
-document.addEventListener('keydown', (e)=>{
-  if(e.keyCode===konamiCode[konamiIndex]){
-    konamiIndex++;
-    if(konamiIndex===konamiCode.length){
-      document.body.style.background="lightblue";
-      document.getElementById("albumCover").classList.add("spin");
-      setTimeout(()=>document.getElementById("albumCover").classList.remove("spin"),1000);
-      konamiIndex=0;
-    }
-  } else konamiIndex=0;
-});
-
-// Voting logic
-const options = document.querySelectorAll('.voteOption');
-let selectedValue = '';
-options.forEach(option=>{
-  option.addEventListener('click', ()=>{
-    options.forEach(o=>o.style.background='white');
-    option.style.background='#eee';
-    selectedValue = option.querySelector('input').value;
-    option.querySelector('input').checked=true;
-  });
-});
-
-document.getElementById('voteForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  if(!selectedValue) return;
-
-  fetch("https://formspree.io/f/mvgwpkkq",{
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ albumVote:selectedValue })
-  });
-
-  document.getElementById('votingSection').style.display='none';
-  const popup = document.getElementById('votePopup');
-  popup.innerText=`Thanks for voting for ${selectedValue}!`;
-  popup.style.display='block';
-  setTimeout(()=>{popup.style.display='none';},2000);
-});
+// Music
+let isPlaying = false;
+function toggleMusic() {
+  const music = document.getElementById('bgMusic');
+  if (isPlaying) {
+    music.pause();
+  } else {
+    music.play();
+  }
+  isPlaying = !isPlaying;
+}
 </script>
 </body>
 </html>
