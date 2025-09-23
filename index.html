@@ -7,7 +7,7 @@
 <meta name="description" content="MALUCO — pre-reservations of the album (standard and definitive edition)." />
 <link rel="icon" href="favicon.ico" />
 
-<!-- (4) Performance: preconnects for Firebase -->
+<!-- Performance -->
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
 
@@ -16,11 +16,6 @@
 <meta property="og:description" content="Pre-reservations available. See the product, choose an edition, and reserve with no cost." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="400x400.jpg" />
-
-<!-- (10) Deployment notes:
-  - Add your domain to Firebase Auth → Settings → Authorized domains
-  - Consider separate Firebase projects for dev/prod
--->
 
 <style>
   :root {
@@ -213,8 +208,8 @@
     padding: 20px;
     border-radius: 12px;
     width: 100%;
-    max-width: 420px;
-    text-align: center;
+    max-width: 480px;
+    text-align: left;
     transform: translateY(-16px) scale(0.96);
     transition: transform 0.35s ease, opacity 0.35s ease;
     opacity: 0;
@@ -248,13 +243,18 @@
   /* Footer */
   .copyright { text-align: center; margin: 24px 0 10px; font-size: 12px; color: #888; }
 
-  /* Success toast */
+  /* Toast */
   .toast {
     position: fixed; left: 50%; top: 14px; transform: translateX(-50%);
     background: #1f9d55; color: #fff; padding: 10px 16px; border-radius: 10px;
     box-shadow: var(--shadow-lg); z-index: 2000; opacity: 0; transition: opacity .3s ease;
   }
   .toast.show { opacity: 1; }
+
+  /* Small helper text */
+  .muted { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .tracklist { margin: 8px 0 0 0; padding-left: 18px; }
+  .tracklist li { margin: 2px 0; }
 </style>
 </head>
 <body>
@@ -271,7 +271,7 @@
   </nav>
 
   <!-- Home -->
-  <section id="home" class="section">
+  <section id="home" class="section" tabindex="-1">
     <h1>MALUCO</h1>
     <div id="countdown" aria-live="polite">
       <div class="flip-digit" aria-label="Days"><div class="flip-digit-inner"><span class="flip-digit-top">0d</span><span class="flip-digit-bottom">0d</span></div></div>
@@ -282,10 +282,11 @@
 
     <img class="hero-img" src="400x400.jpg" alt="MALUCO album" width="400" height="400"
          onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" />
+    <p class="muted">Shortcuts: H=Home, S=Shop, E=Settings, A=Account, M=Music, T=Theme, Esc=Close</p>
   </section>
 
   <!-- Shop -->
-  <section id="shop" class="section">
+  <section id="shop" class="section" tabindex="-1">
     <div class="shop-grid">
       <button class="product" type="button" onclick="openModal('standard')">
         <img src="400x400.jpg" alt="MALUCO standard edition" width="400" height="400" loading="lazy" />
@@ -304,7 +305,7 @@
   </section>
 
   <!-- Settings -->
-  <section id="settings" class="section">
+  <section id="settings" class="section" tabindex="-1">
     <h2>Settings</h2>
     <div class="audioControl">
       <button type="button" onclick="toggleMusic()">Play / Pause Music</button>
@@ -316,33 +317,43 @@
 
   <!-- Product Modal -->
   <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-content">
+    <div class="modal-content" role="document">
       <h2 id="modalTitle">MALUCO — $3</h2>
       <img id="modalAlbum" src="400x400.jpg" alt="Album" width="400" height="400" />
+      <div id="tracklistWrap">
+        <strong>Tracklist</strong>
+        <ol id="tracklist" class="tracklist"></ol>
+      </div>
       <p>This is a reservation — <strong>we won't charge you now</strong>.</p>
 
       <button id="buyButton" type="button" class="btn" onclick="showForm()">Reserve</button>
 
       <div id="formArea" style="display:none; margin-top:10px;">
-        <form id="preorderForm" action="https://formspree.io/f/mvgwpkkq" method="POST">
-          <!-- (3) Honeypot anti-spam -->
+        <form id="preorderForm" action="https://formspree.io/f/mvgwpkkq" method="POST" novalidate>
+          <!-- Honeypot anti-spam -->
           <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
           <label for="email">Email</label><br />
           <input id="email" type="email" name="email" placeholder="your@email.com" required /><br /><br />
           <label><input type="checkbox" name="interest" required /> I want to reserve this product</label><br /><br />
+          <!-- Human check appears only if needed -->
+          <div id="humanCheck" style="display:none; margin:6px 0;">
+            <label>What is 3 + 4? <input type="number" id="humanAnswer" inputmode="numeric" style="width:70px"></label>
+          </div>
           <button id="submitBtn" type="submit" class="btn">Confirm Reservation</button>
+          <div id="formStatus" class="muted" aria-live="polite"></div>
         </form>
-        <div id="formStatus" style="margin-top:10px;"></div>
       </div>
 
       <br />
-      <button type="button" class="btn" onclick="closeModal()">Close</button>
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button type="button" class="btn" onclick="closeModal()">Close</button>
+      </div>
     </div>
   </div>
 
   <!-- Account / Auth Modal -->
   <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true">
-    <div class="modal-content">
+    <div class="modal-content" role="document">
       <h2 id="authTitle">Sign in</h2>
 
       <button type="button" class="btn" id="googleSignInBtn">Continue with Google</button>
@@ -357,15 +368,17 @@
         <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
           <button type="button" class="btn" id="emailSignInBtn">Sign in</button>
           <button type="button" class="btn" id="emailSignUpBtn">Create account</button>
-          <!-- (2) Password reset -->
           <button type="button" class="btn" id="resetBtn" title="Reset password via email">Reset password</button>
         </div>
+        <p id="verifyNotice" class="muted" style="display:none;">Please verify your email. <button type="button" class="btn" id="resendVerifyBtn">Resend verification</button></p>
       </form>
 
       <div id="authError" style="color:#c0392b; margin-top:10px; min-height:1.2em;"></div>
 
       <br />
-      <button type="button" class="btn" onclick="closeAuthModal()">Close</button>
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button type="button" class="btn" onclick="closeAuthModal()">Close</button>
+      </div>
     </div>
   </div>
 
@@ -411,10 +424,22 @@
   const db = getFirestore(app);
 
   const $ = (sel) => document.querySelector(sel);
-  const authModal  = $("#authModal");
+  const toastEl = $("#toast");
+  const whoami = $("#whoami");
   const accountBtn = $("#accountBtn");
-  const whoami     = $("#whoami");
-  const toastEl    = $("#toast");
+
+  /* ---------- Tracklists (edit these names whenever you want) ---------- */
+  const TRACKS = {
+    standard: [
+      "Intro", "Alone", "City Lights", "Maluco", "Echoes",
+      "Late Night Calls", "Overdrive", "Outro"
+    ],
+    definitive: [
+      "Intro", "Alone", "City Lights", "Maluco", "Echoes",
+      "Late Night Calls", "Overdrive", "Crossfire",
+      "Day 26", "Neon Dreams", "Home Again", "Outro (Extended)"
+    ]
+  };
 
   function showToast(msg){
     toastEl.textContent = msg;
@@ -422,86 +447,109 @@
     setTimeout(()=> toastEl.classList.remove('show'), 2200);
   }
 
-  function showAuthModal(){
-    authModal.style.display = 'flex';
+  /* -------------------- AUTH MODAL OPEN/CLOSE + FOCUS TRAP -------------------- */
+  const authModal = $("#authModal");
+  const productModal = $("#productModal");
+  let lastFocus = null;
+  let activeTrap = null;
+
+  function trapFocus(container){
+    const focusable = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const loop = (e)=>{
+      if (e.key !== 'Tab') return;
+      const items = Array.from(focusable).filter(el => !el.disabled && el.offsetParent !== null);
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+    container.addEventListener('keydown', loop);
+    return () => container.removeEventListener('keydown', loop);
+  }
+
+  function showModal(modalEl){
+    lastFocus = document.activeElement;
+    modalEl.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     requestAnimationFrame(()=> {
-      authModal.classList.add('show');
-      authModal.setAttribute('aria-hidden','false');
+      modalEl.classList.add('show');
+      modalEl.setAttribute('aria-hidden','false');
+      const firstBtn = modalEl.querySelector('button, [href], input, [tabindex]:not([tabindex="-1"])');
+      firstBtn?.focus();
     });
+    activeTrap = trapFocus(modalEl);
   }
-  function closeAuthModal(){
-    authModal.classList.remove('show');
-    authModal.setAttribute('aria-hidden','true');
+  function hideModal(modalEl){
+    modalEl.classList.remove('show');
+    modalEl.setAttribute('aria-hidden','true');
     document.body.style.overflow = '';
-    setTimeout(()=>{ authModal.style.display = 'none'; }, 300);
+    setTimeout(()=>{ modalEl.style.display = 'none'; }, 300);
+    activeTrap?.(); activeTrap = null;
+    lastFocus?.focus();
   }
-  window.closeAuthModal = closeAuthModal;
 
+  /* ----------------------------- ACCOUNT / AUTH ----------------------------- */
   function openAuthModal() {
-    const user = auth.currentUser;
     $("#authError").textContent = "";
+    const user = auth.currentUser;
     if (user) {
       $("#authTitle").innerText = "Your account";
-      $("#emailAuthForm").style.display = "none";
+      $("#emailAuthForm").style.display = "block";
       $("#googleSignInBtn").style.display = "none";
-      $("#signoutArea")?.remove();
-      $("#authModal .modal-content").insertAdjacentHTML("beforeend",
-        `<div id="signoutArea" style="margin-top:10px;">
-           <button type="button" class="btn" id="signOutBtn">Sign out</button>
-         </div>`);
-      showAuthModal();
-      $("#signOutBtn").onclick = async () => { await signOut(auth); closeAuthModal(); showToast("Signed out"); };
+      $("#verifyNotice").style.display = user.emailVerified ? "none" : "block";
+      // Replace buttons area with a Sign out if not already
+      if (!document.getElementById('signOutBtn')) {
+        const btns = document.createElement('div');
+        btns.style.marginTop = "10px";
+        btns.innerHTML = `<button type="button" class="btn" id="signOutBtn">Sign out</button>`;
+        authModal.querySelector('.modal-content').appendChild(btns);
+        document.getElementById('signOutBtn').onclick = async () => { await signOut(auth); hideModal(authModal); showToast("Signed out"); };
+      }
     } else {
       $("#authTitle").innerText = "Sign in";
-      $("#emailAuthForm").style.display = "block";
       $("#googleSignInBtn").style.display = "inline-block";
-      $("#signoutArea")?.remove();
-      showAuthModal();
+      $("#verifyNotice").style.display = "none";
+      document.getElementById('signOutBtn')?.remove();
     }
+    showModal(authModal);
   }
   window.openAuthModal = openAuthModal;
 
-  // Auth actions
   $("#googleSignInBtn")?.addEventListener("click", async ()=>{
     try {
       await signInWithPopup(auth, new GoogleAuthProvider());
-      closeAuthModal();
+      hideModal(authModal);
       showToast("Signed in with Google");
     } catch (e) { showAuthError(e); }
   });
-
   $("#emailSignInBtn")?.addEventListener("click", async ()=>{
     const email = $("#authEmail").value.trim();
     const pass  = $("#authPass").value;
     try {
       await signInWithEmailAndPassword(auth, email, pass);
-      closeAuthModal();
+      hideModal(authModal);
       showToast("Signed in");
     } catch (e) { showAuthError(e); }
   });
-
   $("#emailSignUpBtn")?.addEventListener("click", async ()=>{
     const email = $("#authEmail").value.trim();
     const pass  = $("#authPass").value;
     try {
       await createUserWithEmailAndPassword(auth, email, pass);
-      // (2) email verification prompt (optional)
       try { await sendEmailVerification(auth.currentUser); } catch {}
-      closeAuthModal();
-      showToast("Account created");
+      $("#verifyNotice").style.display = "block";
+      showToast("Account created — verify your email");
     } catch (e) { showAuthError(e); }
   });
-
-  // (2) Password reset
   $("#resetBtn")?.addEventListener("click", async ()=>{
     const email = $("#authEmail").value.trim();
     if (!email) { $("#authError").textContent = "Enter your email above first."; return; }
-    try {
-      await sendPasswordResetEmail(auth, email);
-      $("#authError").textContent = "";
-      showToast("Password reset email sent");
-    } catch (e) { showAuthError(e); }
+    try { await sendPasswordResetEmail(auth, email); $("#authError").textContent = ""; showToast("Password reset email sent"); }
+    catch(e){ showAuthError(e); }
+  });
+  document.getElementById('resendVerifyBtn')?.addEventListener('click', async ()=>{
+    try { await sendEmailVerification(auth.currentUser); showToast("Verification email sent"); }
+    catch(e){ showAuthError(e); }
   });
 
   function showAuthError(err){
@@ -517,28 +565,111 @@
     $("#authError").textContent = map[code] || err?.message || "Something went wrong.";
   }
 
-  // Keep UI in sync
   onAuthStateChanged(auth, (user)=>{
     if (user) {
       const name = user.displayName || user.email || "User";
       accountBtn.textContent = (name.split("@")[0] || "Account");
-      whoami && (whoami.textContent = `Signed in as ${name}`);
+      whoami && (whoami.textContent = `Signed in as ${name}` + (user.emailVerified ? "" : " (unverified)"));
     } else {
       accountBtn.textContent = "Account";
       whoami && (whoami.textContent = "");
     }
   });
 
-  // (1) UX: AJAX submit to Formspree + disable button + success state
+  /* ------------------------------ PRODUCT MODAL ----------------------------- */
+  let currentSku = 'standard';
+  let formShownAt = 0; // (6) time-based guard
+
+  function renderTracklist(sku){
+    const list = document.getElementById('tracklist');
+    list.innerHTML = "";
+    (TRACKS[sku] || []).forEach((t, i)=>{
+      const li = document.createElement('li');
+      li.textContent = `${i+1}. ${t}`;
+      list.appendChild(li);
+    });
+  }
+
+  function openModal(type) {
+    currentSku = (type === 'definitive') ? 'definitive' : 'standard';
+    const title = document.getElementById('modalTitle');
+    const img   = document.getElementById('modalAlbum');
+
+    if (currentSku === 'standard') {
+      title.innerText = 'MALUCO — $3';
+      img.src = '400x400.jpg';
+      img.alt = 'MALUCO standard edition';
+      img.width = 400; img.height = 400;
+    } else {
+      title.innerText = 'MALUCO (Definitive Edition) — $5';
+      img.src = '500x500.jpg';
+      img.alt = 'MALUCO definitive edition';
+      img.width = 500; img.height = 500;
+    }
+
+    // Reset form area
+    document.getElementById('buyButton').style.display='inline-block';
+    document.getElementById('formArea').style.display='none';
+    document.getElementById('formStatus').textContent = '';
+    const hc = document.getElementById('humanCheck'); hc.style.display='none'; $("#humanAnswer").value='';
+
+    renderTracklist(currentSku);
+    showModal(productModal);
+  }
+  window.openModal = openModal;
+
+  function closeModal(){ hideModal(productModal); }
+  window.closeModal = closeModal;
+
+  // close on backdrop click
+  document.getElementById('productModal').addEventListener('click', (e)=>{
+    if (e.target.id === 'productModal') closeModal();
+  });
+  document.getElementById('authModal').addEventListener('click', (e)=>{
+    if (e.target.id === 'authModal') hideModal(authModal);
+  });
+  // global Esc
+  window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') { hideModal(productModal); hideModal(authModal); } }, { passive: true });
+
+  /* (1) Require sign-in + verified email before showing reservation form */
+  function showForm(){
+    const u = auth.currentUser;
+    if (!u) { openAuthModal(); return; }
+    if (!u.emailVerified) {
+      $("#verifyNotice").style.display = "block";
+      openAuthModal();
+      return;
+    }
+    document.getElementById('formArea').style.display='block';
+    document.getElementById('buyButton').style.display='none';
+    formShownAt = Date.now(); // start timer for anti-spam
+  }
+  window.showForm = showForm;
+
+  /* -------------------------- FORM SUBMIT (1 + 6) -------------------------- */
   const preorderForm = document.querySelector('#preorderForm');
   const submitBtn = document.querySelector('#submitBtn');
-  const formArea = document.querySelector('#formArea');
-  const formStatus = document.querySelector('#formStatus');
 
   preorderForm?.addEventListener('submit', async (e)=>{
     e.preventDefault();
-    // honeypot
+
+    // (6) Honeypot
     if (preorderForm.querySelector('input[name="_gotcha"]')?.value) return;
+
+    // (6) Time-based guard (>= 4s after form shown)
+    if (!formShownAt || (Date.now() - formShownAt) < 4000) {
+      // Ask a small human check instead
+      document.getElementById('humanCheck').style.display = 'block';
+      document.getElementById('formStatus').textContent = "Please answer the question above.";
+      return;
+    }
+
+    // (6) Human check if visible
+    const hc = document.getElementById('humanCheck');
+    if (hc.style.display !== 'none') {
+      const ans = Number(document.getElementById('humanAnswer').value);
+      if (ans !== 7) { document.getElementById('formStatus').textContent = "Human check failed."; return; }
+    }
 
     submitBtn.disabled = true;
     const oldText = submitBtn.textContent;
@@ -546,39 +677,61 @@
 
     const fd = new FormData(preorderForm);
     try {
-      // Optional Firestore write (if signed in)
+      // Optional Firestore logging if signed in
       const user = auth.currentUser;
       if (user) {
-        const isDef = document.getElementById('modalTitle').innerText.includes('Definitive');
         await setDoc(doc(db, 'preorders', `${user.uid}-${Date.now()}`), {
           uid: user.uid,
           email: fd.get('email'),
-          sku: isDef ? 'definitive' : 'standard',
-          priceUSD: isDef ? 5 : 3,
+          sku: currentSku,
+          priceUSD: currentSku === 'definitive' ? 5 : 3,
           createdAt: serverTimestamp()
         });
       }
-      // Send to Formspree (expects JSON accept header)
+
+      // Send to Formspree
       const res = await fetch(preorderForm.action, {
         method: 'POST',
         body: fd,
         headers: { 'Accept': 'application/json' }
       });
+
       if (res.ok) {
-        formArea.innerHTML = '<p style="font-weight:700">✅ Reservation received! Check your inbox for confirmation.</p>';
+        document.getElementById('formArea').innerHTML = '<p style="font-weight:700">✅ Reservation received! Check your inbox for confirmation.</p>';
         showToast("Reservation received");
       } else {
-        formStatus.textContent = "Could not submit reservation. Please try again.";
+        document.getElementById('formStatus').textContent = "Could not submit reservation. Please try again.";
         submitBtn.disabled = false; submitBtn.textContent = oldText;
       }
     } catch (err) {
-      console.warn(err);
-      formStatus.textContent = "Something went wrong. Please try again.";
+      document.getElementById('formStatus').textContent = "Something went wrong. Please try again.";
       submitBtn.disabled = false; submitBtn.textContent = oldText;
     }
   });
 
-  // If you want to REQUIRE sign-in before showing the form, replace showForm in site logic with auth gate.
+  /* --------------------------- UI SYNC + SHORTCUTS -------------------------- */
+  onAuthStateChanged(auth, (user)=>{
+    if (user) {
+      const name = user.displayName || user.email || "User";
+      accountBtn.textContent = (name.split("@")[0] || "Account");
+      whoami && (whoami.textContent = `Signed in as ${name}` + (user.emailVerified ? "" : " (unverified)"));
+    } else {
+      accountBtn.textContent = "Account";
+      whoami && (whoami.textContent = "");
+    }
+  });
+
+  // Keyboard shortcuts: H,S,E,A,M,T
+  window.addEventListener('keydown', (e)=>{
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const k = e.key.toLowerCase();
+    if (k === 'h') document.getElementById('home')?.scrollIntoView({behavior:'smooth'});
+    if (k === 's') document.getElementById('shop')?.scrollIntoView({behavior:'smooth'});
+    if (k === 'e') document.getElementById('settings')?.scrollIntoView({behavior:'smooth'});
+    if (k === 'a') openAuthModal();
+    if (k === 'm') document.getElementById('bgMusic').paused ? document.getElementById('bgMusic').play().catch(()=>{}) : document.getElementById('bgMusic').pause();
+    if (k === 't') document.body.classList.toggle('dark');
+  });
 </script>
 
 <!-- ===== Site logic ===== -->
@@ -633,67 +786,27 @@
   setInterval(updateCountdown, 1000);
   updateCountdown();
 
-  let lastFocus;
-  function openModal(type) {
-    lastFocus = document.activeElement;
-    const modal = document.getElementById('productModal');
-    const title = document.getElementById('modalTitle');
-    const img   = document.getElementById('modalAlbum');
-
-    if (type === 'standard') {
-      title.innerText = 'MALUCO — $3';
-      img.src = '400x400.jpg';
-      img.alt = 'MALUCO standard edition';
-      img.width = 400; img.height = 400;
-    } else {
-      title.innerText = 'MALUCO (Definitive Edition) — $5';
-      img.src = '500x500.jpg';
-      img.alt = 'MALUCO definitive edition';
-      img.width = 500; img.height = 500;
-    }
-
-    document.getElementById('buyButton').style.display='inline-block';
-    document.getElementById('formArea').style.display='none';
-
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    requestAnimationFrame(() => {
-      modal.classList.add('show');
-      modal.setAttribute('aria-hidden', 'false');
-      document.getElementById('buyButton').focus();
+  // Menu underline & section pulse on click
+  document.querySelectorAll('.nav-link').forEach(link=>{
+    link.addEventListener('click', (e)=>{
+      link.classList.add('clicked');
+      setTimeout(()=> link.classList.remove('clicked'), 400);
+      const id = link.getAttribute('data-target');
+      const section = document.getElementById(id);
+      if (!section) return;
+      setTimeout(()=>{
+        section.classList.add('target-pulse');
+        setTimeout(()=> section.classList.remove('target-pulse'), 800);
+        section.focus({preventScroll:true});
+      }, 200);
     });
-  }
-  function closeModal(){
-    const modal = document.getElementById('productModal');
-    modal.classList.remove('show');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    setTimeout(() => { modal.style.display = 'none'; }, 300);
-    if (lastFocus) lastFocus.focus();
-  }
-  window.openModal = openModal;
-  window.closeModal = closeModal;
-
-  document.getElementById('productModal').addEventListener('click', (e)=>{
-    if (e.target.id === 'productModal') closeModal();
   });
-  window.addEventListener('keydown', (e)=>{
-    if (e.key === 'Escape') closeModal();
-  }, { passive: true });
 
-  function showForm(){
-    document.getElementById('formArea').style.display='block';
-    document.getElementById('buyButton').style.display='none';
-  }
-  window.showForm = showForm;
-
+  // Music + Theme helpers attached earlier
   function toggleMusic(){
     const music = document.getElementById('bgMusic');
-    if (music.paused) {
-      music.play().catch(()=>{ /* autoplay blocked */ });
-    } else {
-      music.pause();
-    }
+    if (music.paused) music.play().catch(()=>{});
+    else music.pause();
   }
   function setVolume(v){ document.getElementById('bgMusic').volume = parseFloat(v); }
   window.toggleMusic = toggleMusic;
@@ -713,25 +826,7 @@
   }
   window.toggleMenu = toggleMenu;
 
-  // (nav click) add pulse animation on target + underline slide on link
-  document.querySelectorAll('.nav-link').forEach(link=>{
-    link.addEventListener('click', (e)=>{
-      // underline slide
-      link.classList.add('clicked');
-      setTimeout(()=> link.classList.remove('clicked'), 400);
-
-      // section pulse after scroll
-      const id = link.getAttribute('data-target');
-      const section = document.getElementById(id);
-      if (!section) return;
-      // delay a bit to let scroll land
-      setTimeout(()=>{
-        section.classList.add('target-pulse');
-        setTimeout(()=> section.classList.remove('target-pulse'), 800);
-      }, 200);
-    });
-  });
-
+  // Konami (just for fun)
   (function konamiInit(){
     const seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
     let pos = 0;
