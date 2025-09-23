@@ -4,12 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MALUCO — Website</title>
-<meta name="description" content="MALUCO — pré-reservas do álbum (edição normal e definitiva), contador para o próximo dia 26, modo escuro, música de fundo e mais." />
+<meta name="description" content="MALUCO — PRE-RESERVATIONS OF THE ALBUM (NORMAL AND DEFINITIVE EDITION)" />
 <link rel="icon" href="favicon.ico" />
 
 <!-- Open Graph -->
-<meta property="og:title" content="MALUCO — Website" />
-<meta property="og:description" content="Pré-reservas disponíveis. Vê o produto, escolhe a edição e reserva sem custos." />
+<meta property="og:title" content="MALUCO" />
+<meta property="og:description" content="PRE-RESERVATIONS AVAILABLE. SEE THE PRODUCT, CHOOSE A EDITION AND RESERVE WITH NO COSTS." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="400x400.jpg" />
 
@@ -259,8 +259,8 @@
     <div class="menu" id="mainmenu" role="navigation" aria-label="Principal">
       <a href="#home">Home</a>
       <a href="#shop">Shop</a>
-      <a href="#settings">Definições</a>
-      <a href="#" aria-disabled="true" tabindex="-1" style="opacity:.6; cursor: not-allowed;">Conta (em breve)</a>
+      <a href="#settings">Settings</a>
+      <a href="#" aria-disabled="true" tabindex="-1" style="opacity:.6; cursor: not-allowed;">Account (soon)</a>
     </div>
   </nav>
 
@@ -268,25 +268,25 @@
   <section id="home" class="section">
     <h1>MALUCO</h1>
     <div id="countdown" aria-live="polite">
-      <div class="flip-digit" aria-label="Dias">
+      <div class="flip-digit" aria-label="Days">
         <div class="flip-digit-inner">
           <span class="flip-digit-top">0d</span>
           <span class="flip-digit-bottom">0d</span>
         </div>
       </div>
-      <div class="flip-digit" aria-label="Horas">
+      <div class="flip-digit" aria-label="Hrs">
         <div class="flip-digit-inner">
           <span class="flip-digit-top">0h</span>
           <span class="flip-digit-bottom">0h</span>
         </div>
       </div>
-      <div class="flip-digit" aria-label="Minutos">
+      <div class="flip-digit" aria-label="Min">
         <div class="flip-digit-inner">
           <span class="flip-digit-top">0m</span>
           <span class="flip-digit-bottom">0m</span>
         </div>
       </div>
-      <div class="flip-digit" aria-label="Segundos">
+      <div class="flip-digit" aria-label="Secs">
         <div class="flip-digit-inner">
           <span class="flip-digit-top">0s</span>
           <span class="flip-digit-bottom">0s</span>
@@ -297,7 +297,7 @@
     <img
       class="hero-img"
       src="400x400.jpg"
-      alt="Capa do álbum MALUCO"
+      alt="MALUCO"
       width="400" height="400"
       onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})"
     />
@@ -307,17 +307,17 @@
   <section id="shop" class="section">
     <div class="shop-grid">
       <button class="product" type="button" onclick="openModal('standard')">
-        <img src="400x400.jpg" alt="MALUCO — edição normal" width="400" height="400" loading="lazy" />
+        <img src="400x400.jpg" alt="MALUCO" width="400" height="400" loading="lazy" />
         <h2>MALUCO</h2>
-        <p><strong>3€</strong></p>
-        <p>Pré-reservas disponíveis</p>
+        <p><strong>$3</strong></p>
+        <p>PRE-RESERVATION AVAILABLE</p>
       </button>
 
       <button class="product" type="button" onclick="openModal('definitive')">
-        <img src="500x500.jpg" alt="MALUCO — edição definitiva" width="500" height="500" loading="lazy" />
-        <h2>MALUCO (Edição Definitiva)</h2>
-        <p><strong>5€</strong></p>
-        <p>Pré-reservas disponíveis</p>
+        <img src="500x500.jpg" alt="MALUCO — DEFINITIVE EDITION" width="500" height="500" loading="lazy" />
+        <h2>MALUCO (DEFINITIVE EDITION)</h2>
+        <p><strong>$5</strong></p>
+        <p>PRE-RESERVATION AVAILABLE</p>
       </button>
     </div>
   </section>
@@ -326,19 +326,19 @@
   <section id="settings" class="section">
     <h2>Definições</h2>
     <div class="audioControl">
-      <button type="button" onclick="toggleMusic()">Tocar / Pausar Música</button>
+      <button type="button" onclick="toggleMusic()">PLAY / PAUSE MUSIC</button>
       <label for="volumeSlider">Volume:</label>
       <input type="range" min="0" max="1" step="0.01" id="volumeSlider" onchange="setVolume(this.value)" />
-      <button type="button" onclick="toggleTheme()">Alternar Tema Escuro</button>
+      <button type="button" onclick="toggleTheme()">USE DARK THEME</button>
     </div>
   </section>
 
   <!-- Modal -->
   <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-content">
-      <h2 id="modalTitle">MALUCO — 3€</h2>
+      <h2 id="modalTitle">MALUCO — $3</h2>
       <img id="modalAlbum" src="400x400.jpg" alt="Capa do produto" width="400" height="400" />
-      <p>Esta é uma pré-reserva, <strong>não cobramos agora</strong>.</p>
+      <p>THIS IS A RESERVATION, <strong>WE WON'T CHARGE NOTHING</strong>.</p>
 
       <button id="buyButton" type="button" class="btn" onclick="showForm()">Reservar</button>
 
@@ -346,20 +346,20 @@
         <form action="https://formspree.io/f/mvgwpkkq" method="POST">
           <label for="email">Email</label><br />
           <input id="email" type="email" name="email" placeholder="teu@email.com" required /><br /><br />
-          <label><input type="checkbox" name="interest" required /> Quero reservar este produto</label><br /><br />
-          <button type="submit" class="btn">Confirmar Pré-reserva</button>
+          <label><input type="checkbox" name="interest" required /> I WANT THIS PRODUCT</label><br /><br />
+          <button type="submit" class="btn">CONFIRM PRE-RESERVATION</button>
         </form>
       </div>
 
       <br />
-      <button type="button" class="btn" onclick="closeModal()">Fechar</button>
+      <button type="button" class="btn" onclick="closeModal()">CLOSE</button>
     </div>
   </div>
 
   <!-- Música -->
   <audio id="bgMusic" loop>
     <source src="ALONE.mp3" type="audio/mpeg" />
-    O teu navegador não suporta áudio.
+    YOUR BROWSER IS TOO A$$ TO HANDLE SOUND.
   </audio>
 
   <div class="copyright">© 2025 ME100</div>
@@ -428,14 +428,14 @@
     const img   = document.getElementById('modalAlbum');
 
     if (type === 'standard') {
-      title.innerText = 'MALUCO — 3€';
+      title.innerText = 'MALUCO — $3';
       img.src = '400x400.jpg';
-      img.alt = 'MALUCO — edição normal';
+      img.alt = 'MALUCO';
       img.width = 400; img.height = 400;
     } else {
-      title.innerText = 'MALUCO (Edição Definitiva) — 5€';
+      title.innerText = 'MALUCO (DEFINITIVE EDITION) — $5';
       img.src = '500x500.jpg';
-      img.alt = 'MALUCO — edição definitiva';
+      img.alt = 'MALUCO — DEFINITIVE EDITION';
       img.width = 500; img.height = 500;
     }
 
@@ -509,8 +509,7 @@
       const key = (k.length === 1) ? k : e.key; // mantém arrows
       pos = (key === seq[pos]) ? pos + 1 : (key === seq[0] ? 1 : 0);
       if (pos === seq.length) {
-        document.body.style.background = 'linear-gradient(120deg, #ffcccc, #ff99cc)';
-        alert("Konami Code Ativado!");
+        document.body.style.background = 'linear-gradient(120deg, #6dc8eb, #66c2ef)';
         pos = 0;
       }
     }, { passive: true });
@@ -518,3 +517,4 @@
 </script>
 </body>
 </html>
+
