@@ -56,11 +56,27 @@ nav a:hover { color: gray; }
 
 /* Home */
 #home h1 { font-size: 2.5em; margin: 20px 0 10px; }
-#countdown { font-size: 1.5em; margin: 15px 0; color: #333; display:flex; gap:5px; }
-#countdown span { background:#fff; padding:10px 15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
-#countdown span:hover { transform: scale(1.1); }
-#home img { max-width: 350px; border-radius: 8px; cursor: pointer; transition: transform 0.3s; }
-#home img:hover { transform: scale(1.05); }
+#countdown { font-size: 1.5em; margin: 15px 0; display:flex; gap:5px; }
+.flip-digit {
+  background:#fff;
+  padding:10px 15px;
+  border-radius:8px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  display:inline-block;
+  perspective: 1000px;
+  position: relative;
+}
+.flip-digit-inner {
+  display:block;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+.flip-digit-top, .flip-digit-bottom {
+  backface-visibility: hidden;
+  display:block;
+}
+.flip-digit-top { transform: rotateX(0deg); }
+.flip-digit-bottom { transform: rotateX(180deg); position:absolute; top:0; left:0; }
 
 /* Shop */
 .product {
@@ -151,7 +167,12 @@ input[type=range] { width:200px; }
 <!-- Home Section -->
 <section id="home" class="section">
   <h1>MALUCO</h1>
-  <p id="countdown"><span>0d</span> <span>0h</span> <span>0m</span> <span>0s</span></p>
+  <div id="countdown">
+    <div class="flip-digit"><div class="flip-digit-inner"><span class="flip-digit-top">0d</span><span class="flip-digit-bottom">0d</span></div></div>
+    <div class="flip-digit"><div class="flip-digit-inner"><span class="flip-digit-top">0h</span><span class="flip-digit-bottom">0h</span></div></div>
+    <div class="flip-digit"><div class="flip-digit-inner"><span class="flip-digit-top">0m</span><span class="flip-digit-bottom">0m</span></div></div>
+    <div class="flip-digit"><div class="flip-digit-inner"><span class="flip-digit-top">0s</span><span class="flip-digit-bottom">0s</span></div></div>
+  </div>
   <img src="400x400.jpg" alt="MALUCO album" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
 </section>
 
@@ -218,23 +239,33 @@ window.addEventListener('scroll', () => {
 });
 sections.forEach(s => s.classList.add('visible')); // first view
 
-// Countdown
+// Countdown flip
 function updateCountdown() {
   const target = new Date(new Date().getFullYear(), new Date().getMonth(), 26, 0, 0, 0);
   const now = new Date();
   let diff = target - now;
-  if (diff < 0) diff += 30*24*60*60*1000;
+  if(diff<0) diff+=30*24*60*60*1000;
   const days = Math.floor(diff / (1000*60*60*24));
   const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
   const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
   const seconds = Math.floor((diff % (1000*60)) / 1000);
-  const spans = document.querySelectorAll("#countdown span");
-  spans[0].innerText = days+'d';
-  spans[1].innerText = hours+'h';
-  spans[2].innerText = minutes+'m';
-  spans[3].innerText = seconds+'s';
+
+  const values = [`${days}d`, `${hours}h`, `${minutes}m`, `${seconds}s`];
+  document.querySelectorAll(".flip-digit").forEach((digit, i) => {
+    const inner = digit.querySelector('.flip-digit-inner');
+    const top = inner.querySelector('.flip-digit-top');
+    const bottom = inner.querySelector('.flip-digit-bottom');
+    if(top.innerText !== values[i]){
+      bottom.innerText = values[i];
+      inner.style.transform = 'rotateX(-180deg)';
+      setTimeout(()=> {
+        top.innerText = values[i];
+        inner.style.transform = 'rotateX(0deg)';
+      }, 300);
+    }
+  });
 }
-setInterval(updateCountdown, 1000);
+setInterval(updateCountdown,1000);
 updateCountdown();
 
 // Modal
@@ -242,31 +273,42 @@ function openModal(type) {
   const modal = document.getElementById('productModal');
   const title = document.getElementById('modalTitle');
   const img = document.getElementById('modalAlbum');
-  if(type === 'standard') { title.innerText='MALUCO - $3'; img.src='400x400.jpg'; img.alt='MALUCO product'; }
-  else { title.innerText='MALUCO (DEFINITIVE EDITION) - $5'; img.src='500x500.jpg'; img.alt='MALUCO Definitive Edition'; }
+  if(type==='standard'){ title.innerText='MALUCO - $3'; img.src='400x400.jpg'; img.alt='MALUCO product'; }
+  else{ title.innerText='MALUCO (DEFINITIVE EDITION) - $5'; img.src='500x500.jpg'; img.alt='MALUCO Definitive Edition'; }
   modal.style.display='flex';
   setTimeout(()=>modal.classList.add('show'),10);
 }
-function closeModal() {
+function closeModal(){
   const modal=document.getElementById('productModal');
   modal.classList.remove('show');
   setTimeout(()=>modal.style.display='none',300);
   document.getElementById('buyButton').style.display='inline-block';
   document.getElementById('formArea').style.display='none';
 }
-function showForm() { document.getElementById('formArea').style.display='block'; document.getElementById('buyButton').style.display='none'; }
+function showForm(){ document.getElementById('formArea').style.display='block'; document.getElementById('buyButton').style.display='none'; }
 
 // Music
 let isPlaying=false;
-function toggleMusic() {
+function toggleMusic(){
   const music=document.getElementById('bgMusic');
   if(isPlaying) music.pause();
   else music.play();
   isPlaying=!isPlaying;
 }
-function setVolume(v) {
-  document.getElementById('bgMusic').volume = v;
-}
+function setVolume(v){ document.getElementById('bgMusic').volume = v; }
+
+// Konami code
+const konami = [38,38,40,40,37,39,37,39,66,65];
+let konamiPos=0;
+window.addEventListener('keydown', e=>{
+  if(e.keyCode===konami[konamiPos]) konamiPos++;
+  else konamiPos=0;
+  if(konamiPos===konami.length){
+    document.body.style.background = 'linear-gradient(120deg, #ffcccc, #ff99cc)';
+    alert("Konami Code Activated!");
+    konamiPos=0;
+  }
+});
 </script>
 </body>
 </html>
