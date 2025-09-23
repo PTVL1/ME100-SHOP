@@ -1,370 +1,520 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MALUCO - Website</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MALUCO — Website</title>
+<meta name="description" content="MALUCO — pré-reservas do álbum (edição normal e definitiva), contador para o próximo dia 26, modo escuro, música de fundo e mais." />
+<link rel="icon" href="favicon.ico" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="MALUCO — Website" />
+<meta property="og:description" content="Pré-reservas disponíveis. Vê o produto, escolhe a edição e reserva sem custos." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="400x400.jpg" />
+
 <style>
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Trebuchet MS', sans-serif;
-  background: linear-gradient(120deg, #fdfbfb, #ebedee);
-  scroll-behavior: smooth;
-  transition: background 0.5s ease, color 0.5s ease;
-  overflow-x: hidden;
-  color: #000;
-}
-
-/* Dark Theme */
-body.dark {
-  background: linear-gradient(120deg, #1e1e1e, #121212);
-  color: #fff;
-}
-body.dark nav { background: #222; }
-body.dark nav a { color: #fff; }
-body.dark nav a:hover { color: #aaa; }
-body.dark .product p { color: #ccc; }
-body.dark .modal-content { background: #222; color: #fff; }
-body.dark button { background: #444; color: #fff; }
-body.dark button:hover { background: #555; }
-body.dark .flip-digit { background:#333; color:#fff; }
-body.dark .flip-digit-top, 
-body.dark .flip-digit-bottom { color:#fff; }
-
-/* Navigation */
-nav {
-  background: #f5f5f5;
-  padding: 15px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-nav .menu {
-  display: flex;
-  gap: 30px;
-}
-nav a {
-  text-decoration: none;
-  color: black;
-  font-size: 18px;
-  font-weight: bold;
-  transition: color 0.3s;
-}
-nav a:hover { color: gray; }
-
-/* Hamburger Button */
-.menu-toggle {
-  display: block;
-  background: none;
-  border: none;
-  font-size: 28px;
-  cursor: pointer;
-  color: inherit;
-}
-@media (min-width: 769px) {
-  .menu-toggle { display: block; }
-}
-@media (max-width: 768px) {
-  nav .menu {
-    display: none;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 10px;
+  :root {
+    --bg-light: linear-gradient(120deg, #fdfbfb, #ebedee);
+    --bg-dark:  linear-gradient(120deg, #1e1e1e, #121212);
+    --text-light: #000;
+    --text-dark:  #fff;
+    --muted: #444;
+    --muted-dark: #ccc;
+    --card: #fff;
+    --card-dark: #222;
+    --btn: #ccc;
+    --btn-dark: #444;
+    --btn-hover: #bbb;
+    --btn-dark-hover: #555;
+    --shadow: 0 2px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 8px 20px rgba(0,0,0,0.2);
+    --focus: #6aa9ff;
+    --nav-light: #f5f5f5;
+    --nav-dark: #222;
   }
-  nav .menu.show { display: flex; }
-}
 
-/* Sections */
-.section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 50px 20px;
-  box-sizing: border-box;
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-.section.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
 
-/* Home */
-#home h1 { font-size: 2.5em; margin: 20px 0 10px; }
-#countdown { font-size: 1.5em; margin: 15px 0; display:flex; gap:5px; }
-.flip-digit {
-  background:#fff;
-  color:#000;
-  padding:10px 15px;
-  border-radius:8px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);
-  display:inline-block;
-  perspective: 1000px;
-  position: relative;
-}
-.flip-digit-inner {
-  display:block;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-}
-.flip-digit-top, .flip-digit-bottom {
-  backface-visibility: hidden;
-  display:block;
-  color:#000;
-}
-.flip-digit-top { transform: rotateX(0deg); }
-.flip-digit-bottom { transform: rotateX(180deg); position:absolute; top:0; left:0; }
+  body {
+    margin: 0;
+    font-family: 'Trebuchet MS', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-light);
+    scroll-behavior: smooth;
+    transition: background 0.5s ease, color 0.5s ease;
+    overflow-x: hidden;
+  }
 
-/* Shop */
-.product {
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-  max-width: 350px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin-bottom: 50px;
-}
-.product img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-.product:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
-.product:hover img { transform: scale(1.1); }
-.product h1 { font-size: 2em; margin: 10px 0 5px; }
-.product p { color: #444; font-size: 1em; margin: 5px 0; }
+  body.dark { background: var(--bg-dark); color: var(--text-dark); }
 
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  top:0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,0.5);
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-.modal.show { display:flex; opacity:1; }
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  transform: translateY(-20px) scale(0.95);
-  transition: transform 0.4s ease, opacity 0.4s ease;
-  opacity: 0;
-}
-.modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; }
-.modal-content img { width: 80%; height: auto; margin: 0 auto 15px; border-radius: 6px; }
+  /* Focus visível */
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
 
-/* Buttons */
-button {
-  background: #ccc;
-  color: black;
-  border: none;
-  border-radius: 20px;
-  padding: 12px 25px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-  margin: 5px 0;
-}
-button:hover { background:#bbb; transform:scale(1.05); }
+  /* Navegação */
+  nav {
+    background: var(--nav-light);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow);
+  }
+  body.dark nav { background: var(--nav-dark); }
+  .brand { font-weight: 800; letter-spacing: 0.5px; }
+  .menu { display: flex; gap: 28px; align-items: center; }
+  .menu a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 17px;
+    font-weight: 700;
+    transition: opacity 0.2s ease;
+  }
+  .menu a:hover { opacity: 0.7; }
 
-/* Settings */
-#settings h2 { margin-bottom: 15px; }
-.audioControl { margin-top: 20px; font-size: 18px; display:flex; flex-direction:column; align-items:center; gap:10px; }
-input[type=range] { width:200px; }
-@media (max-width: 768px) {
-  #volumeSlider { display: none; }
-}
+  /* Hamburger */
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: inherit;
+  }
+  /* desktop */
+  @media (min-width: 769px) {
+    .menu-toggle { display: none; }
+    nav .menu { display: flex !important; }
+  }
+  /* mobile */
+  @media (max-width: 768px) {
+    nav { flex-wrap: wrap; }
+    nav .menu {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 10px;
+    }
+    nav .menu.show { display: flex; }
+  }
 
-/* Copyright */
-.copyright { text-align: center; margin: 40px 0 20px; font-size: 12px; color: #888; }
+  /* Secções */
+  .section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 56px 20px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    scroll-margin-top: 80px; /* compensa o nav sticky */
+    text-align: center;
+  }
+  .section.visible { opacity: 1; transform: translateY(0); }
+
+  /* Home */
+  #home h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 10px 0 10px; }
+  #countdown { font-size: 1.25rem; margin: 16px 0 8px; display: flex; gap: 6px; }
+  .flip-digit {
+    background: var(--card);
+    color: var(--text-light);
+    padding: 10px 14px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    display: inline-block;
+    perspective: 1000px;
+    position: relative;
+    min-width: 60px;
+  }
+  .flip-digit-inner {
+    display: block;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+  .flip-digit-top, .flip-digit-bottom {
+    backface-visibility: hidden;
+    display: block;
+  }
+  .flip-digit-top { transform: rotateX(0deg); }
+  .flip-digit-bottom { transform: rotateX(180deg); position: absolute; inset: 0; }
+
+  body.dark .flip-digit { background: #333; color: #fff; }
+  body.dark .flip-digit-top, body.dark .flip-digit-bottom { color: #fff; }
+
+  .hero-img {
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    margin-top: 12px;
+    max-width: 90vw;
+    height: auto;
+  }
+
+  /* Shop */
+  .shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+    width: min(1100px, 92vw);
+    margin: 0 auto;
+  }
+  .product {
+    background: var(--card);
+    color: inherit;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--shadow);
+  }
+  .product:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .product img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    transition: transform 0.25s ease;
+  }
+  .product:hover img { transform: scale(1.03); }
+  .product h2 { font-size: 1.35rem; margin: 10px 0 6px; }
+  .product p { margin: 4px 0; color: var(--muted); }
+  body.dark .product { background: var(--card-dark); }
+  body.dark .product p { color: var(--muted-dark); }
+
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .modal.show { display: flex; opacity: 1; }
+  .modal-content {
+    background: var(--card);
+    color: inherit;
+    padding: 20px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    transform: translateY(-16px) scale(0.96);
+    transition: transform 0.35s ease, opacity 0.35s ease;
+    opacity: 0;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; }
+  .modal-content img { width: 80%; height: auto; margin: 0 auto 14px; border-radius: 10px; display: block; }
+  body.dark .modal-content { background: var(--card-dark); }
+
+  /* Botões */
+  button, .btn {
+    background: var(--btn);
+    color: #000;
+    border: none;
+    border-radius: 22px;
+    padding: 12px 22px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  button:hover, .btn:hover { background: var(--btn-hover); transform: translateY(-1px); }
+  body.dark button, body.dark .btn { background: var(--btn-dark); color: #fff; }
+  body.dark button:hover, body.dark .btn:hover { background: var(--btn-dark-hover); }
+
+  /* Settings */
+  #settings h2 { margin-bottom: 16px; }
+  .audioControl {
+    margin-top: 12px;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  input[type=range] { width: 220px; }
+  @media (max-width: 768px) { #volumeSlider { display: none; } }
+
+  /* Copyright */
+  .copyright { text-align: center; margin: 36px 0 22px; font-size: 12px; color: #888; }
 </style>
 </head>
 <body>
-
-<!-- Navigation -->
-<nav>
-  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-  <div class="menu">
-    <a href="#home">Home</a>
-    <a href="#shop">Shop</a>
-    <a href="#settings">Settings</a>
-    <a href="#">Account (soon)</a>
-  </div>
-</nav>
-
-<!-- Home Section -->
-<section id="home" class="section">
-  <h1>MALUCO</h1>
-  <div id="countdown">
-    <div class="flip-digit"><div class="flip-digit-inner"><span class="flip-digit-top">0d</span><span class="flip-digit-bottom">0d</span></div></div>
-    <div class="flip-digit"><div class="flip-digit-inner"><span class="flip-digit-top">0h</span><span class="flip-digit-bottom">0h</span></div></div>
-    <div class="flip-digit"><div class="flip-digit-inner"><span class="flip-digit-top">0m</span><span class="flip-digit-bottom">0m</span></div></div>
-    <div class="flip-digit"><div class="flip-digit-inner"><span class="flip-digit-top">0s</span><span class="flip-digit-bottom">0s</span></div></div>
-  </div>
-  <img src="400x400.jpg" alt="MALUCO album" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-</section>
-
-<!-- Shop Section -->
-<section id="shop" class="section">
-  <div class="product" onclick="openModal('standard')">
-    <img src="400x400.jpg" alt="MALUCO product">
-    <h1>MALUCO</h1>
-    <p>$3</p>
-    <p>pre-orders available now</p>
-  </div>
-  <div class="product" onclick="openModal('definitive')">
-    <img src="500x500.jpg" alt="MALUCO Definitive Edition">
-    <h1>MALUCO (DEFINITIVE EDITION)</h1>
-    <p>$5</p>
-    <p>pre-orders available now</p>
-  </div>
-</section>
-
-<!-- Settings Section -->
-<section id="settings" class="section">
-  <h2>Settings</h2>
-  <div class="audioControl">
-    <button onclick="toggleMusic()">Play / Pause Music</button>
-    <label>Volume:</label>
-    <input type="range" min="0" max="1" step="0.01" id="volumeSlider" onchange="setVolume(this.value)">
-    <button onclick="toggleTheme()">Toggle Dark Theme</button>
-  </div>
-</section>
-
-<!-- Modal -->
-<div class="modal" id="productModal">
-  <div class="modal-content">
-    <h2 id="modalTitle">MALUCO - $3</h2>
-    <img id="modalAlbum" src="400x400.jpg" alt="Album">
-    <p>This is a reservation, we won't charge you</p>
-    <button id="buyButton" onclick="showForm()">Buy</button>
-    <div id="formArea" style="display:none; margin-top:10px;">
-      <form action="https://formspree.io/f/mvgwpkkq" method="POST">
-        <input type="email" name="email" placeholder="Your email" required><br><br>
-        <label><input type="checkbox" name="interest" required> I want to reserve this product</label><br><br>
-        <button type="submit">Reserve</button>
-      </form>
+  <!-- Navegação -->
+  <nav>
+    <div class="brand">MALUCO</div>
+    <button class="menu-toggle" type="button" aria-controls="mainmenu" aria-expanded="false" onclick="toggleMenu()">☰</button>
+    <div class="menu" id="mainmenu" role="navigation" aria-label="Principal">
+      <a href="#home">Home</a>
+      <a href="#shop">Shop</a>
+      <a href="#settings">Definições</a>
+      <a href="#" aria-disabled="true" tabindex="-1" style="opacity:.6; cursor: not-allowed;">Conta (em breve)</a>
     </div>
-    <br>
-    <button onclick="closeModal()">Close</button>
+  </nav>
+
+  <!-- Home -->
+  <section id="home" class="section">
+    <h1>MALUCO</h1>
+    <div id="countdown" aria-live="polite">
+      <div class="flip-digit" aria-label="Dias">
+        <div class="flip-digit-inner">
+          <span class="flip-digit-top">0d</span>
+          <span class="flip-digit-bottom">0d</span>
+        </div>
+      </div>
+      <div class="flip-digit" aria-label="Horas">
+        <div class="flip-digit-inner">
+          <span class="flip-digit-top">0h</span>
+          <span class="flip-digit-bottom">0h</span>
+        </div>
+      </div>
+      <div class="flip-digit" aria-label="Minutos">
+        <div class="flip-digit-inner">
+          <span class="flip-digit-top">0m</span>
+          <span class="flip-digit-bottom">0m</span>
+        </div>
+      </div>
+      <div class="flip-digit" aria-label="Segundos">
+        <div class="flip-digit-inner">
+          <span class="flip-digit-top">0s</span>
+          <span class="flip-digit-bottom">0s</span>
+        </div>
+      </div>
+    </div>
+
+    <img
+      class="hero-img"
+      src="400x400.jpg"
+      alt="Capa do álbum MALUCO"
+      width="400" height="400"
+      onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})"
+    />
+  </section>
+
+  <!-- Shop -->
+  <section id="shop" class="section">
+    <div class="shop-grid">
+      <button class="product" type="button" onclick="openModal('standard')">
+        <img src="400x400.jpg" alt="MALUCO — edição normal" width="400" height="400" loading="lazy" />
+        <h2>MALUCO</h2>
+        <p><strong>3€</strong></p>
+        <p>Pré-reservas disponíveis</p>
+      </button>
+
+      <button class="product" type="button" onclick="openModal('definitive')">
+        <img src="500x500.jpg" alt="MALUCO — edição definitiva" width="500" height="500" loading="lazy" />
+        <h2>MALUCO (Edição Definitiva)</h2>
+        <p><strong>5€</strong></p>
+        <p>Pré-reservas disponíveis</p>
+      </button>
+    </div>
+  </section>
+
+  <!-- Definições -->
+  <section id="settings" class="section">
+    <h2>Definições</h2>
+    <div class="audioControl">
+      <button type="button" onclick="toggleMusic()">Tocar / Pausar Música</button>
+      <label for="volumeSlider">Volume:</label>
+      <input type="range" min="0" max="1" step="0.01" id="volumeSlider" onchange="setVolume(this.value)" />
+      <button type="button" onclick="toggleTheme()">Alternar Tema Escuro</button>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-content">
+      <h2 id="modalTitle">MALUCO — 3€</h2>
+      <img id="modalAlbum" src="400x400.jpg" alt="Capa do produto" width="400" height="400" />
+      <p>Esta é uma pré-reserva, <strong>não cobramos agora</strong>.</p>
+
+      <button id="buyButton" type="button" class="btn" onclick="showForm()">Reservar</button>
+
+      <div id="formArea" style="display:none; margin-top:10px;">
+        <form action="https://formspree.io/f/mvgwpkkq" method="POST">
+          <label for="email">Email</label><br />
+          <input id="email" type="email" name="email" placeholder="teu@email.com" required /><br /><br />
+          <label><input type="checkbox" name="interest" required /> Quero reservar este produto</label><br /><br />
+          <button type="submit" class="btn">Confirmar Pré-reserva</button>
+        </form>
+      </div>
+
+      <br />
+      <button type="button" class="btn" onclick="closeModal()">Fechar</button>
+    </div>
   </div>
-</div>
 
-<!-- Music -->
-<audio id="bgMusic" loop>
-  <source src="ALONE.mp3" type="audio/mpeg">
-</audio>
+  <!-- Música -->
+  <audio id="bgMusic" loop>
+    <source src="ALONE.mp3" type="audio/mpeg" />
+    O teu navegador não suporta áudio.
+  </audio>
 
-<div class="copyright">© 2025 ME100</div>
+  <div class="copyright">© 2025 ME100</div>
 
-<script>
-// Fade-in on scroll
-const sections = document.querySelectorAll('.section');
-window.addEventListener('scroll', () => {
-  sections.forEach(s => {
-    const rect = s.getBoundingClientRect();
-    if(rect.top < window.innerHeight - 100) s.classList.add('visible');
-  });
-});
-sections.forEach(s => s.classList.add('visible')); // first view
+<script defer>
+  /* Preferências de tema (localStorage + prefers-color-scheme) */
+  (function initTheme(){
+    try {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if ((saved === 'dark') || (!saved && prefersDark)) document.body.classList.add('dark');
+    } catch(e) {}
+  })();
 
-// Countdown flip
-function updateCountdown() {
-  const target = new Date(new Date().getFullYear(), new Date().getMonth(), 26, 0, 0, 0);
-  const now = new Date();
-  let diff = target - now;
-  if(diff<0) diff+=30*24*60*60*1000;
-  const days = Math.floor(diff / (1000*60*60*24));
-  const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-  const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
-  const seconds = Math.floor((diff % (1000*60)) / 1000);
+  /* IntersectionObserver para revelar secções */
+  (function revealOnScroll(){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { rootMargin: '0px 0px -100px 0px' });
+    document.querySelectorAll('.section').forEach(s => io.observe(s));
+  })();
 
-  const values = [`${days}d`, `${hours}h`, `${minutes}m`, `${seconds}s`];
-  document.querySelectorAll(".flip-digit").forEach((digit, i) => {
-    const inner = digit.querySelector('.flip-digit-inner');
-    const top = inner.querySelector('.flip-digit-top');
-    const bottom = inner.querySelector('.flip-digit-bottom');
-    if(top.innerText !== values[i]){
-      bottom.innerText = values[i];
-      inner.style.transform = 'rotateX(-180deg)';
-      setTimeout(()=> {
-        top.innerText = values[i];
-        inner.style.transform = 'rotateX(0deg)';
-      }, 300);
-    }
-  });
-}
-setInterval(updateCountdown,1000);
-updateCountdown();
-
-// Modal
-function openModal(type) {
-  const modal = document.getElementById('productModal');
-  const title = document.getElementById('modalTitle');
-  const img = document.getElementById('modalAlbum');
-  if(type==='standard'){ title.innerText='MALUCO - $3'; img.src='400x400.jpg'; img.alt='MALUCO product'; }
-  else{ title.innerText='MALUCO (DEFINITIVE EDITION) - $5'; img.src='500x500.jpg'; img.alt='MALUCO Definitive Edition'; }
-  modal.style.display='flex';
-  setTimeout(()=>modal.classList.add('show'),10);
-}
-function closeModal(){
-  const modal=document.getElementById('productModal');
-  modal.classList.remove('show');
-  setTimeout(()=>modal.style.display='none',300);
-  document.getElementById('buyButton').style.display='inline-block';
-  document.getElementById('formArea').style.display='none';
-}
-function showForm(){ document.getElementById('formArea').style.display='block'; document.getElementById('buyButton').style.display='none'; }
-
-// Music
-let isPlaying=false;
-function toggleMusic(){
-  const music=document.getElementById('bgMusic');
-  if(isPlaying) music.pause();
-  else music.play();
-  isPlaying=!isPlaying;
-}
-function setVolume(v){ document.getElementById('bgMusic').volume = v; }
-
-// Theme Toggle
-function toggleTheme(){
-  document.body.classList.toggle('dark');
-}
-
-// Hamburger Menu
-function toggleMenu() {
-  document.querySelector("nav .menu").classList.toggle("show");
-}
-
-// Konami code
-const konami = [38,38,40,40,37,39,37,39,66,65];
-let konamiPos=0;
-window.addEventListener('keydown', e=>{
-  if(e.keyCode===konami[konamiPos]) konamiPos++;
-  else konamiPos=0;
-  if(konamiPos===konami.length){
-    document.body.style.background = 'linear-gradient(120deg, #6dc8eb, #6dafeb)';
-    konamiPos=0;
+  /* Próximo dia 26 */
+  function next26th(from = new Date()) {
+    const y = from.getFullYear(), m = from.getMonth();
+    const candidate = new Date(y, m, 26, 0, 0, 0);
+    return (from <= candidate) ? candidate : new Date(y, m + 1, 26, 0, 0, 0);
   }
-});
+
+  /* Contador com efeito flip */
+  function updateCountdown() {
+    const target = next26th();
+    const now    = new Date();
+    let diff     = target - now;
+
+    const days    = Math.floor(diff / 86400000);
+    const hours   = Math.floor((diff % 86400000) / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+
+    const values = [`${days}d`, `${hours}h`, `${minutes}m`, `${seconds}s`];
+
+    document.querySelectorAll(".flip-digit").forEach((digit, i) => {
+      const inner  = digit.querySelector('.flip-digit-inner');
+      const top    = inner.querySelector('.flip-digit-top');
+      const bottom = inner.querySelector('.flip-digit-bottom');
+      if (top.innerText !== values[i]) {
+        bottom.innerText = values[i];
+        inner.style.transform = 'rotateX(-180deg)';
+        setTimeout(() => {
+          top.innerText = values[i];
+          inner.style.transform = 'rotateX(0deg)';
+        }, 300);
+      }
+    });
+  }
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  /* Modal com acessibilidade básica */
+  let lastFocus;
+  function openModal(type) {
+    lastFocus = document.activeElement;
+    const modal = document.getElementById('productModal');
+    const title = document.getElementById('modalTitle');
+    const img   = document.getElementById('modalAlbum');
+
+    if (type === 'standard') {
+      title.innerText = 'MALUCO — 3€';
+      img.src = '400x400.jpg';
+      img.alt = 'MALUCO — edição normal';
+      img.width = 400; img.height = 400;
+    } else {
+      title.innerText = 'MALUCO (Edição Definitiva) — 5€';
+      img.src = '500x500.jpg';
+      img.alt = 'MALUCO — edição definitiva';
+      img.width = 500; img.height = 500;
+    }
+
+    document.getElementById('buyButton').style.display='inline-block';
+    document.getElementById('formArea').style.display='none';
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => {
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+      document.getElementById('buyButton').focus();
+    });
+  }
+
+  function closeModal(){
+    const modal = document.getElementById('productModal');
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    setTimeout(() => { modal.style.display = 'none'; }, 300);
+
+    if (lastFocus) lastFocus.focus();
+  }
+
+  document.getElementById('productModal').addEventListener('click', (e)=>{
+    if (e.target.id === 'productModal') closeModal(); // clique no backdrop
+  });
+  window.addEventListener('keydown', (e)=>{
+    if (e.key === 'Escape') closeModal();
+  }, { passive: true });
+
+  function showForm(){
+    document.getElementById('formArea').style.display='block';
+    document.getElementById('buyButton').style.display='none';
+  }
+
+  /* Música */
+  function toggleMusic(){
+    const music = document.getElementById('bgMusic');
+    if (music.paused) {
+      music.play().catch(()=>{ /* autoplay bloqueado: opcional mostrar aviso */ });
+    } else {
+      music.pause();
+    }
+  }
+  function setVolume(v){ document.getElementById('bgMusic').volume = parseFloat(v); }
+
+  /* Tema (toggle + persistência) */
+  function toggleTheme(){
+    const dark = document.body.classList.toggle('dark');
+    try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch(e) {}
+  }
+  window.toggleTheme = toggleTheme;
+
+  /* Menu hambúrguer (sincroniza aria-expanded) */
+  function toggleMenu() {
+    const menu = document.getElementById("mainmenu");
+    const btn  = document.querySelector(".menu-toggle");
+    const open = menu.classList.toggle("show");
+    btn.setAttribute("aria-expanded", String(open));
+  }
+  window.toggleMenu = toggleMenu;
+
+  /* Konami code (API moderna) */
+  (function konamiInit(){
+    const seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let pos = 0;
+    window.addEventListener('keydown', (e)=>{
+      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      const key = (k.length === 1) ? k : e.key; // mantém arrows
+      pos = (key === seq[pos]) ? pos + 1 : (key === seq[0] ? 1 : 0);
+      if (pos === seq.length) {
+        document.body.style.background = 'linear-gradient(120deg, #ffcccc, #ff99cc)';
+        alert("Konami Code Ativado!");
+        pos = 0;
+      }
+    }, { passive: true });
+  })();
 </script>
 </body>
 </html>
-
