@@ -7,10 +7,12 @@
 <style>
 body {
   margin: 0;
+  padding: 0;
   font-family: 'Trebuchet MS', sans-serif;
   background: linear-gradient(120deg, #fdfbfb, #ebedee);
   scroll-behavior: smooth;
   transition: background 0.5s ease, color 0.5s ease;
+  overflow-x: hidden;
   color: #000;
 }
 
@@ -22,21 +24,29 @@ body.dark {
 body.dark nav { background: #222; }
 body.dark nav a { color: #fff; }
 body.dark nav a:hover { color: #aaa; }
+body.dark .product p { color: #ccc; }
 body.dark .modal-content { background: #222; color: #fff; }
 body.dark button { background: #444; color: #fff; }
 body.dark button:hover { background: #555; }
+body.dark .flip-digit { background:#333; color:#fff; }
+body.dark .flip-digit-top, 
+body.dark .flip-digit-bottom { color:#fff; }
 
 /* Navigation */
 nav {
   background: #f5f5f5;
   padding: 15px 30px;
   display: flex;
-  justify-content: center;
-  gap: 30px;
+  justify-content: space-between;
+  align-items: center;
   position: sticky;
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+nav .menu {
+  display: flex;
+  gap: 30px;
 }
 nav a {
   text-decoration: none;
@@ -47,16 +57,27 @@ nav a {
 }
 nav a:hover { color: gray; }
 
-/* Hamburger */
+/* Hamburger Button */
 .menu-toggle {
-  display: none;
-  position: absolute;
-  right: 20px;
-  top: 15px;
-  font-size: 26px;
+  display: block;
+  background: none;
+  border: none;
+  font-size: 28px;
   cursor: pointer;
+  color: inherit;
 }
-nav.mobile-hidden { display: none; flex-direction: column; text-align: center; }
+@media (min-width: 769px) {
+  .menu-toggle { display: block; }
+}
+@media (max-width: 768px) {
+  nav .menu {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  nav .menu.show { display: flex; }
+}
 
 /* Sections */
 .section {
@@ -71,88 +92,10 @@ nav.mobile-hidden { display: none; flex-direction: column; text-align: center; }
   transform: translateY(30px);
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
-.section.visible { opacity: 1; transform: translateY(0); }
-
-/* Buttons */
-button {
-  background: #ccc;
-  color: black;
-  border: none;
-  border-radius: 20px;
-  padding: 12px 25px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-  margin: 5px 0;
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
-button:hover { background:#bbb; transform:scale(1.05); }
-
-/* Settings */
-.audioControl { 
-  margin-top: 20px; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  gap: 10px; 
-}
-#volumeSlider { width: 200px; }
-
-/* Hide slider on mobile */
-@media (max-width: 768px) {
-  #volumeSlider { display: none; }
-  nav { display: none; }
-  .menu-toggle { display: block; }
-  nav.mobile-hidden.active { display: flex; }
-}
-</style>
-</head>
-<body>
-
-<!-- Hamburger -->
-<div class="menu-toggle" onclick="toggleMenu()">☰</div>
-
-<!-- Navigation -->
-<nav class="mobile-hidden" id="navMenu">
-  <a href="#home">Home</a>
-  <a href="#shop">Shop</a>
-  <a href="#settings">Settings</a>
-  <a href="#">Account (soon)</a>
-</nav>
-
-<!-- Home -->
-<section id="home" class="section">
-  <h1>MALUCO</h1>
-  <img src="400x400.jpg" alt="MALUCO album" style="max-width:300px;">
-</section>
-
-<!-- Shop -->
-<section id="shop" class="section">
-  <h2>Shop</h2>
-</section>
-
-<!-- Settings -->
-<section id="settings" class="section">
-  <h2>Settings</h2>
-  <div class="audioControl">
-    <button onclick="toggleMusic()">Play / Pause Music</button>
-    <input type="range" min="0" max="1" step="0.01" id="volumeSlider" onchange="setVolume(this.value)">
-    <button onclick="toggleTheme()">Toggle Dark Theme</button>
-  </div>
-</section>
-
-<audio id="bgMusic" loop>
-  <source src="ALONE.mp3" type="audio/mpeg">
-</audio>
-
-<script>
-/* Fade-in on scroll */
-const sections = document.querySelectorAll('.section');
-window.addEventListener('scroll', () => {
-  sections.forEach(s => {
-    if(s.getBoundingClientRect().top < window.innerHeight - 100) s.classList.add('visible');
-  });
-});
-sections.forEach(s => s.classList.add('visible'));
 
 /* Home */
 #home h1 { font-size: 2.5em; margin: 20px 0 10px; }
@@ -245,25 +188,25 @@ button:hover { background:#bbb; transform:scale(1.05); }
 #settings h2 { margin-bottom: 15px; }
 .audioControl { margin-top: 20px; font-size: 18px; display:flex; flex-direction:column; align-items:center; gap:10px; }
 input[type=range] { width:200px; }
+@media (max-width: 768px) {
+  #volumeSlider { display: none; }
+}
 
 /* Copyright */
 .copyright { text-align: center; margin: 40px 0 20px; font-size: 12px; color: #888; }
-
-/* Responsive */
-@media (max-width: 768px) {
-  nav { flex-direction: column; gap: 15px; }
-  #home img, .product { max-width: 90%; }
-}
 </style>
 </head>
 <body>
 
 <!-- Navigation -->
 <nav>
-  <a href="#home">Home</a>
-  <a href="#shop">Shop</a>
-  <a href="#settings">Settings</a>
-  <a href="#">Account (soon)</a>
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <div class="menu">
+    <a href="#home">Home</a>
+    <a href="#shop">Shop</a>
+    <a href="#settings">Settings</a>
+    <a href="#">Account (soon)</a>
+  </div>
 </nav>
 
 <!-- Home Section -->
@@ -405,6 +348,11 @@ function toggleTheme(){
   document.body.classList.toggle('dark');
 }
 
+// Hamburger Menu
+function toggleMenu() {
+  document.querySelector("nav .menu").classList.toggle("show");
+}
+
 // Konami code
 const konami = [38,38,40,40,37,39,37,39,66,65];
 let konamiPos=0;
@@ -420,4 +368,3 @@ window.addEventListener('keydown', e=>{
 </script>
 </body>
 </html>
-
