@@ -67,58 +67,77 @@ nav a:hover {
 #home img:hover { transform: scale(1.05); }
 
 /* Shop Section (product card) */
-.product {
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-  max-width: 350px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.product img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-.product:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
-.product:hover img { transform: scale(1.1); }
-.product h1 { font-size: 2em; margin: 10px 0 5px 0; }
-.product p { color: #444; font-size: 1em; margin: 5px 0; }
+<section id="shop" class="section">
+  <!-- MALUCO Standard -->
+  <div class="product" onclick="openModal('standard')">
+    <img id="albumCover" src="400x400.jpg" alt="MALUCO product">
+    <h1>MALUCO</h1>
+    <p>$3</p>
+    <p>pre-orders available now</p>
+  </div>
 
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  top:0; left:0; right:0; bottom:0;
-  background: linear-gradient(rgba(0,0,0,0.4), rgba(50,50,50,0.6));
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  <!-- MALUCO Definitive Edition -->
+  <div class="product" onclick="openModal('definitive')" style="margin-top:50px;">
+    <img src="400x400-def.jpg" alt="MALUCO Definitive Edition" style="border-radius:8px;">
+    <h1>MALUCO (DEFINITIVE EDITION)</h1>
+    <p>$5</p>
+    <p>pre-orders available now</p>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal" id="productModal">
+  <div class="modal-content">
+    <h2 id="modalTitle">MALUCO - $3</h2>
+    <img id="modalAlbum" src="400x400.jpg" alt="Album">
+    <p>This is a reservation, we won't charge you</p>
+    <button id="buyButton" onclick="showForm()">Buy</button>
+    <div id="formArea" style="display:none; margin-top:10px;">
+      <form action="https://formspree.io/f/mvgwpkkq" method="POST">
+        <input type="email" name="email" placeholder="Your email" required><br><br>
+        <label><input type="checkbox" name="interest" required> I want to reserve this product</label><br><br>
+        <button type="submit">Reserve</button>
+      </form>
+    </div>
+    <br>
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+// Modal controls with product selection
+function openModal(type) {
+  const modal = document.getElementById('productModal');
+  const title = document.getElementById('modalTitle');
+  const img = document.getElementById('modalAlbum');
+
+  if(type === 'standard') {
+    title.innerText = 'MALUCO - $3';
+    img.src = '400x400.jpg';
+    img.alt = 'MALUCO product';
+  } else if(type === 'definitive') {
+    title.innerText = 'MALUCO (DEFINITIVE EDITION) - $5';
+    img.src = '400x400-def.jpg';
+    img.alt = 'MALUCO Definitive Edition';
+  }
+
+  modal.style.display = 'flex';
+  setTimeout(() => modal.classList.add('show'), 10);
 }
-.modal.show { display:flex; opacity:1; }
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  transform: translateY(-20px) scale(0.95);
-  transition: transform 0.4s ease, opacity 0.4s ease;
-  opacity: 0;
+
+function closeModal() {
+  const modal = document.getElementById('productModal');
+  modal.classList.remove('show');
+  setTimeout(() => { modal.style.display='none'; }, 300);
+  document.getElementById('buyButton').style.display='inline-block';
+  document.getElementById('formArea').style.display='none';
 }
-.modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; }
-.modal-content img {
-  width: 80%;
-  height: auto;
-  margin: 0 auto 15px auto;
-  border-radius: 6px;
+function showForm() {
+  document.getElementById('formArea').style.display='block';
+  document.getElementById('buyButton').style.display='none';
 }
+</script>
+
 
 /* Buttons */
 button {
@@ -171,27 +190,28 @@ button:hover { background:#bbb; transform:scale(1.05); }
 
 <!-- Shop Section -->
 <section id="shop" class="section">
-  <div class="product" onclick="openModal()">
-    <img id="albumCover" src="400x400.jpg" alt="MALUCO product">
+  <!-- MALUCO Standard -->
+  <div class="product" onclick="openModal('standard')">
+    <img src="400x400.jpg" alt="MALUCO product">
     <h1>MALUCO</h1>
     <p>$3</p>
     <p>pre-orders available now</p>
   </div>
-</section>
 
-<!-- Settings Section -->
-<section id="settings" class="section">
-  <h2>Settings</h2>
-  <div class="audioControl">
-    <button onclick="toggleMusic()">Play / Pause Music</button>
+  <!-- MALUCO Definitive Edition -->
+  <div class="product" onclick="openModal('definitive')" style="margin-top:50px;">
+    <img src="400x400-def.jpg" alt="MALUCO Definitive Edition">
+    <h1>MALUCO (DEFINITIVE EDITION)</h1>
+    <p>$5</p>
+    <p>pre-orders available now</p>
   </div>
 </section>
 
 <!-- Modal -->
 <div class="modal" id="productModal">
   <div class="modal-content">
-    <h2>MALUCO - $3</h2>
-    <img src="400x400.jpg" alt="MALUCO product">
+    <h2 id="modalTitle">MALUCO - $3</h2>
+    <img id="modalAlbum" src="400x400.jpg" alt="Album">
     <p>This is a reservation, we won't charge you</p>
     <button id="buyButton" onclick="showForm()">Buy</button>
     <div id="formArea" style="display:none; margin-top:10px;">
@@ -206,9 +226,43 @@ button:hover { background:#bbb; transform:scale(1.05); }
   </div>
 </div>
 
+<script>
+function openModal(type) {
+  const modal = document.getElementById('productModal');
+  const title = document.getElementById('modalTitle');
+  const img = document.getElementById('modalAlbum');
+
+  if(type === 'standard') {
+    title.innerText = 'MALUCO - $3';
+    img.src = '400x400.jpg';
+    img.alt = 'MALUCO product';
+  } else if(type === 'definitive') {
+    title.innerText = 'MALUCO (DEFINITIVE EDITION) - $5';
+    img.src = '400x400-def.jpg';
+    img.alt = 'MALUCO Definitive Edition';
+  }
+
+  modal.style.display = 'flex';
+  setTimeout(() => modal.classList.add('show'), 10);
+}
+
+function closeModal() {
+  const modal = document.getElementById('productModal');
+  modal.classList.remove('show');
+  setTimeout(() => { modal.style.display='none'; }, 300);
+  document.getElementById('buyButton').style.display='inline-block';
+  document.getElementById('formArea').style.display='none';
+}
+
+function showForm() {
+  document.getElementById('formArea').style.display='block';
+  document.getElementById('buyButton').style.display='none';
+}
+</script>
+
 <!-- Music -->
 <audio id="bgMusic" loop>
-  <source src="ALONE.mp3" type="audio/mpeg">
+  <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <div class="copyright">© 2025 ME100</div>
@@ -264,4 +318,3 @@ function toggleMusic() {
 </script>
 </body>
 </html>
-
