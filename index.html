@@ -438,7 +438,7 @@
     }
   });
 
-  /* ---------- (1) Reserve gate + auto-fill email; verify only for Email/Password ---------- */
+  /* ---------- Reserve gate + auto-fill email; verify only for Email/Password ---------- */
   let formShownAt = 0; // time guard
 
   window.showForm = function(){
@@ -644,16 +644,32 @@
   }
   window.toggleMenu=toggleMenu;
 
-  // Nav link animation + section pulse
+  /* ====== NAV: smooth scroll + click animation + close mobile menu ====== */
   document.querySelectorAll('.nav-link').forEach(link=>{
-    link.addEventListener('click', ()=>{
-      link.classList.add('clicked'); setTimeout(()=>link.classList.remove('clicked'),400);
-      const id=link.getAttribute('data-target'); const section=document.getElementById(id);
-      setTimeout(()=>{ section.classList.add('target-pulse'); setTimeout(()=>section.classList.remove('target-pulse'),800); },200);
+    link.addEventListener('click', (e)=>{
+      e.preventDefault();                           // stop instant jump
+      link.classList.add('clicked');                // underline sweep
+      setTimeout(()=>link.classList.remove('clicked'),400);
+
+      const id=link.getAttribute('data-target');
+      const section=document.getElementById(id);
+      if(section){
+        section.scrollIntoView({ behavior:'smooth', block:'start' });
+        // pulse highlight after a tiny delay
+        setTimeout(()=>{ section.classList.add('target-pulse'); setTimeout(()=>section.classList.remove('target-pulse'),800); }, 200);
+      }
+
+      // auto-close mobile menu
+      const menu=document.getElementById('mainmenu');
+      const btn=document.querySelector('.menu-toggle');
+      if(menu.classList.contains('show')){
+        menu.classList.remove('show');
+        btn.setAttribute('aria-expanded','false');
+      }
     });
   });
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts (also smooth)
   window.addEventListener('keydown',(e)=>{
     const tag=(e.target.tagName||'').toLowerCase();
     if(tag==='input' || tag==='textarea') return;
