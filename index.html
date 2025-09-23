@@ -7,11 +7,20 @@
 <meta name="description" content="MALUCO — pre-reservations of the album (standard and definitive edition)." />
 <link rel="icon" href="favicon.ico" />
 
+<!-- (4) Performance: preconnects for Firebase -->
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.googleapis.com" crossorigin>
+
 <!-- Open Graph -->
 <meta property="og:title" content="MALUCO" />
 <meta property="og:description" content="Pre-reservations available. See the product, choose an edition, and reserve with no cost." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="400x400.jpg" />
+
+<!-- (10) Deployment notes:
+  - Add your domain to Firebase Auth → Settings → Authorized domains
+  - Consider separate Firebase projects for dev/prod
+-->
 
 <style>
   :root {
@@ -32,6 +41,7 @@
     --focus: #6aa9ff;
     --nav-light: #f5f5f5;
     --nav-dark: #222;
+    --accent: #6aa9ff33;
   }
 
   * { box-sizing: border-box; }
@@ -65,14 +75,20 @@
   body.dark nav { background: var(--nav-dark); }
   .brand { font-weight: 800; letter-spacing: 0.5px; }
   .menu { display: flex; gap: 20px; align-items: center; }
-  .menu a {
-    text-decoration: none;
-    color: inherit;
-    font-size: 16px;
-    font-weight: 700;
+  .menu a, .menu button.btn-link {
+    background: none; border: none; padding: 0;
+    text-decoration: none; color: inherit; font-size: 16px; font-weight: 700;
     transition: opacity 0.2s ease;
+    cursor: pointer;
+    position: relative;
   }
-  .menu a:hover { opacity: 0.7; }
+  .menu a:hover, .menu button.btn-link:hover { opacity: 0.7; }
+  /* underline slide animation on click */
+  .menu a::after, .menu button.btn-link::after {
+    content:""; position:absolute; left:0; right:100%; bottom:-4px; height:2px;
+    background: currentColor; transition:right .3s ease;
+  }
+  .menu a.clicked::after, .menu button.btn-link.clicked::after { right:0; }
 
   .menu-toggle {
     display: block;
@@ -107,11 +123,19 @@
     padding: 56px 20px;
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition: opacity 0.8s ease, transform 0.8s ease, box-shadow .6s ease;
     scroll-margin-top: 80px;
     text-align: center;
   }
   .section.visible { opacity: 1; transform: translateY(0); }
+
+  /* (nav click) highlight animation on target section */
+  @keyframes targetHighlight {
+    0%   { box-shadow: 0 0 0 0 var(--accent); }
+    50%  { box-shadow: 0 0 0 16px var(--accent); }
+    100% { box-shadow: 0 0 0 0 var(--accent); }
+  }
+  .section.target-pulse { animation: targetHighlight 800ms ease; border-radius: 14px; }
 
   /* Home */
   #home h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 10px 0 10px; }
@@ -223,6 +247,14 @@
 
   /* Footer */
   .copyright { text-align: center; margin: 24px 0 10px; font-size: 12px; color: #888; }
+
+  /* Success toast */
+  .toast {
+    position: fixed; left: 50%; top: 14px; transform: translateX(-50%);
+    background: #1f9d55; color: #fff; padding: 10px 16px; border-radius: 10px;
+    box-shadow: var(--shadow-lg); z-index: 2000; opacity: 0; transition: opacity .3s ease;
+  }
+  .toast.show { opacity: 1; }
 </style>
 </head>
 <body>
@@ -231,10 +263,10 @@
     <div class="brand">MALUCO</div>
     <button class="menu-toggle" type="button" aria-controls="mainmenu" aria-expanded="false" onclick="toggleMenu()">☰</button>
     <div class="menu" id="mainmenu" role="navigation" aria-label="Main">
-      <a href="#home">Home</a>
-      <a href="#shop">Shop</a>
-      <a href="#settings">Settings</a>
-      <button id="accountBtn" class="btn" type="button" style="padding:8px 14px;" onclick="openAuthModal()">Account</button>
+      <a href="#home" data-target="home" class="nav-link">Home</a>
+      <a href="#shop" data-target="shop" class="nav-link">Shop</a>
+      <a href="#settings" data-target="settings" class="nav-link">Settings</a>
+      <button id="accountBtn" class="btn btn-link" type="button" onclick="openAuthModal()">Account</button>
     </div>
   </nav>
 
@@ -292,12 +324,15 @@
       <button id="buyButton" type="button" class="btn" onclick="showForm()">Reserve</button>
 
       <div id="formArea" style="display:none; margin-top:10px;">
-        <form action="https://formspree.io/f/mvgwpkkq" method="POST">
+        <form id="preorderForm" action="https://formspree.io/f/mvgwpkkq" method="POST">
+          <!-- (3) Honeypot anti-spam -->
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
           <label for="email">Email</label><br />
           <input id="email" type="email" name="email" placeholder="your@email.com" required /><br /><br />
           <label><input type="checkbox" name="interest" required /> I want to reserve this product</label><br /><br />
-          <button type="submit" class="btn">Confirm Reservation</button>
+          <button id="submitBtn" type="submit" class="btn">Confirm Reservation</button>
         </form>
+        <div id="formStatus" style="margin-top:10px;"></div>
       </div>
 
       <br />
@@ -319,9 +354,11 @@
         <input id="authEmail" type="email" placeholder="you@example.com" required /><br /><br />
         <label for="authPass">Password</label><br />
         <input id="authPass" type="password" minlength="6" placeholder="••••••••" required /><br /><br />
-        <div style="display:flex; gap:8px; justify-content:center;">
+        <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
           <button type="button" class="btn" id="emailSignInBtn">Sign in</button>
           <button type="button" class="btn" id="emailSignUpBtn">Create account</button>
+          <!-- (2) Password reset -->
+          <button type="button" class="btn" id="resetBtn" title="Reset password via email">Reset password</button>
         </div>
       </form>
 
@@ -338,24 +375,26 @@
     Your browser does not support audio.
   </audio>
 
+  <!-- toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
   <!-- Signed-in indicator (optional) -->
   <div id="whoami" class="copyright"></div>
   <div class="copyright">© 2025 ME100</div>
 
 <!-- ===== Firebase (Auth + optional Firestore) ===== -->
 <script type="module">
-  /* Firebase Web SDK via CDN (v11.0.2). If you update version, change all three URLs. */
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
   import {
     getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider,
-    signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword
+    signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+    sendPasswordResetEmail, sendEmailVerification
   } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
   import {
     getFirestore, doc, setDoc, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-  // Your Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyBUBMX0Nkaml4BoDgTBZsLv15rXd4-yaB0",
     authDomain: "me100-shoop.firebaseapp.com",
@@ -366,17 +405,22 @@
     measurementId: "G-LVBT7HM50B"
   };
 
-  // Initialize
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // Helpers
   const $ = (sel) => document.querySelector(sel);
   const authModal  = $("#authModal");
   const accountBtn = $("#accountBtn");
   const whoami     = $("#whoami");
+  const toastEl    = $("#toast");
+
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    setTimeout(()=> toastEl.classList.remove('show'), 2200);
+  }
 
   function showAuthModal(){
     authModal.style.display = 'flex';
@@ -407,7 +451,7 @@
            <button type="button" class="btn" id="signOutBtn">Sign out</button>
          </div>`);
       showAuthModal();
-      $("#signOutBtn").onclick = async () => { await signOut(auth); closeAuthModal(); };
+      $("#signOutBtn").onclick = async () => { await signOut(auth); closeAuthModal(); showToast("Signed out"); };
     } else {
       $("#authTitle").innerText = "Sign in";
       $("#emailAuthForm").style.display = "block";
@@ -423,6 +467,7 @@
     try {
       await signInWithPopup(auth, new GoogleAuthProvider());
       closeAuthModal();
+      showToast("Signed in with Google");
     } catch (e) { showAuthError(e); }
   });
 
@@ -432,6 +477,7 @@
     try {
       await signInWithEmailAndPassword(auth, email, pass);
       closeAuthModal();
+      showToast("Signed in");
     } catch (e) { showAuthError(e); }
   });
 
@@ -440,7 +486,21 @@
     const pass  = $("#authPass").value;
     try {
       await createUserWithEmailAndPassword(auth, email, pass);
+      // (2) email verification prompt (optional)
+      try { await sendEmailVerification(auth.currentUser); } catch {}
       closeAuthModal();
+      showToast("Account created");
+    } catch (e) { showAuthError(e); }
+  });
+
+  // (2) Password reset
+  $("#resetBtn")?.addEventListener("click", async ()=>{
+    const email = $("#authEmail").value.trim();
+    if (!email) { $("#authError").textContent = "Enter your email above first."; return; }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      $("#authError").textContent = "";
+      showToast("Password reset email sent");
     } catch (e) { showAuthError(e); }
   });
 
@@ -469,35 +529,56 @@
     }
   });
 
-  // Optional: also write preorders to Firestore when user submits the Formspree form
-  const preorderForm = document.querySelector('#formArea form');
-  preorderForm?.addEventListener('submit', async ()=>{
+  // (1) UX: AJAX submit to Formspree + disable button + success state
+  const preorderForm = document.querySelector('#preorderForm');
+  const submitBtn = document.querySelector('#submitBtn');
+  const formArea = document.querySelector('#formArea');
+  const formStatus = document.querySelector('#formStatus');
+
+  preorderForm?.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    // honeypot
+    if (preorderForm.querySelector('input[name="_gotcha"]')?.value) return;
+
+    submitBtn.disabled = true;
+    const oldText = submitBtn.textContent;
+    submitBtn.textContent = "Submitting…";
+
+    const fd = new FormData(preorderForm);
     try {
+      // Optional Firestore write (if signed in)
       const user = auth.currentUser;
-      if (!user) return; // Only save if signed in
-      const fd = new FormData(preorderForm);
-      const email = fd.get('email');
-      const isDef = document.getElementById('modalTitle').innerText.includes('Definitive');
-      const sku = isDef ? 'definitive' : 'standard';
-      await setDoc(doc(db, 'preorders', `${user.uid}-${Date.now()}`), {
-        uid: user.uid,
-        email,
-        sku,
-        priceUSD: isDef ? 5 : 3,
-        createdAt: serverTimestamp()
+      if (user) {
+        const isDef = document.getElementById('modalTitle').innerText.includes('Definitive');
+        await setDoc(doc(db, 'preorders', `${user.uid}-${Date.now()}`), {
+          uid: user.uid,
+          email: fd.get('email'),
+          sku: isDef ? 'definitive' : 'standard',
+          priceUSD: isDef ? 5 : 3,
+          createdAt: serverTimestamp()
+        });
+      }
+      // Send to Formspree (expects JSON accept header)
+      const res = await fetch(preorderForm.action, {
+        method: 'POST',
+        body: fd,
+        headers: { 'Accept': 'application/json' }
       });
+      if (res.ok) {
+        formArea.innerHTML = '<p style="font-weight:700">✅ Reservation received! Check your inbox for confirmation.</p>';
+        showToast("Reservation received");
+      } else {
+        formStatus.textContent = "Could not submit reservation. Please try again.";
+        submitBtn.disabled = false; submitBtn.textContent = oldText;
+      }
     } catch (err) {
-      console.warn('Could not persist preorder in Firestore:', err);
+      console.warn(err);
+      formStatus.textContent = "Something went wrong. Please try again.";
+      submitBtn.disabled = false; submitBtn.textContent = oldText;
     }
-    // Do not preventDefault: Formspree still receives the submission
   });
 
-  // If you want to REQUIRE sign-in before showing the form, replace showForm with:
-  // window.showForm = function(){
-  //   if (!auth.currentUser) { openAuthModal(); return; }
-  //   document.getElementById('formArea').style.display='block';
-  //   document.getElementById('buyButton').style.display='none';
-  // };
+  // If you want to REQUIRE sign-in before showing the form, replace showForm in site logic with auth gate.
 </script>
 
 <!-- ===== Site logic ===== -->
@@ -631,6 +712,25 @@
     btn.setAttribute("aria-expanded", String(open));
   }
   window.toggleMenu = toggleMenu;
+
+  // (nav click) add pulse animation on target + underline slide on link
+  document.querySelectorAll('.nav-link').forEach(link=>{
+    link.addEventListener('click', (e)=>{
+      // underline slide
+      link.classList.add('clicked');
+      setTimeout(()=> link.classList.remove('clicked'), 400);
+
+      // section pulse after scroll
+      const id = link.getAttribute('data-target');
+      const section = document.getElementById(id);
+      if (!section) return;
+      // delay a bit to let scroll land
+      setTimeout(()=>{
+        section.classList.add('target-pulse');
+        setTimeout(()=> section.classList.remove('target-pulse'), 800);
+      }, 200);
+    });
+  });
 
   (function konamiInit(){
     const seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
