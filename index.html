@@ -522,41 +522,30 @@
 
 <!-- ===== Site logic ===== -->
 <script defer>
-  // Nav link animation + smooth scrolling + section pulse
+  // Smooth nav + underline pulse + close mobile
   (function initNavSmoothScroll(){
-   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     document.querySelectorAll('.nav-link').forEach(link=>{
       link.addEventListener('click', (e)=>{
-        // prevent the default anchor jump
         e.preventDefault();
-
-        // add tiny underline animation on the link
         link.classList.add('clicked');
         setTimeout(()=>link.classList.remove('clicked'), 400);
 
-        // figure target section and scroll smoothly
         const id = link.getAttribute('data-target');
         const section = document.getElementById(id);
         if (!section) return;
 
-        if (prefersReduced) {
-          // immediate for users who prefer reduced motion
-          section.scrollIntoView();
-        } else {
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        if (prefersReduced) section.scrollIntoView();
+        else section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-        // add a subtle pulse to the section after a short delay
         setTimeout(()=>{
           section.classList.add('target-pulse');
           setTimeout(()=>section.classList.remove('target-pulse'), 800);
         }, 200);
 
-        // update the URL hash without jumping
         history.pushState(null, '', `#${id}`);
 
-        // close mobile menu if open
         const menu = document.getElementById('mainmenu');
         const btn  = document.querySelector('.menu-toggle');
         if (menu?.classList.contains('show')) {
@@ -598,7 +587,6 @@
     const img=document.getElementById('modalAlbum');
     const tracklist=document.getElementById('tracklist');
 
-    // Use your exact tracklist for both editions
     const tracksHTML = `
       <h3>Tracklist — ${type==='definitive' ? 'MALUCO (Definitive)' : 'MALUCO'}</h3>
       <ol>
@@ -673,15 +661,6 @@
     const open=menu.classList.toggle("show"); btn.setAttribute("aria-expanded",String(open));
   }
   window.toggleMenu=toggleMenu;
-
-  // Nav link animation + section pulse
-  document.querySelectorAll('.nav-link').forEach(link=>{
-    link.addEventListener('click', ()=>{
-      link.classList.add('clicked'); setTimeout(()=>link.classList.remove('clicked'),400);
-      const id=link.getAttribute('data-target'); const section=document.getElementById(id);
-      setTimeout(()=>{ section.classList.add('target-pulse'); setTimeout(()=>section.classList.remove('target-pulse'),800); },200);
-    });
-  });
 
   // Keyboard shortcuts
   window.addEventListener('keydown',(e)=>{
