@@ -234,7 +234,6 @@
       <a href="#home">Home</a>
       <a href="#shop">Shop</a>
       <a href="#settings">Settings</a>
-      <!-- Account button (updates to user name when signed in) -->
       <button id="accountBtn" class="btn" type="button" style="padding:8px 14px;" onclick="openAuthModal()">Account</button>
     </div>
   </nav>
@@ -336,7 +335,7 @@
   <!-- Music -->
   <audio id="bgMusic" loop>
     <source src="ALONE.mp3" type="audio/mpeg" />
-    Your A$$ does not support audio.
+    Your browser does not support audio.
   </audio>
 
   <!-- Signed-in indicator (optional) -->
@@ -345,9 +344,7 @@
 
 <!-- ===== Firebase (Auth + optional Firestore) ===== -->
 <script type="module">
-  /* Replace X.Y.Z with the current Firebase Web SDK version from the docs,
-     and paste your Firebase config below. */
-  <script type="module">
+  /* Firebase Web SDK via CDN (v11.0.2). If you update version, change all three URLs. */
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
   import {
@@ -358,29 +355,7 @@
     getFirestore, doc, setDoc, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-  // Your Firebase config (copied from Console)
-  const firebaseConfig = {
-    apiKey: "AIzaSyBUBMX0Nkaml4BoDgTBZsLv15rXd4-yaB0",
-    authDomain: "me100-shoop.firebaseapp.com",
-    projectId: "me100-shoop",
-    storageBucket: "me100-shoop.firebasestorage.app",
-    messagingSenderId: "1043376017039",
-    appId: "1:1043376017039:web:5606b92f696854658faafa",
-    measurementId: "G-LVBT7HM50B"
-  };
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
-  import {
-    getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider,
-    signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword
-  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-  import {
-    getFirestore, doc, setDoc, serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-
-  // Your Firebase config (copied from Console)
+  // Your Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyBUBMX0Nkaml4BoDgTBZsLv15rXd4-yaB0",
     authDomain: "me100-shoop.firebaseapp.com",
@@ -396,10 +371,6 @@
   const analytics = getAnalytics(app);
   const auth = getAuth(app);
   const db = getFirestore(app);
-
-  // … here goes the rest of your auth logic (sign in, sign up, etc.)
-</script>
-
 
   // Helpers
   const $ = (sel) => document.querySelector(sel);
@@ -502,7 +473,6 @@
   const preorderForm = document.querySelector('#formArea form');
   preorderForm?.addEventListener('submit', async ()=>{
     try {
-      if (!db) return; // Firestore not used
       const user = auth.currentUser;
       if (!user) return; // Only save if signed in
       const fd = new FormData(preorderForm);
@@ -519,10 +489,10 @@
     } catch (err) {
       console.warn('Could not persist preorder in Firestore:', err);
     }
-    // We don't preventDefault: Formspree still receives the submission
+    // Do not preventDefault: Formspree still receives the submission
   });
 
-  // If you want to REQUIRE sign-in before showing the form, uncomment:
+  // If you want to REQUIRE sign-in before showing the form, replace showForm with:
   // window.showForm = function(){
   //   if (!auth.currentUser) { openAuthModal(); return; }
   //   document.getElementById('formArea').style.display='block';
@@ -532,7 +502,6 @@
 
 <!-- ===== Site logic ===== -->
 <script defer>
-  /* Theme at load (localStorage + prefers-color-scheme) */
   (function initTheme(){
     try {
       const saved = localStorage.getItem('theme');
@@ -541,7 +510,6 @@
     } catch(e) {}
   })();
 
-  /* Reveal sections on scroll */
   (function revealOnScroll(){
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -549,14 +517,12 @@
     document.querySelectorAll('.section').forEach(s => io.observe(s));
   })();
 
-  /* Next 26th */
   function next26th(from = new Date()) {
     const y = from.getFullYear(), m = from.getMonth();
     const candidate = new Date(y, m, 26, 0, 0, 0);
     return (from <= candidate) ? candidate : new Date(y, m + 1, 26, 0, 0, 0);
   }
 
-  /* Countdown flip */
   function updateCountdown() {
     const target = next26th();
     const now    = new Date();
@@ -586,7 +552,6 @@
   setInterval(updateCountdown, 1000);
   updateCountdown();
 
-  /* Product modal */
   let lastFocus;
   function openModal(type) {
     lastFocus = document.activeElement;
@@ -623,7 +588,6 @@
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     setTimeout(() => { modal.style.display = 'none'; }, 300);
-
     if (lastFocus) lastFocus.focus();
   }
   window.openModal = openModal;
@@ -642,7 +606,6 @@
   }
   window.showForm = showForm;
 
-  /* Music */
   function toggleMusic(){
     const music = document.getElementById('bgMusic');
     if (music.paused) {
@@ -655,14 +618,12 @@
   window.toggleMusic = toggleMusic;
   window.setVolume = setVolume;
 
-  /* Theme */
   function toggleTheme(){
     const dark = document.body.classList.toggle('dark');
     try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch(e) {}
   }
   window.toggleTheme = toggleTheme;
 
-  /* Menu */
   function toggleMenu() {
     const menu = document.getElementById("mainmenu");
     const btn  = document.querySelector(".menu-toggle");
@@ -671,7 +632,6 @@
   }
   window.toggleMenu = toggleMenu;
 
-  /* Konami (modern key API) */
   (function konamiInit(){
     const seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
     let pos = 0;
@@ -688,4 +648,3 @@
 </script>
 </body>
 </html>
-
