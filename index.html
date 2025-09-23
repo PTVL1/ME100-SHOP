@@ -347,30 +347,59 @@
 <script type="module">
   /* Replace X.Y.Z with the current Firebase Web SDK version from the docs,
      and paste your Firebase config below. */
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/X.Y.Z/firebase-app.js";
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
   import {
     getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider,
     signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword
-  } from "https://www.gstatic.com/firebasejs/X.Y.Z/firebase-auth.js";
-  // Optional Firestore if you want to save pre-orders
+  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
   import {
     getFirestore, doc, setDoc, serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/X.Y.Z/firebase-firestore.js";
+  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-  /* Your Firebase config (Console → Project settings → Web app) */
+  // Your Firebase config (copied from Console)
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    appId: "YOUR_APP_ID"
-    // storageBucket, messagingSenderId, measurementId (optional)
+    apiKey: "AIzaSyBUBMX0Nkaml4BoDgTBZsLv15rXd4-yaB0",
+    authDomain: "me100-shoop.firebaseapp.com",
+    projectId: "me100-shoop",
+    storageBucket: "me100-shoop.firebasestorage.app",
+    messagingSenderId: "1043376017039",
+    appId: "1:1043376017039:web:5606b92f696854658faafa",
+    measurementId: "G-LVBT7HM50B"
   };
 
-  // Init
-  const app  = initializeApp(firebaseConfig);
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+  import {
+    getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider,
+    signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+  import {
+    getFirestore, doc, setDoc, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+  // Your Firebase config (copied from Console)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBUBMX0Nkaml4BoDgTBZsLv15rXd4-yaB0",
+    authDomain: "me100-shoop.firebaseapp.com",
+    projectId: "me100-shoop",
+    storageBucket: "me100-shoop.firebasestorage.app",
+    messagingSenderId: "1043376017039",
+    appId: "1:1043376017039:web:5606b92f696854658faafa",
+    measurementId: "G-LVBT7HM50B"
+  };
+
+  // Initialize
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
   const auth = getAuth(app);
-  let db;
-  try { db = getFirestore(app); } catch(_){}
+  const db = getFirestore(app);
+
+  // … here goes the rest of your auth logic (sign in, sign up, etc.)
+</script>
+
 
   // Helpers
   const $ = (sel) => document.querySelector(sel);
@@ -659,3 +688,4 @@
 </script>
 </body>
 </html>
+
