@@ -191,8 +191,13 @@
         <form id="preorderForm" action="https://formspree.io/f/mvgwpkkq" method="POST">
           <!-- Honeypot -->
           <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
+
           <label for="email">Email</label><br />
           <input id="email" type="email" name="email" placeholder="your@email.com" required /><br /><br />
+
+          <!-- (1) Confirm this is my email -->
+          <label><input id="confirmEmailChk" type="checkbox" required /> Confirm this is my email</label><br /><br />
+
           <label><input type="checkbox" name="interest" required /> I want to reserve this product</label><br /><br />
           <button id="submitBtn" type="submit" class="btn">Confirm Reservation</button>
         </form>
@@ -211,7 +216,8 @@
 
       <button type="button" class="btn" id="googleSignInBtn">Continue with Google</button>
 
-      <div style="margin:10px 0; opacity:.6;">or</div>
+      <!-- The "or" divider is only for signed-out state; it's removed when signed-in -->
+      <div class="dividerOr" style="margin:10px 0; opacity:.6;">or</div>
 
       <form id="emailAuthForm" onsubmit="return false;">
         <label for="authEmail">Email</label><br />
@@ -285,7 +291,7 @@
       if(e.key === 'Tab'){
         if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
         else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
-      } else if(e.key === 'Escape'){ // universal close
+      } else if(e.key === 'Escape'){
         if(modal.id === 'productModal') window.closeModal();
         if(modal.id === 'authModal') closeAuthModal();
       }
@@ -305,7 +311,6 @@
       authModal.classList.add('show');
       authModal.setAttribute('aria-hidden','false');
       activateFocusTrap(authModal);
-      // focus first control
       ($("#googleSignInBtn")||authModal.querySelector('button, input'))?.focus();
     });
   }
@@ -318,25 +323,65 @@
   }
   window.closeAuthModal = closeAuthModal;
 
+  /* ---------- Account modal content (signed-in shows name + email; no 'or') ---------- */
   function openAuthModal(){
     const user = auth.currentUser;
     $("#authError").textContent="";
+
     if(user){
-      $("#authTitle").innerText="Your account";
-      $("#emailAuthForm").style.display="none";
-      $("#googleSignInBtn").style.display="none";
+      const name  = user.displayName || (user.email ? user.email.split("@")[0] : "User");
+      const email = user.email || "";
+      const usesPassword = (user.providerData||[]).some(p => p.providerId === "password");
+      const verifyNeeded = usesPassword && !user.emailVerified;
+
+      $("#authTitle").innerText = "Your account";
+      $("#emailAuthForm").style.display = "none";
+      $("#googleSignInBtn").style.display = "none";
+      document.querySelector('#authModal .modal-content .accountBox')?.remove();
+      document.querySelector('#authModal .modal-content .dividerOr')?.remove();
       $("#signoutArea")?.remove();
+
+      const accountHTML = `
+        <div class="accountBox" style="margin-top:6px">
+          <div style="font-weight:700; margin-bottom:4px;">${name}</div>
+          <div style="opacity:.85">${email}</div>
+          ${verifyNeeded ? `
+            <div id="verifyBanner" style="margin-top:10px; padding:10px; border-radius:8px; background:#fff3cd; color:#7a5a00;">
+              Email not verified.
+              <button id="resendVerifyBtn" class="btn" style="margin-left:6px;">Resend verification</button>
+              <div style="font-size:12px; margin-top:6px; opacity:.9">Tip: check Spam/Promotions and mark “Not spam”.</div>
+            </div>` : ``}
+        </div>
+      `;
+
       $("#authModal .modal-content").insertAdjacentHTML("beforeend",
-        `<div id="signoutArea" style="margin-top:10px;">
+        accountHTML +
+        `<div id="signoutArea" style="margin-top:12px;">
            <button type="button" class="btn" id="signOutBtn">Sign out</button>
          </div>`);
+
       showAuthModal();
-      $("#signOutBtn").onclick = async ()=>{ await signOut(auth); closeAuthModal(); showToast("Signed out"); };
+
+      $("#signOutBtn").onclick = async () => { await signOut(auth); closeAuthModal(); showToast("Signed out"); };
+      $("#resendVerifyBtn")?.addEventListener("click", async ()=>{
+        try { await sendEmailVerification(auth.currentUser); showToast("Verification email sent"); }
+        catch (e) { $("#authError").textContent = e?.message || "Could not send verification email."; }
+      });
+
     } else {
-      $("#authTitle").innerText="Sign in";
-      $("#emailAuthForm").style.display="block";
-      $("#googleSignInBtn").style.display="inline-block";
+      $("#authTitle").innerText = "Sign in";
+      $("#emailAuthForm").style.display = "block";
+      $("#googleSignInBtn").style.display = "inline-block";
+      document.querySelector('#authModal .modal-content .accountBox')?.remove();
       $("#signoutArea")?.remove();
+      // keep the 'or' divider for signed-out only
+      if (!document.querySelector('#authModal .modal-content .dividerOr')) {
+        const div = document.createElement('div');
+        div.className = 'dividerOr';
+        div.style.cssText = 'margin:10px 0; opacity:.6;';
+        div.textContent = 'or';
+        $("#authModal .modal-content").insertBefore(div, $("#emailAuthForm"));
+      }
       showAuthModal();
     }
   }
@@ -359,7 +404,7 @@
     try{
       await createUserWithEmailAndPassword(auth,email,pass);
       try{ await sendEmailVerification(auth.currentUser); }catch{}
-      closeAuthModal(); showToast("Account created — verify your email");
+      closeAuthModal(); showToast("Account created — verify your email (check Spam)");
     }catch(e){ showAuthError(e); }
   });
 
@@ -393,14 +438,13 @@
     }
   });
 
-  /* ---------- (1) Reserve gate: sign-in required; email verified only for Email/Password ---------- */
-  let formShownAt = 0; // (6) time-guard
+  /* ---------- (1) Reserve gate + auto-fill email; verify only for Email/Password ---------- */
+  let formShownAt = 0; // time guard
 
   window.showForm = function(){
     const user = auth.currentUser;
     if(!user){ openAuthModal(); return; }
 
-    // Determine if they signed in via email/password
     const usesPassword = (user.providerData||[]).some(p=>p.providerId==="password");
     if(usesPassword && !user.emailVerified){
       alert("Please verify your email first (check your inbox).");
@@ -409,12 +453,21 @@
 
     document.getElementById('formArea').style.display='block';
     document.getElementById('buyButton').style.display='none';
-    formShownAt = Date.now(); // start timer for anti-spam
-    // focus email field
-    document.getElementById('email')?.focus();
+
+    // Auto-fill and pre-check confirm
+    const emailInp = document.getElementById('email');
+    const confirmC = document.getElementById('confirmEmailChk');
+    if (emailInp) {
+      emailInp.value = user.email || "";
+      // emailInp.readOnly = true; // uncomment if you want to force account email
+    }
+    if (confirmC) confirmC.checked = !!user.email;
+
+    formShownAt = Date.now();
+    emailInp?.focus();
   };
 
-  /* ---------- (1 & 6) Submit with Firestore + time-based guard + lock button ---------- */
+  /* ---------- Submit with Firestore + time guard + lock button ---------- */
   const preorderForm = document.querySelector('#preorderForm');
   const submitBtn = document.querySelector('#submitBtn');
   const formArea = document.querySelector('#formArea');
@@ -426,7 +479,7 @@
     // Honeypot
     if(preorderForm.querySelector('input[name="_gotcha"]')?.value) return;
 
-    // (6) Time guard: at least 3s since form shown
+    // Time guard: at least 3s since form shown
     if(!formShownAt || (Date.now()-formShownAt)<3000){
       formStatus.textContent = "Please take a moment before submitting.";
       return;
@@ -507,53 +560,39 @@
   }
   setInterval(updateCountdown,1000); updateCountdown();
 
-  /* Product modal (with focus trap calls from Firebase block) */
+  /* Product modal */
   let lastFocus;
   function openModal(type){
     lastFocus=document.activeElement;
-    const modal=document.getElementById('productModal');
     const title=document.getElementById('modalTitle');
     const img=document.getElementById('modalAlbum');
     const tracklist=document.getElementById('tracklist');
 
+    // Use your exact tracklist for both editions
+    const tracksHTML = `
+      <h3>Tracklist — ${type==='definitive' ? 'MALUCO (Definitive)' : 'MALUCO'}</h3>
+      <ol>
+        <li>I DRUGGED MYSELF TO DEATH</li>
+        <li>MESSED UP</li>
+        <li>MOVE ON!</li>
+        <li>FALL BENEATH MY SPELL</li>
+        <li>YOUR HEART HAS BEEN BROKEN???</li>
+        <li>ALONE</li>
+        <li>DO YOU LOVE ME?</li>
+        <li>ONE MORE CHANCE</li>
+        <li>EVERY TIME I NEED UUU</li>
+        <li>FEEL THE MUSIC - BONUS</li>
+        <li>RING EARING - BONUS</li>
+      </ol>`;
+
     if(type==='standard'){
       title.innerText='MALUCO — $3';
       img.src='400x400.jpg'; img.alt='MALUCO standard edition'; img.width=400; img.height=400;
-      // Standard edition tracklist
-      tracklist.innerHTML = `
-        <h3>Tracklist — MALUCO</h3>
-        <ol>
-          <li>I DRUGGED MYSELF TO DEATH</li>
-          <li>MESSED UP</li>
-          <li>MOVE ON!</li>
-          <li>FALL BENEATH MY SPELL</li>
-          <li>YOUR HEART HAS BEEN BROKEN???</li>
-          <li>ALONE</li>
-          <li>DO YOU LOVE ME?</li>
-          <li>ONE MORE CHANCE</li>
-          <li>EVERY TIME I NEED UUU</li>
-          <li>FEEL THE MUSIC - BONUS</li>
-          <li>RING EARING - BONUS</li>
-        </ol>`;
     }else{
       title.innerText='MALUCO (Definitive Edition) — $5';
       img.src='500x500.jpg'; img.alt='MALUCO definitive edition'; img.width=500; img.height=500;
-      // Definitive adds bonus tracks
-      tracklist.innerHTML = `
-        <h3>Tracklist — MALUCO (Definitive)</h3>
-        <ol>
-          <li>Intro</li>
-          <li>Neon City</li>
-          <li>Run It</li>
-          <li>Midnight Drive</li>
-          <li>Echoes</li>
-          <li>ALONE</li>
-          <li>Afterglow</li>
-          <li>Outro</li>
-          <li>Bonus: Night Shift</li>
-          <li>Bonus: Skyline (Remix)</li>
-        </ol>`;
     }
+    tracklist.innerHTML = tracksHTML;
 
     document.getElementById('buyButton').style.display='inline-block';
     document.getElementById('formArea').style.display='none';
@@ -577,7 +616,7 @@
   }
   window.openModal=openModal; window.closeModal=closeModal;
 
-  // backdrop + Esc handled by focus trap; also close on backdrop click:
+  // close on backdrop click
   document.getElementById('productModal').addEventListener('click', (e)=>{ if(e.target.id==='productModal') closeModal(); });
 
   function toggleTracklist(){
@@ -585,8 +624,6 @@
     tl.style.display = (tl.style.display==='none' || !tl.style.display) ? 'block' : 'none';
   }
   window.toggleTracklist = toggleTracklist;
-
-  // Note: showForm is defined in Firebase module to enforce auth/verification.
 
   function toggleMusic(){
     const music=document.getElementById('bgMusic');
@@ -619,7 +656,7 @@
   // Keyboard shortcuts
   window.addEventListener('keydown',(e)=>{
     const tag=(e.target.tagName||'').toLowerCase();
-    if(tag==='input' || tag==='textarea') return; // don't hijack typing in forms
+    if(tag==='input' || tag==='textarea') return;
     const key=e.key.toLowerCase();
     if(key==='h'){ document.getElementById('home').scrollIntoView({behavior:'smooth'}); }
     else if(key==='s'){ document.getElementById('shop').scrollIntoView({behavior:'smooth'}); }
@@ -635,7 +672,7 @@
     }
   },{passive:true});
 
-  // Konami fun
+  // Konami easter egg
   (function konamiInit(){
     const seq=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
     let pos=0;
@@ -649,4 +686,3 @@
 </script>
 </body>
 </html>
-
