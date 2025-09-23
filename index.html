@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MALUCO — Website</title>
-<meta name="description" content="MALUCO — PRE-RESERVATIONS OF THE ALBUM (NORMAL AND DEFINITIVE EDITION)" />
+<meta name="description" content="MALUCO — pre-reservations of the album (standard and definitive edition)." />
 <link rel="icon" href="favicon.ico" />
 
 <!-- Open Graph -->
 <meta property="og:title" content="MALUCO" />
-<meta property="og:description" content="PRE-RESERVATIONS AVAILABLE. SEE THE PRODUCT, CHOOSE A EDITION AND RESERVE WITH NO COSTS." />
+<meta property="og:description" content="Pre-reservations available. See the product, choose an edition, and reserve with no cost." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="400x400.jpg" />
 
@@ -46,13 +46,11 @@
     transition: background 0.5s ease, color 0.5s ease;
     overflow-x: hidden;
   }
-
   body.dark { background: var(--bg-dark); color: var(--text-dark); }
 
-  /* Focus visível */
   :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
 
-  /* Navegação */
+  /* Navigation */
   nav {
     background: var(--nav-light);
     padding: 12px 20px;
@@ -66,17 +64,16 @@
   }
   body.dark nav { background: var(--nav-dark); }
   .brand { font-weight: 800; letter-spacing: 0.5px; }
-  .menu { display: flex; gap: 28px; align-items: center; }
+  .menu { display: flex; gap: 20px; align-items: center; }
   .menu a {
     text-decoration: none;
     color: inherit;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
     transition: opacity 0.2s ease;
   }
   .menu a:hover { opacity: 0.7; }
 
-  /* Hamburger */
   .menu-toggle {
     display: block;
     background: none;
@@ -85,25 +82,23 @@
     cursor: pointer;
     color: inherit;
   }
-  /* desktop */
   @media (min-width: 769px) {
     .menu-toggle { display: none; }
     nav .menu { display: flex !important; }
   }
-  /* mobile */
   @media (max-width: 768px) {
-    nav { flex-wrap: wrap; }
+    nav { flex-wrap: wrap; gap: 8px; }
     nav .menu {
       display: none;
       width: 100%;
       flex-direction: column;
-      gap: 14px;
-      margin-top: 10px;
+      gap: 12px;
+      margin-top: 8px;
     }
     nav .menu.show { display: flex; }
   }
 
-  /* Secções */
+  /* Sections */
   .section {
     display: flex;
     flex-direction: column;
@@ -113,7 +108,7 @@
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.8s ease, transform 0.8s ease;
-    scroll-margin-top: 80px; /* compensa o nav sticky */
+    scroll-margin-top: 80px;
     text-align: center;
   }
   .section.visible { opacity: 1; transform: translateY(0); }
@@ -132,18 +127,9 @@
     position: relative;
     min-width: 60px;
   }
-  .flip-digit-inner {
-    display: block;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-  }
-  .flip-digit-top, .flip-digit-bottom {
-    backface-visibility: hidden;
-    display: block;
-  }
-  .flip-digit-top { transform: rotateX(0deg); }
+  .flip-digit-inner { display: block; transition: transform 0.6s; transform-style: preserve-3d; }
+  .flip-digit-top, .flip-digit-bottom { backface-visibility: hidden; display: block; }
   .flip-digit-bottom { transform: rotateX(180deg); position: absolute; inset: 0; }
-
   body.dark .flip-digit { background: #333; color: #fff; }
   body.dark .flip-digit-top, body.dark .flip-digit-bottom { color: #fff; }
 
@@ -177,19 +163,14 @@
     box-shadow: var(--shadow);
   }
   .product:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-  .product img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-    transition: transform 0.25s ease;
-  }
+  .product img { width: 100%; height: auto; border-radius: 10px; transition: transform 0.25s ease; }
   .product:hover img { transform: scale(1.03); }
   .product h2 { font-size: 1.35rem; margin: 10px 0 6px; }
   .product p { margin: 4px 0; color: var(--muted); }
   body.dark .product { background: var(--card-dark); }
   body.dark .product p { color: var(--muted-dark); }
 
-  /* Modal */
+  /* Modal (product & auth share same base classes) */
   .modal {
     display: none;
     position: fixed;
@@ -219,7 +200,7 @@
   .modal-content img { width: 80%; height: auto; margin: 0 auto 14px; border-radius: 10px; display: block; }
   body.dark .modal-content { background: var(--card-dark); }
 
-  /* Botões */
+  /* Buttons */
   button, .btn {
     background: var(--btn);
     color: #000;
@@ -236,31 +217,25 @@
 
   /* Settings */
   #settings h2 { margin-bottom: 16px; }
-  .audioControl {
-    margin-top: 12px;
-    font-size: 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
+  .audioControl { margin-top: 12px; font-size: 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
   input[type=range] { width: 220px; }
   @media (max-width: 768px) { #volumeSlider { display: none; } }
 
-  /* Copyright */
-  .copyright { text-align: center; margin: 36px 0 22px; font-size: 12px; color: #888; }
+  /* Footer */
+  .copyright { text-align: center; margin: 24px 0 10px; font-size: 12px; color: #888; }
 </style>
 </head>
 <body>
-  <!-- Navegação -->
+  <!-- Navigation -->
   <nav>
     <div class="brand">MALUCO</div>
     <button class="menu-toggle" type="button" aria-controls="mainmenu" aria-expanded="false" onclick="toggleMenu()">☰</button>
-    <div class="menu" id="mainmenu" role="navigation" aria-label="Principal">
+    <div class="menu" id="mainmenu" role="navigation" aria-label="Main">
       <a href="#home">Home</a>
       <a href="#shop">Shop</a>
       <a href="#settings">Settings</a>
-      <a href="#" aria-disabled="true" tabindex="-1" style="opacity:.6; cursor: not-allowed;">Account (soon)</a>
+      <!-- Account button (updates to user name when signed in) -->
+      <button id="accountBtn" class="btn" type="button" style="padding:8px 14px;" onclick="openAuthModal()">Account</button>
     </div>
   </nav>
 
@@ -268,86 +243,61 @@
   <section id="home" class="section">
     <h1>MALUCO</h1>
     <div id="countdown" aria-live="polite">
-      <div class="flip-digit" aria-label="Days">
-        <div class="flip-digit-inner">
-          <span class="flip-digit-top">0d</span>
-          <span class="flip-digit-bottom">0d</span>
-        </div>
-      </div>
-      <div class="flip-digit" aria-label="Hrs">
-        <div class="flip-digit-inner">
-          <span class="flip-digit-top">0h</span>
-          <span class="flip-digit-bottom">0h</span>
-        </div>
-      </div>
-      <div class="flip-digit" aria-label="Min">
-        <div class="flip-digit-inner">
-          <span class="flip-digit-top">0m</span>
-          <span class="flip-digit-bottom">0m</span>
-        </div>
-      </div>
-      <div class="flip-digit" aria-label="Secs">
-        <div class="flip-digit-inner">
-          <span class="flip-digit-top">0s</span>
-          <span class="flip-digit-bottom">0s</span>
-        </div>
-      </div>
+      <div class="flip-digit" aria-label="Days"><div class="flip-digit-inner"><span class="flip-digit-top">0d</span><span class="flip-digit-bottom">0d</span></div></div>
+      <div class="flip-digit" aria-label="Hours"><div class="flip-digit-inner"><span class="flip-digit-top">0h</span><span class="flip-digit-bottom">0h</span></div></div>
+      <div class="flip-digit" aria-label="Minutes"><div class="flip-digit-inner"><span class="flip-digit-top">0m</span><span class="flip-digit-bottom">0m</span></div></div>
+      <div class="flip-digit" aria-label="Seconds"><div class="flip-digit-inner"><span class="flip-digit-top">0s</span><span class="flip-digit-bottom">0s</span></div></div>
     </div>
 
-    <img
-      class="hero-img"
-      src="400x400.jpg"
-      alt="MALUCO"
-      width="400" height="400"
-      onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})"
-    />
+    <img class="hero-img" src="400x400.jpg" alt="MALUCO album" width="400" height="400"
+         onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" />
   </section>
 
   <!-- Shop -->
   <section id="shop" class="section">
     <div class="shop-grid">
       <button class="product" type="button" onclick="openModal('standard')">
-        <img src="400x400.jpg" alt="MALUCO" width="400" height="400" loading="lazy" />
+        <img src="400x400.jpg" alt="MALUCO standard edition" width="400" height="400" loading="lazy" />
         <h2>MALUCO</h2>
         <p><strong>$3</strong></p>
-        <p>Pre-Reservation Available</p>
+        <p>Pre-orders available now</p>
       </button>
 
       <button class="product" type="button" onclick="openModal('definitive')">
-        <img src="500x500.jpg" alt="MALUCO — DEFINITIVE EDITION" width="500" height="500" loading="lazy" />
-        <h2>MALUCO (DEFINITIVE EDITION)</h2>
+        <img src="500x500.jpg" alt="MALUCO definitive edition" width="500" height="500" loading="lazy" />
+        <h2>MALUCO (Definitive Edition)</h2>
         <p><strong>$5</strong></p>
-        <p>Pre-Reservation Available</p>
+        <p>Pre-orders available now</p>
       </button>
     </div>
   </section>
 
-  <!-- Definições -->
+  <!-- Settings -->
   <section id="settings" class="section">
     <h2>Settings</h2>
     <div class="audioControl">
       <button type="button" onclick="toggleMusic()">Play / Pause Music</button>
       <label for="volumeSlider">Volume:</label>
       <input type="range" min="0" max="1" step="0.01" id="volumeSlider" onchange="setVolume(this.value)" />
-      <button type="button" onclick="toggleTheme()">Use Dark Theme</button>
+      <button type="button" onclick="toggleTheme()">Toggle Dark Theme</button>
     </div>
   </section>
 
-  <!-- Modal -->
+  <!-- Product Modal -->
   <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-content">
       <h2 id="modalTitle">MALUCO — $3</h2>
-      <img id="modalAlbum" src="400x400.jpg" alt="Capa do produto" width="400" height="400" />
-      <p>This is a reservation, <strong>we won't charge u NOTHING</strong>.</p>
+      <img id="modalAlbum" src="400x400.jpg" alt="Album" width="400" height="400" />
+      <p>This is a reservation — <strong>we won't charge you now</strong>.</p>
 
       <button id="buyButton" type="button" class="btn" onclick="showForm()">Reserve</button>
 
       <div id="formArea" style="display:none; margin-top:10px;">
         <form action="https://formspree.io/f/mvgwpkkq" method="POST">
-          <label for="email">email</label><br />
+          <label for="email">Email</label><br />
           <input id="email" type="email" name="email" placeholder="your@email.com" required /><br /><br />
-          <label><input type="checkbox" name="interest" required /> I WANT THIS PRODUCT</label><br /><br />
-          <button type="submit" class="btn">CONFIRM PRE-RESERVATION</button>
+          <label><input type="checkbox" name="interest" required /> I want to reserve this product</label><br /><br />
+          <button type="submit" class="btn">Confirm Reservation</button>
         </form>
       </div>
 
@@ -356,16 +306,204 @@
     </div>
   </div>
 
-  <!-- Música -->
+  <!-- Account / Auth Modal -->
+  <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true">
+    <div class="modal-content">
+      <h2 id="authTitle">Sign in</h2>
+
+      <button type="button" class="btn" id="googleSignInBtn">Continue with Google</button>
+
+      <div style="margin:10px 0; opacity:.6;">or</div>
+
+      <form id="emailAuthForm" onsubmit="return false;">
+        <label for="authEmail">Email</label><br />
+        <input id="authEmail" type="email" placeholder="you@example.com" required /><br /><br />
+        <label for="authPass">Password</label><br />
+        <input id="authPass" type="password" minlength="6" placeholder="••••••••" required /><br /><br />
+        <div style="display:flex; gap:8px; justify-content:center;">
+          <button type="button" class="btn" id="emailSignInBtn">Sign in</button>
+          <button type="button" class="btn" id="emailSignUpBtn">Create account</button>
+        </div>
+      </form>
+
+      <div id="authError" style="color:#c0392b; margin-top:10px; min-height:1.2em;"></div>
+
+      <br />
+      <button type="button" class="btn" onclick="closeAuthModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- Music -->
   <audio id="bgMusic" loop>
     <source src="ALONE.mp3" type="audio/mpeg" />
-    YOUR BROWSER IS TOO A$$ TO HANDLE SOUND.
+    Your A$$ does not support audio.
   </audio>
 
+  <!-- Signed-in indicator (optional) -->
+  <div id="whoami" class="copyright"></div>
   <div class="copyright">© 2025 ME100</div>
 
+<!-- ===== Firebase (Auth + optional Firestore) ===== -->
+<script type="module">
+  /* Replace X.Y.Z with the current Firebase Web SDK version from the docs,
+     and paste your Firebase config below. */
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/X.Y.Z/firebase-app.js";
+  import {
+    getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider,
+    signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/X.Y.Z/firebase-auth.js";
+  // Optional Firestore if you want to save pre-orders
+  import {
+    getFirestore, doc, setDoc, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/X.Y.Z/firebase-firestore.js";
+
+  /* Your Firebase config (Console → Project settings → Web app) */
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    appId: "YOUR_APP_ID"
+    // storageBucket, messagingSenderId, measurementId (optional)
+  };
+
+  // Init
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  let db;
+  try { db = getFirestore(app); } catch(_){}
+
+  // Helpers
+  const $ = (sel) => document.querySelector(sel);
+  const authModal  = $("#authModal");
+  const accountBtn = $("#accountBtn");
+  const whoami     = $("#whoami");
+
+  function showAuthModal(){
+    authModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(()=> {
+      authModal.classList.add('show');
+      authModal.setAttribute('aria-hidden','false');
+    });
+  }
+  function closeAuthModal(){
+    authModal.classList.remove('show');
+    authModal.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    setTimeout(()=>{ authModal.style.display = 'none'; }, 300);
+  }
+  window.closeAuthModal = closeAuthModal;
+
+  function openAuthModal() {
+    const user = auth.currentUser;
+    $("#authError").textContent = "";
+    if (user) {
+      $("#authTitle").innerText = "Your account";
+      $("#emailAuthForm").style.display = "none";
+      $("#googleSignInBtn").style.display = "none";
+      $("#signoutArea")?.remove();
+      $("#authModal .modal-content").insertAdjacentHTML("beforeend",
+        `<div id="signoutArea" style="margin-top:10px;">
+           <button type="button" class="btn" id="signOutBtn">Sign out</button>
+         </div>`);
+      showAuthModal();
+      $("#signOutBtn").onclick = async () => { await signOut(auth); closeAuthModal(); };
+    } else {
+      $("#authTitle").innerText = "Sign in";
+      $("#emailAuthForm").style.display = "block";
+      $("#googleSignInBtn").style.display = "inline-block";
+      $("#signoutArea")?.remove();
+      showAuthModal();
+    }
+  }
+  window.openAuthModal = openAuthModal;
+
+  // Auth actions
+  $("#googleSignInBtn")?.addEventListener("click", async ()=>{
+    try {
+      await signInWithPopup(auth, new GoogleAuthProvider());
+      closeAuthModal();
+    } catch (e) { showAuthError(e); }
+  });
+
+  $("#emailSignInBtn")?.addEventListener("click", async ()=>{
+    const email = $("#authEmail").value.trim();
+    const pass  = $("#authPass").value;
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      closeAuthModal();
+    } catch (e) { showAuthError(e); }
+  });
+
+  $("#emailSignUpBtn")?.addEventListener("click", async ()=>{
+    const email = $("#authEmail").value.trim();
+    const pass  = $("#authPass").value;
+    try {
+      await createUserWithEmailAndPassword(auth, email, pass);
+      closeAuthModal();
+    } catch (e) { showAuthError(e); }
+  });
+
+  function showAuthError(err){
+    const code = err?.code || "";
+    const map = {
+      "auth/popup-closed-by-user": "Sign-in window was closed.",
+      "auth/account-exists-with-different-credential": "This email is linked to another sign-in method.",
+      "auth/invalid-credential": "Invalid credentials.",
+      "auth/invalid-login-credentials": "Invalid email or password.",
+      "auth/email-already-in-use": "Email already in use.",
+      "auth/weak-password": "Password should be at least 6 characters."
+    };
+    $("#authError").textContent = map[code] || err?.message || "Something went wrong.";
+  }
+
+  // Keep UI in sync
+  onAuthStateChanged(auth, (user)=>{
+    if (user) {
+      const name = user.displayName || user.email || "User";
+      accountBtn.textContent = (name.split("@")[0] || "Account");
+      whoami && (whoami.textContent = `Signed in as ${name}`);
+    } else {
+      accountBtn.textContent = "Account";
+      whoami && (whoami.textContent = "");
+    }
+  });
+
+  // Optional: also write preorders to Firestore when user submits the Formspree form
+  const preorderForm = document.querySelector('#formArea form');
+  preorderForm?.addEventListener('submit', async ()=>{
+    try {
+      if (!db) return; // Firestore not used
+      const user = auth.currentUser;
+      if (!user) return; // Only save if signed in
+      const fd = new FormData(preorderForm);
+      const email = fd.get('email');
+      const isDef = document.getElementById('modalTitle').innerText.includes('Definitive');
+      const sku = isDef ? 'definitive' : 'standard';
+      await setDoc(doc(db, 'preorders', `${user.uid}-${Date.now()}`), {
+        uid: user.uid,
+        email,
+        sku,
+        priceUSD: isDef ? 5 : 3,
+        createdAt: serverTimestamp()
+      });
+    } catch (err) {
+      console.warn('Could not persist preorder in Firestore:', err);
+    }
+    // We don't preventDefault: Formspree still receives the submission
+  });
+
+  // If you want to REQUIRE sign-in before showing the form, uncomment:
+  // window.showForm = function(){
+  //   if (!auth.currentUser) { openAuthModal(); return; }
+  //   document.getElementById('formArea').style.display='block';
+  //   document.getElementById('buyButton').style.display='none';
+  // };
+</script>
+
+<!-- ===== Site logic ===== -->
 <script defer>
-  /* Preferências de tema (localStorage + prefers-color-scheme) */
+  /* Theme at load (localStorage + prefers-color-scheme) */
   (function initTheme(){
     try {
       const saved = localStorage.getItem('theme');
@@ -374,7 +512,7 @@
     } catch(e) {}
   })();
 
-  /* IntersectionObserver para revelar secções */
+  /* Reveal sections on scroll */
   (function revealOnScroll(){
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -382,18 +520,18 @@
     document.querySelectorAll('.section').forEach(s => io.observe(s));
   })();
 
-  /* Próximo dia 26 */
+  /* Next 26th */
   function next26th(from = new Date()) {
     const y = from.getFullYear(), m = from.getMonth();
     const candidate = new Date(y, m, 26, 0, 0, 0);
     return (from <= candidate) ? candidate : new Date(y, m + 1, 26, 0, 0, 0);
   }
 
-  /* Contador com efeito flip */
+  /* Countdown flip */
   function updateCountdown() {
     const target = next26th();
     const now    = new Date();
-    let diff     = target - now;
+    const diff   = target - now;
 
     const days    = Math.floor(diff / 86400000);
     const hours   = Math.floor((diff % 86400000) / 3600000);
@@ -419,7 +557,7 @@
   setInterval(updateCountdown, 1000);
   updateCountdown();
 
-  /* Modal com acessibilidade básica */
+  /* Product modal */
   let lastFocus;
   function openModal(type) {
     lastFocus = document.activeElement;
@@ -430,12 +568,12 @@
     if (type === 'standard') {
       title.innerText = 'MALUCO — $3';
       img.src = '400x400.jpg';
-      img.alt = 'MALUCO';
+      img.alt = 'MALUCO standard edition';
       img.width = 400; img.height = 400;
     } else {
-      title.innerText = 'MALUCO (DEFINITIVE EDITION) — $5';
+      title.innerText = 'MALUCO (Definitive Edition) — $5';
       img.src = '500x500.jpg';
-      img.alt = 'MALUCO — DEFINITIVE EDITION';
+      img.alt = 'MALUCO definitive edition';
       img.width = 500; img.height = 500;
     }
 
@@ -450,7 +588,6 @@
       document.getElementById('buyButton').focus();
     });
   }
-
   function closeModal(){
     const modal = document.getElementById('productModal');
     modal.classList.remove('show');
@@ -460,9 +597,11 @@
 
     if (lastFocus) lastFocus.focus();
   }
+  window.openModal = openModal;
+  window.closeModal = closeModal;
 
   document.getElementById('productModal').addEventListener('click', (e)=>{
-    if (e.target.id === 'productModal') closeModal(); // clique no backdrop
+    if (e.target.id === 'productModal') closeModal();
   });
   window.addEventListener('keydown', (e)=>{
     if (e.key === 'Escape') closeModal();
@@ -472,26 +611,29 @@
     document.getElementById('formArea').style.display='block';
     document.getElementById('buyButton').style.display='none';
   }
+  window.showForm = showForm;
 
-  /* Música */
+  /* Music */
   function toggleMusic(){
     const music = document.getElementById('bgMusic');
     if (music.paused) {
-      music.play().catch(()=>{ /* autoplay bloqueado: opcional mostrar aviso */ });
+      music.play().catch(()=>{ /* autoplay blocked */ });
     } else {
       music.pause();
     }
   }
   function setVolume(v){ document.getElementById('bgMusic').volume = parseFloat(v); }
+  window.toggleMusic = toggleMusic;
+  window.setVolume = setVolume;
 
-  /* Tema (toggle + persistência) */
+  /* Theme */
   function toggleTheme(){
     const dark = document.body.classList.toggle('dark');
     try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch(e) {}
   }
   window.toggleTheme = toggleTheme;
 
-  /* Menu hambúrguer (sincroniza aria-expanded) */
+  /* Menu */
   function toggleMenu() {
     const menu = document.getElementById("mainmenu");
     const btn  = document.querySelector(".menu-toggle");
@@ -500,14 +642,14 @@
   }
   window.toggleMenu = toggleMenu;
 
-  /* Konami code (API moderna) */
+  /* Konami (modern key API) */
   (function konamiInit(){
     const seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
     let pos = 0;
     window.addEventListener('keydown', (e)=>{
-      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-      const key = (k.length === 1) ? k : e.key; // mantém arrows
-      pos = (key === seq[pos]) ? pos + 1 : (key === seq[0] ? 1 : 0);
+      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      const normalized = (key.length === 1) ? key : e.key;
+      pos = (normalized === seq[pos]) ? pos + 1 : (normalized === seq[0] ? 1 : 0);
       if (pos === seq.length) {
         document.body.style.background = 'linear-gradient(120deg, #6dc8eb, #66c2ef)';
         pos = 0;
@@ -517,6 +659,3 @@
 </script>
 </body>
 </html>
-
-
-
