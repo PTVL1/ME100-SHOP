@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
 
-<!-- Open Graph (kept) -->
+<!-- Open Graph -->
 <meta property="og:title" content="MALUCO" />
 <meta property="og:description" content="Pre-reservations available. See the product, choose an edition, and reserve with no cost." />
 <meta property="og:type" content="website" />
@@ -38,7 +38,8 @@
 
   nav{background:var(--nav-light);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:var(--shadow)}
   body.dark nav{background:var(--nav-dark)}
-  .brand{font-weight:800;letter-spacing:.5px}
+  .brand{font-weight:800;letter-spacing:.5px;cursor:pointer;user-select:none;transition:transform .25s}
+  .brand.bounce{transform:scale(1.06) translateY(-2px)}
   .menu{display:flex;gap:20px;align-items:center}
   .menu a,.menu button.btn-link{background:none;border:none;padding:0;text-decoration:none;color:inherit;font-size:16px;font-weight:700;transition:opacity .2s;cursor:pointer;position:relative}
   .menu a:hover,.menu button.btn-link:hover{opacity:.7}
@@ -69,7 +70,7 @@
   .hero-img{border-radius:12px;box-shadow:var(--shadow);cursor:pointer;margin-top:12px;max-width:90vw;height:auto}
 
   .shop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;width:min(1100px,92vw);margin:0 auto}
-  .product{background:var(--card);color:inherit;border:none;text-align:center;cursor:pointer;width:100%;padding:14px;border-radius:12px;transition:transform .2s,box-shadow .2s;box-shadow:var(--shadow)}
+  .product{position:relative;background:var(--card);color:inherit;border:none;text-align:center;cursor:pointer;width:100%;padding:14px;border-radius:12px;transition:transform .2s,box-shadow .2s;box-shadow:var(--shadow)}
   .product:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
   .product img{width:100%;height:auto;border-radius:10px;transition:transform .25s}
   .product:hover img{transform:scale(1.03)}
@@ -77,8 +78,11 @@
   .product p{margin:4px 0;color:var(--muted)}
   body.dark .product{background:var(--card-dark)}
   body.dark .product p{color:var(--muted-dark)}
+  /* info badge */
+  .info-badge{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px;border:none;cursor:pointer}
+  .product:hover .info-badge{background:rgba(0,0,0,.85)}
 
-  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);justify-content:center;align-items:center;padding:12px;opacity:0;transition:opacity .35s}
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);justify-content:center;align-items:center;padding:12px;opacity:0;transition:opacity .35s;z-index:1200}
   .modal.show{display:flex;opacity:1}
   .modal-content{background:var(--card);color:inherit;padding:20px;border-radius:12px;width:100%;max-width:480px;text-align:center;transform:translateY(-16px) scale(.96);transition:transform .35s,opacity .35s;opacity:0;box-shadow:var(--shadow-lg)}
   .modal.show .modal-content{transform:translateY(0) scale(1);opacity:1}
@@ -93,7 +97,12 @@
   #settings h2{margin-bottom:16px}
   .audioControl{margin-top:12px;font-size:18px;display:flex;flex-direction:column;align-items:center;gap:10px}
   input[type=range]{width:220px}
-  @media (max-width:768px){#volumeSlider{display:none}}
+  /* mobile hides */
+  @media (max-width:768px){
+    #volumeSlider{display:none}
+    label[for="volumeSlider"]{display:none}           /* hide Volume: label */
+    .shortcuts-wrap{display:none}                     /* hide shortcuts list */
+  }
 
   .copyright{text-align:center;margin:24px 0 10px;font-size:12px;color:#888}
 
@@ -104,12 +113,15 @@
   .tracklist{display:none;text-align:left;margin:10px auto 0;max-width:360px}
   .tracklist h3{margin:8px 0 6px;font-size:1rem}
   .tracklist ol{padding-left:20px;text-align:left}
+
+  /* Confetti canvas */
+  #confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:1500}
 </style>
 </head>
 <body>
   <!-- Navigation -->
   <nav>
-    <div class="brand">MALUCO</div>
+    <div class="brand" id="brandHome" title="Go Home">MALUCO</div>
     <button class="menu-toggle" type="button" aria-controls="mainmenu" aria-expanded="false" onclick="toggleMenu()">☰</button>
     <div class="menu" id="mainmenu" role="navigation" aria-label="Main">
       <a href="#home" data-target="home" class="nav-link">Home</a>
@@ -141,6 +153,7 @@
         <h2>MALUCO</h2>
         <p><strong>$3</strong></p>
         <p>Pre-orders available now</p>
+        <button class="info-badge" type="button" aria-label="Standard edition info" onclick="event.stopPropagation(); openInfo('standard')">i</button>
       </button>
 
       <button class="product" type="button" onclick="openModal('definitive')">
@@ -148,6 +161,7 @@
         <h2>MALUCO (Definitive Edition)</h2>
         <p><strong>$5</strong></p>
         <p>Pre-orders available now</p>
+        <button class="info-badge" type="button" aria-label="Definitive edition info" onclick="event.stopPropagation(); openInfo('definitive')">i</button>
       </button>
     </div>
   </section>
@@ -161,7 +175,7 @@
       <input type="range" min="0" max="1" step="0.01" id="volumeSlider" onchange="setVolume(this.value)" />
       <button type="button" onclick="toggleTheme()">Toggle Dark Theme</button>
       <!-- Keyboard shortcuts list -->
-      <div style="margin-top:14px; font-size:14px; opacity:.9; text-align:left">
+      <div class="shortcuts-wrap" style="margin-top:14px; font-size:14px; opacity:.9; text-align:left">
         <strong>Keyboard shortcuts</strong>
         <ul style="list-style: none; padding-left: 0; line-height:1.7;">
           <li><kbd>H</kbd> Home &nbsp; <kbd>S</kbd> Shop &nbsp; <kbd>E</kbd> Settings</li>
@@ -182,6 +196,7 @@
       <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
         <button id="buyButton" type="button" class="btn" onclick="showForm()">Reserve</button>
         <button id="tracklistBtn" type="button" class="btn" onclick="toggleTracklist()">Tracklist</button>
+        <button id="infoBtn" type="button" class="btn" onclick="openInfo(currentEdition)">Info</button>
       </div>
 
       <!-- Tracklist -->
@@ -189,15 +204,10 @@
 
       <div id="formArea" style="display:none; margin-top:10px;">
         <form id="preorderForm" action="https://formspree.io/f/mvgwpkkq" method="POST">
-          <!-- Honeypot -->
           <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
-
           <label for="email">Email</label><br />
           <input id="email" type="email" name="email" placeholder="your@email.com" required /><br /><br />
-
-          <!-- (1) Confirm this is my email -->
           <label><input id="confirmEmailChk" type="checkbox" required /> Confirm this is my email</label><br /><br />
-
           <label><input type="checkbox" name="interest" required /> I want to reserve this product</label><br /><br />
           <button id="submitBtn" type="submit" class="btn">Confirm Reservation</button>
         </form>
@@ -209,16 +219,23 @@
     </div>
   </div>
 
+  <!-- Info Modal -->
+  <div class="modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle" aria-hidden="true">
+    <div class="modal-content" style="text-align:left; max-width:520px;">
+      <h2 id="infoTitle" style="text-align:center;">Product Info</h2>
+      <div id="infoBody" style="line-height:1.6;"></div>
+      <div style="text-align:center; margin-top:14px;">
+        <button type="button" class="btn" onclick="closeInfo()">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Account / Auth Modal -->
   <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true">
     <div class="modal-content">
       <h2 id="authTitle">Sign in</h2>
-
       <button type="button" class="btn" id="googleSignInBtn">Continue with Google</button>
-
-      <!-- The "or" divider is only for signed-out state; it's removed when signed-in -->
       <div class="dividerOr" style="margin:10px 0; opacity:.6;">or</div>
-
       <form id="emailAuthForm" onsubmit="return false;">
         <label for="authEmail">Email</label><br />
         <input id="authEmail" type="email" placeholder="you@example.com" required /><br /><br />
@@ -230,9 +247,7 @@
           <button type="button" class="btn" id="resetBtn" title="Reset password via email">Reset password</button>
         </div>
       </form>
-
       <div id="authError" style="color:#c0392b; margin-top:10px; min-height:1.2em;"></div>
-
       <br />
       <button type="button" class="btn" onclick="closeAuthModal()">Close</button>
     </div>
@@ -243,6 +258,9 @@
     <source src="ALONE.mp3" type="audio/mpeg" />
     Your browser does not support audio.
   </audio>
+
+  <!-- Confetti canvas -->
+  <canvas id="confettiCanvas"></canvas>
 
   <!-- Toast -->
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -282,28 +300,27 @@
 
   function showToast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); setTimeout(()=>toastEl.classList.remove('show'),2200); }
 
-  /* ---------- Focus trap for modals (accessibility) ---------- */
+  /* ---------- Focus trap for modals ---------- */
   function activateFocusTrap(modal){
-    const focusables = modal.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
-    if(!focusables.length) return;
-    const first = focusables[0], last = focusables[focusables.length-1];
-    function onKey(e){
-      if(e.key === 'Tab'){
-        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
-        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
-      } else if(e.key === 'Escape'){
-        if(modal.id === 'productModal') window.closeModal();
-        if(modal.id === 'authModal') closeAuthModal();
+    const f = modal.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+    if(!f.length) return; const first=f[0], last=f[f.length-1];
+    modal.__trapHandler = (e)=>{
+      if(e.key==='Tab'){
+        if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+      } else if(e.key==='Escape'){
+        if(modal.id==='productModal') window.closeModal();
+        if(modal.id==='authModal') closeAuthModal();
+        if(modal.id==='infoModal') closeInfo();
       }
-    }
-    modal.__trapHandler = onKey;
-    modal.addEventListener('keydown', onKey);
+    };
+    modal.addEventListener('keydown', modal.__trapHandler);
   }
   function deactivateFocusTrap(modal){
-    if(modal.__trapHandler){ modal.removeEventListener('keydown', modal.__trapHandler); modal.__trapHandler = null; }
+    if(modal.__trapHandler){ modal.removeEventListener('keydown', modal.__trapHandler); modal.__trapHandler=null; }
   }
 
-  /* ---------- Auth modal open/close ---------- */
+  /* ---------- Auth modal ---------- */
   function showAuthModal(){
     authModal.style.display='flex';
     document.body.style.overflow='hidden';
@@ -323,11 +340,9 @@
   }
   window.closeAuthModal = closeAuthModal;
 
-  /* ---------- Account modal content (signed-in shows name + email; no 'or') ---------- */
   function openAuthModal(){
     const user = auth.currentUser;
     $("#authError").textContent="";
-
     if(user){
       const name  = user.displayName || (user.email ? user.email.split("@")[0] : "User");
       const email = user.email || "";
@@ -374,7 +389,6 @@
       $("#googleSignInBtn").style.display = "inline-block";
       document.querySelector('#authModal .modal-content .accountBox')?.remove();
       $("#signoutArea")?.remove();
-      // keep the 'or' divider for signed-out only
       if (!document.querySelector('#authModal .modal-content .dividerOr')) {
         const div = document.createElement('div');
         div.className = 'dividerOr';
@@ -387,18 +401,15 @@
   }
   window.openAuthModal = openAuthModal;
 
-  /* ---------- Auth actions ---------- */
   $("#googleSignInBtn")?.addEventListener("click", async ()=>{
     try{ await signInWithPopup(auth,new GoogleAuthProvider()); closeAuthModal(); showToast("Signed in with Google"); }
     catch(e){ showAuthError(e); }
   });
-
   $("#emailSignInBtn")?.addEventListener("click", async ()=>{
     const email=$("#authEmail").value.trim(), pass=$("#authPass").value;
     try{ await signInWithEmailAndPassword(auth,email,pass); closeAuthModal(); showToast("Signed in"); }
     catch(e){ showAuthError(e); }
   });
-
   $("#emailSignUpBtn")?.addEventListener("click", async ()=>{
     const email=$("#authEmail").value.trim(), pass=$("#authPass").value;
     try{
@@ -407,7 +418,6 @@
       closeAuthModal(); showToast("Account created — verify your email (check Spam)");
     }catch(e){ showAuthError(e); }
   });
-
   $("#resetBtn")?.addEventListener("click", async ()=>{
     const email=$("#authEmail").value.trim();
     if(!email){ $("#authError").textContent="Enter your email above first."; return; }
@@ -438,36 +448,27 @@
     }
   });
 
-  /* ---------- Reserve gate + auto-fill email; verify only for Email/Password ---------- */
-  let formShownAt = 0; // time guard
+  /* ---------- Reserve gate + autofill email ---------- */
+  let formShownAt = 0;
 
   window.showForm = function(){
     const user = auth.currentUser;
     if(!user){ openAuthModal(); return; }
-
     const usesPassword = (user.providerData||[]).some(p=>p.providerId==="password");
     if(usesPassword && !user.emailVerified){
       alert("Please verify your email first (check your inbox).");
       return;
     }
-
     document.getElementById('formArea').style.display='block';
     document.getElementById('buyButton').style.display='none';
-
-    // Auto-fill and pre-check confirm
     const emailInp = document.getElementById('email');
     const confirmC = document.getElementById('confirmEmailChk');
-    if (emailInp) {
-      emailInp.value = user.email || "";
-      // emailInp.readOnly = true; // uncomment if you want to force account email
-    }
+    if (emailInp) emailInp.value = user.email || "";
     if (confirmC) confirmC.checked = !!user.email;
-
     formShownAt = Date.now();
     emailInp?.focus();
   };
 
-  /* ---------- Submit with Firestore + time guard + lock button ---------- */
   const preorderForm = document.querySelector('#preorderForm');
   const submitBtn = document.querySelector('#submitBtn');
   const formArea = document.querySelector('#formArea');
@@ -475,20 +476,14 @@
 
   preorderForm?.addEventListener('submit', async (e)=>{
     e.preventDefault();
-
-    // Honeypot
     if(preorderForm.querySelector('input[name="_gotcha"]')?.value) return;
-
-    // Time guard: at least 3s since form shown
     if(!formShownAt || (Date.now()-formShownAt)<3000){
       formStatus.textContent = "Please take a moment before submitting.";
       return;
     }
-
     submitBtn.disabled = true;
     const oldText = submitBtn.textContent;
     submitBtn.textContent="Submitting…";
-
     const fd = new FormData(preorderForm);
     try{
       const user = auth.currentUser;
@@ -516,11 +511,11 @@
     }
   });
 
-  // Expose for site script
+  // expose trap helpers for other modals
   window.__focusTrap = { activate: activateFocusTrap, deactivate: deactivateFocusTrap };
 </script>
 
-<!-- ===== Site logic ===== -->
+<!-- ===== Site logic + confetti + info modal ===== -->
 <script defer>
   (function initTheme(){
     try{
@@ -537,18 +532,83 @@
     document.querySelectorAll('.section').forEach(s=>io.observe(s));
   })();
 
+  /* Smooth home via brand click + tiny bounce */
+  document.getElementById('brandHome').addEventListener('click', ()=>{
+    const brand = document.getElementById('brandHome');
+    brand.classList.add('bounce');
+    setTimeout(()=>brand.classList.remove('bounce'),300);
+    document.getElementById('home').scrollIntoView({behavior:'smooth', block:'start'});
+    setTimeout(()=>{ const s=document.getElementById('home'); s.classList.add('target-pulse'); setTimeout(()=>s.classList.remove('target-pulse'),800); },200);
+    // close mobile menu if open
+    const menu=document.getElementById('mainmenu'); const btn=document.querySelector('.menu-toggle');
+    if(menu.classList.contains('show')){ menu.classList.remove('show'); btn.setAttribute('aria-expanded','false'); }
+  });
+
   function next26th(from=new Date()){
     const y=from.getFullYear(), m=from.getMonth();
     const candidate=new Date(y,m,26,0,0,0);
     return (from<=candidate)?candidate:new Date(y,m+1,26,0,0,0);
   }
+
+  /* Confetti engine (lightweight) */
+  const confettiCanvas = document.getElementById('confettiCanvas');
+  const ctx = confettiCanvas.getContext('2d');
+  let confettiRunning=false;
+  function resizeCanvas(){ confettiCanvas.width=window.innerWidth; confettiCanvas.height=window.innerHeight; }
+  window.addEventListener('resize', resizeCanvas, {passive:true}); resizeCanvas();
+
+  function launchConfetti(duration=3000, count=180){
+    if(confettiRunning) return;
+    confettiRunning = true;
+    const colors=['#ff4757','#ffa502','#2ed573','#1e90ff','#a55eea','#ff6b81'];
+    const pieces = Array.from({length:count}, ()=>({
+      x: Math.random()*confettiCanvas.width,
+      y: -20 - Math.random()*confettiCanvas.height*0.2,
+      w: 6+Math.random()*6,
+      h: 10+Math.random()*12,
+      color: colors[(Math.random()*colors.length)|0],
+      vy: 2+Math.random()*4,
+      vx: -2+Math.random()*4,
+      rot: Math.random()*Math.PI,
+      vr: -0.2+Math.random()*0.4,
+      alpha: 1
+    }));
+    const start = performance.now();
+    function frame(t){
+      const elapsed = t-start;
+      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+      pieces.forEach(p=>{
+        p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+        if(elapsed>duration*0.7){ p.alpha = Math.max(0, 1 - (elapsed-duration*0.7)/(duration*0.3)); }
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle=p.color;
+        ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+        ctx.restore();
+      });
+      if(elapsed<duration){ requestAnimationFrame(frame); }
+      else { ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); confettiRunning=false; }
+    }
+    requestAnimationFrame(frame);
+    // subtle background flash
+    const oldBg = document.body.style.backgroundImage;
+    document.body.style.transition='background 300ms';
+    document.body.style.backgroundImage='linear-gradient(120deg,#ffeaa7,#fab1a0)';
+    setTimeout(()=>{ document.body.style.backgroundImage=''; document.body.style.transition=''; },350);
+  }
+
+  /* Countdown flip + zero trigger */
+  let zeroCelebrated = false;
   function updateCountdown(){
     const target=next26th(), now=new Date(), diff=target-now;
-    const days=Math.floor(diff/86400000);
-    const hours=Math.floor((diff%86400000)/3600000);
-    const minutes=Math.floor((diff%3600000)/60000);
-    const seconds=Math.floor((diff%60000)/1000);
+    const days=Math.max(0,Math.floor(diff/86400000));
+    const hours=Math.max(0,Math.floor((diff%86400000)/3600000));
+    const minutes=Math.max(0,Math.floor((diff%3600000)/60000));
+    const seconds=Math.max(0,Math.floor((diff%60000)/1000));
     const values=[`${days}d`,`${hours}h`,`${minutes}m`,`${seconds}s`];
+
     document.querySelectorAll(".flip-digit").forEach((digit,i)=>{
       const inner=digit.querySelector('.flip-digit-inner'), top=inner.querySelector('.flip-digit-top'), bottom=inner.querySelector('.flip-digit-bottom');
       if(top.innerText!==values[i]){
@@ -557,18 +617,27 @@
         setTimeout(()=>{ top.innerText=values[i]; inner.style.transform='rotateX(0deg)'; },300);
       }
     });
+
+    if(diff<=0 && !zeroCelebrated){
+      zeroCelebrated = true;
+      launchConfetti(3500, 220);
+      const home = document.getElementById('home');
+      home.classList.add('target-pulse');
+      setTimeout(()=>home.classList.remove('target-pulse'),1200);
+    }
   }
   setInterval(updateCountdown,1000); updateCountdown();
 
   /* Product modal */
   let lastFocus;
+  window.currentEdition = 'standard';
   function openModal(type){
     lastFocus=document.activeElement;
+    currentEdition = type;
     const title=document.getElementById('modalTitle');
     const img=document.getElementById('modalAlbum');
     const tracklist=document.getElementById('tracklist');
 
-    // Use your exact tracklist for both editions
     const tracksHTML = `
       <h3>Tracklist — ${type==='definitive' ? 'MALUCO (Definitive)' : 'MALUCO'}</h3>
       <ol>
@@ -615,8 +684,6 @@
     if(lastFocus) lastFocus.focus();
   }
   window.openModal=openModal; window.closeModal=closeModal;
-
-  // close on backdrop click
   document.getElementById('productModal').addEventListener('click', (e)=>{ if(e.target.id==='productModal') closeModal(); });
 
   function toggleTracklist(){
@@ -624,6 +691,43 @@
     tl.style.display = (tl.style.display==='none' || !tl.style.display) ? 'block' : 'none';
   }
   window.toggleTracklist = toggleTracklist;
+
+  /* Info modal */
+  const infoModal = document.getElementById('infoModal');
+  function openInfo(edition='standard'){
+    const title = document.getElementById('infoTitle');
+    const body  = document.getElementById('infoBody');
+    const isDef = edition==='definitive';
+    title.textContent = isDef ? 'Product Info — MALUCO (Definitive Edition)' : 'Product Info — MALUCO';
+    body.innerHTML = `
+      <ul style="margin:0; padding-left:18px;">
+        <li><strong>Format:</strong> Audio CD (pressed, not CD-R)</li>
+        <li><strong>Shipping time:</strong> 3–7 business days (no shipping on weekends)</li>
+        <li><strong>Support hours:</strong> Closed on weekends</li>
+        <li><strong>Sound quality:</strong> 16-bit / 44.1 kHz stereo (standard Red Book)</li>
+        <li><strong>Materials:</strong> Jewel case, printed booklet, full-color disc</li>
+        <li><strong>Box contents:</strong> ${isDef ? 'CD + booklet + bonus art card + 2 bonus tracks' : 'CD + booklet'}</li>
+      </ul>
+      <div style="margin-top:10px; font-size:13px; opacity:.8">
+        Note: This page is for <em>pre-reservation</em>. You won’t be charged now.
+      </div>
+    `;
+    infoModal.style.display='flex';
+    document.body.style.overflow='hidden';
+    requestAnimationFrame(()=>{
+      infoModal.classList.add('show'); infoModal.setAttribute('aria-hidden','false');
+      window.__focusTrap?.activate(infoModal);
+      infoModal.querySelector('button.btn')?.focus();
+    });
+  }
+  function closeInfo(){
+    window.__focusTrap?.deactivate(infoModal);
+    infoModal.classList.remove('show'); infoModal.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+    setTimeout(()=>{ infoModal.style.display='none'; },300);
+  }
+  window.openInfo = openInfo; window.closeInfo = closeInfo;
+  infoModal.addEventListener('click', (e)=>{ if(e.target.id==='infoModal') closeInfo(); });
 
   function toggleMusic(){
     const music=document.getElementById('bgMusic');
@@ -644,32 +748,22 @@
   }
   window.toggleMenu=toggleMenu;
 
-  /* ====== NAV: smooth scroll + click animation + close mobile menu ====== */
+  // Nav link smooth + underline + pulse + close mobile
   document.querySelectorAll('.nav-link').forEach(link=>{
     link.addEventListener('click', (e)=>{
-      e.preventDefault();                           // stop instant jump
-      link.classList.add('clicked');                // underline sweep
-      setTimeout(()=>link.classList.remove('clicked'),400);
-
-      const id=link.getAttribute('data-target');
-      const section=document.getElementById(id);
+      e.preventDefault();
+      link.classList.add('clicked'); setTimeout(()=>link.classList.remove('clicked'),400);
+      const id=link.getAttribute('data-target'); const section=document.getElementById(id);
       if(section){
         section.scrollIntoView({ behavior:'smooth', block:'start' });
-        // pulse highlight after a tiny delay
-        setTimeout(()=>{ section.classList.add('target-pulse'); setTimeout(()=>section.classList.remove('target-pulse'),800); }, 200);
+        setTimeout(()=>{ section.classList.add('target-pulse'); setTimeout(()=>section.classList.remove('target-pulse'),800); },200);
       }
-
-      // auto-close mobile menu
-      const menu=document.getElementById('mainmenu');
-      const btn=document.querySelector('.menu-toggle');
-      if(menu.classList.contains('show')){
-        menu.classList.remove('show');
-        btn.setAttribute('aria-expanded','false');
-      }
+      const menu=document.getElementById('mainmenu'); const btn=document.querySelector('.menu-toggle');
+      if(menu.classList.contains('show')){ menu.classList.remove('show'); btn.setAttribute('aria-expanded','false'); }
     });
   });
 
-  // Keyboard shortcuts (also smooth)
+  // Keyboard shortcuts
   window.addEventListener('keydown',(e)=>{
     const tag=(e.target.tagName||'').toLowerCase();
     if(tag==='input' || tag==='textarea') return;
@@ -683,12 +777,14 @@
     else if(key==='escape'){
       const authOpen = document.getElementById('authModal').classList.contains('show');
       const prodOpen = document.getElementById('productModal').classList.contains('show');
+      const infoOpen = document.getElementById('infoModal').classList.contains('show');
       if(authOpen) window.closeAuthModal();
       if(prodOpen) closeModal();
+      if(infoOpen) closeInfo();
     }
   },{passive:true});
 
-  // Konami easter egg
+  // Konami
   (function konamiInit(){
     const seq=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
     let pos=0;
