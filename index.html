@@ -7,22 +7,62 @@
 <meta name="description" content="MALUCO — pre-reservations of the album (standard and definitive edition)." />
 <link rel="icon" href="favicon.ico" />
 
+<!-- Theme color for mobile -->
+<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
 <!-- Performance: preconnects -->
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
 
-<!-- Open Graph -->
+<!-- Open Graph / Twitter -->
 <meta property="og:title" content="MALUCO" />
 <meta property="og:description" content="Pre-reservations available. See the product, choose an edition, and reserve with no cost." />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="400x400.jpg" />
+<meta property="og:url" content="https://example.com/" />
+<meta property="og:image" content="https://example.com/og-1200x630.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<!-- Product JSON-LD (duplicate for each SKU as needed) -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Product",
+  "name":"MALUCO",
+  "image":["https://example.com/400x400.jpg"],
+  "description":"Standard edition CD",
+  "offers":{
+    "@type":"Offer",
+    "price":"3.00",
+    "priceCurrency":"USD",
+    "availability":"https://schema.org/PreOrder",
+    "url":"https://example.com/#shop"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Product",
+  "name":"MALUCO (Definitive Edition)",
+  "image":["https://example.com/500x500.jpg"],
+  "description":"Definitive edition CD with bonuses",
+  "offers":{
+    "@type":"Offer",
+    "price":"5.00",
+    "priceCurrency":"USD",
+    "availability":"https://schema.org/PreOrder",
+    "url":"https://example.com/#shop"
+  }
+}
+</script>
 
 <style>
   :root{
     --bg-light:linear-gradient(120deg,#fdfbfb,#ebedee);
     --bg-dark:linear-gradient(120deg,#1e1e1e,#121212);
     --text-light:#000; --text-dark:#fff;
-    --muted:#444; --muted-dark:#ccc;
+    --muted:#3a3a3a; --muted-dark:#d6d6d6;
     --card:#fff; --card-dark:#222;
     --btn:#ccc; --btn-dark:#444;
     --btn-hover:#bbb; --btn-dark-hover:#555;
@@ -35,6 +75,12 @@
   body{margin:0;font-family:'Trebuchet MS',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg-light);color:var(--text-light);scroll-behavior:smooth;transition:background .5s,color .5s;overflow-x:hidden}
   body.dark{background:var(--bg-dark);color:var(--text-dark)}
   :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+    .flip-digit-inner{transform:none !important;}
+  }
 
   nav{background:var(--nav-light);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:var(--shadow)}
   body.dark nav{background:var(--nav-dark)}
@@ -55,6 +101,7 @@
 
   .nav-icon{display:inline-flex;align-items:center;gap:8px}
   .nav-icon svg{width:18px;height:18px;vertical-align:middle}
+  .menu a[aria-current="true"]{opacity:.85}
 
   .section{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:56px 20px;opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s,box-shadow .6s;text-align:center;scroll-margin-top:80px}
   .section.visible{opacity:1;transform:translateY(0)}
@@ -73,7 +120,7 @@
   .hero-img{border-radius:12px;box-shadow:var(--shadow);cursor:pointer;margin-top:12px;max-width:90vw;height:auto}
 
   .shop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;width:min(1100px,92vw);margin:0 auto}
-  .product{position:relative;background:var(--card);color:inherit;border:none;text-align:center;cursor:pointer;width:100%;padding:14px;border-radius:12px;transition:transform .2s,box-shadow .2s;box-shadow:var(--shadow)}
+  .product{position:relative;background:var(--card);color:inherit;text-align:center;cursor:pointer;width:100%;padding:14px;border-radius:12px;transition:transform .2s,box-shadow .2s;box-shadow:var(--shadow)}
   .product:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
   .product img{width:100%;height:auto;border-radius:10px;transition:transform .25s}
   .product:hover img{transform:scale(1.03)}
@@ -81,7 +128,6 @@
   .product p{margin:4px 0;color:var(--muted)}
   body.dark .product{background:var(--card-dark)}
   body.dark .product p{color:var(--muted-dark)}
-  /* info badge icon - round "i" */
   .info-badge{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;display:grid;place-items:center;border:none;cursor:pointer}
   .product:hover .info-badge{background:rgba(0,0,0,.85)}
   .info-badge svg{width:16px;height:16px}
@@ -91,6 +137,7 @@
   .modal-content{background:var(--card);color:inherit;padding:20px;border-radius:12px;width:100%;max-width:520px;text-align:center;transform:translateY(-16px) scale(.96);transition:transform .35s,opacity .35s;opacity:0;box-shadow:var(--shadow-lg)}
   .modal.show .modal-content{transform:translateY(0) scale(1);opacity:1}
   .modal-content img{width:80%;height:auto;margin:0 auto 14px;border-radius:10px;display:block}
+  .modal-content:focus{outline:none}
   body.dark .modal-content{background:var(--card-dark)}
 
   button,.btn{background:var(--btn);color:#000;border:none;border-radius:22px;padding:12px 22px;font-size:16px;cursor:pointer;transition:background .2s,transform .15s}
@@ -112,11 +159,12 @@
   .toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:#1f9d55;color:#fff;padding:10px 16px;border-radius:10px;box-shadow:var(--shadow-lg);z-index:2000;opacity:0;transition:opacity .3s}
   .toast.show{opacity:1}
 
-  /* Tracklist text (modal used instead of inline) */
   .tracklist{display:none}
 
-  /* Confetti canvas */
   #confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:1500}
+
+  /* Make modal contents programmatically focusable for focus restore */
+  .modal-content{outline:0} .modal-content[tabindex="-1"]{outline:0}
 </style>
 </head>
 <body>
@@ -124,13 +172,12 @@
   <nav>
     <div class="brand" id="brandHome" title="Go Home">MALUCO</div>
     <button class="menu-toggle" type="button" aria-controls="mainmenu" aria-expanded="false" onclick="toggleMenu()">☰</button>
-    <div class="menu" id="mainmenu" role="navigation" aria-label="Main">
-      <a href="#home" data-target="home" class="nav-link">Home</a>
+    <div class="menu" id="mainmenu" aria-label="Main">
+      <a href="#home" data-target="home" class="nav-link" aria-current="true">Home</a>
       <a href="#shop" data-target="shop" class="nav-link">Shop</a>
-      <!-- Settings icon button (cogwheel) -->
       <a href="#settings" data-target="settings" class="nav-link nav-icon" title="Settings" aria-label="Settings">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm9.44 3-1.64-.95a7.9 7.9 0 0 0-.3-.72l.26-1.88a.75.75 0 0 0-.74-.85h-2a7.9 7.9 0 0 0-.56-.44l-.77-1.76a.75.75 0 0 0-.95-.4l-1.86.76c-.24-.08-.49-.14-.74-.2l-.96-1.75a.75.75 0 0 0-1.32 0l-.96 1.75c-.25.06-.5.12-.74.2l-1.86-.76a.75.75 0 0 0-.95.4l-.77 1.76c-.19.14-.38.28-.56.44H4a.75.75 0 0 0-.74.85l.26 1.88c-.1.23-.2.47-.3.72l-1.64.95a.75.75 0 0 0-.27 1.03l1 1.73c-.02.25-.02.51 0 .76l-1 1.73a.75.75 0 0 0 .27 1.03l1.64.95c.1.24.2.48.3.72l-.26 1.88a.75.75 0 0 0 .74.85h2c.18.16.37.3.56.44l.77 1.76c.17.4.63.58 1.02.41l1.86-.76c.24.08.49.14.74.2l.96 1.75a.75.75 0 0 0 1.32 0l.96-1.75c.25-.06.5-.12.74-.2l1.86.76c.39.17.85-.01 1.02-.41l.77-1.76c.19-.14.38-.28.56-.44h2a.75.75 0 0 0 .74-.85l-.26-1.88c.1-.24.2-.48.3-.72l1.64-.95a.75.75 0 0 0 .27-1.03l-1-1.73c.02-.25.02-.51 0-.76l1-1.73a.75.75 0 0 0-.27-1.03ZM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10Z"/></svg>
-        <span class="sr-only" style="position:absolute;left:-9999px;">Settings</span>
+        <span class="sr-only">Settings</span>
       </a>
       <button id="accountBtn" class="btn btn-link" type="button" onclick="openAuthModal()">Account</button>
     </div>
@@ -146,33 +193,37 @@
       <div class="flip-digit" aria-label="Seconds"><div class="flip-digit-inner"><span class="flip-digit-top">0s</span><span class="flip-digit-bottom">0s</span></div></div>
     </div>
 
-    <img class="hero-img" src="400x400.jpg" alt="MALUCO album" width="400" height="400"
+    <img class="hero-img" src="400x400.jpg" alt="MALUCO album" width="400" height="400" fetchpriority="high"
          onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" />
   </section>
 
   <!-- Shop -->
   <section id="shop" class="section">
     <div class="shop-grid">
-      <button class="product" type="button" onclick="openModal('standard')">
+      <!-- Product as article with role=button (no nested buttons) -->
+      <article class="product" tabindex="0" role="button" aria-describedby="std-desc"
+               onclick="openModal('standard')"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('standard')}">
         <img src="400x400.jpg" alt="MALUCO standard edition" width="400" height="400" loading="lazy" />
         <h2>MALUCO</h2>
-        <p><strong>$3</strong></p>
-        <p>Pre-orders available now</p>
-        <button class="info-badge" type="button" aria-label="Standard edition info" onclick="event.stopPropagation(); openInfo('standard')">
-          <!-- round info icon -->
+        <p id="std-desc"><strong>$3</strong> — Pre-orders available now</p>
+        <button class="info-badge" type="button" aria-label="Standard edition info"
+                onclick="event.stopPropagation(); openInfo('standard')">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z"/></svg>
         </button>
-      </button>
+      </article>
 
-      <button class="product" type="button" onclick="openModal('definitive')">
+      <article class="product" tabindex="0" role="button" aria-describedby="def-desc"
+               onclick="openModal('definitive')"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('definitive')}">
         <img src="500x500.jpg" alt="MALUCO definitive edition" width="500" height="500" loading="lazy" />
         <h2>MALUCO (Definitive Edition)</h2>
-        <p><strong>$5</strong></p>
-        <p>Pre-orders available now</p>
-        <button class="info-badge" type="button" aria-label="Definitive edition info" onclick="event.stopPropagation(); openInfo('definitive')">
+        <p id="def-desc"><strong>$5</strong> — Pre-orders available now</p>
+        <button class="info-badge" type="button" aria-label="Definitive edition info"
+                onclick="event.stopPropagation(); openInfo('definitive')">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z"/></svg>
         </button>
-      </button>
+      </article>
     </div>
   </section>
 
@@ -197,14 +248,13 @@
 
   <!-- Product Modal -->
   <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-content">
+    <div class="modal-content" tabindex="-1">
       <h2 id="modalTitle">MALUCO — $3</h2>
       <img id="modalAlbum" src="400x400.jpg" alt="Album" width="400" height="400" />
       <p>This is a reservation — <strong>we won't charge you now</strong>.</p>
 
       <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
         <button id="buyButton" type="button" class="btn" onclick="showForm()">Reserve</button>
-        <!-- Tracklist opens a popup modal -->
         <button id="tracklistBtn" type="button" class="btn" onclick="openTracklistModal(currentEdition)">Tracklist</button>
         <button id="infoBtn" type="button" class="btn" onclick="openInfo(currentEdition)">Info</button>
       </div>
@@ -226,9 +276,9 @@
     </div>
   </div>
 
-  <!-- Tracklist Modal (popup) -->
+  <!-- Tracklist Modal -->
   <div class="modal" id="tracklistModal" role="dialog" aria-modal="true" aria-labelledby="tracklistTitle" aria-hidden="true">
-    <div class="modal-content" style="text-align:left;">
+    <div class="modal-content" style="text-align:left;" tabindex="-1">
       <h2 id="tracklistTitle" style="text-align:center;">Tracklist</h2>
       <div id="tracklistBody" style="line-height:1.6;"></div>
       <div style="text-align:center; margin-top:14px;">
@@ -239,7 +289,7 @@
 
   <!-- Info Modal -->
   <div class="modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle" aria-hidden="true">
-    <div class="modal-content" style="text-align:left;">
+    <div class="modal-content" style="text-align:left;" tabindex="-1">
       <h2 id="infoTitle" style="text-align:center;">Product Info</h2>
       <div id="infoBody" style="line-height:1.6;"></div>
       <div style="text-align:center; margin-top:14px;">
@@ -248,9 +298,9 @@
     </div>
   </div>
 
-  <!-- Account / Auth Modal (cleaner UI + username control) -->
+  <!-- Account / Auth Modal -->
   <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true">
-    <div class="modal-content" style="max-width:520px;">
+    <div class="modal-content" style="max-width:520px;" tabindex="-1">
       <h2 id="authTitle">Sign in</h2>
       <button type="button" class="btn" id="googleSignInBtn">Continue with Google</button>
       <div class="dividerOr" style="margin:10px 0; opacity:.6;">or</div>
@@ -290,7 +340,8 @@
 <!-- ===== Firebase (Auth + Firestore for preorders + usernames) ===== -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+  // Optional: gate analytics behind consent. If you keep it, import and call after consent.
+  // import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
   import {
     getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider,
     signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword,
@@ -312,7 +363,7 @@
   };
 
   const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+  // const analytics = getAnalytics(app); // enable after consent
   const auth = getAuth(app);
   const db = getFirestore(app);
 
@@ -359,6 +410,7 @@
     authModal.setAttribute('aria-hidden','true');
     document.body.style.overflow='';
     setTimeout(()=>{ authModal.style.display='none'; },300);
+    lastFocusGlobal?.focus?.(); // restore if opened from a focused element
   }
   window.closeAuthModal = closeAuthModal;
 
@@ -472,13 +524,11 @@
         if(diffDays < 30) throw new Error(`You can change your username again in ${Math.ceil(30 - diffDays)} day(s).`);
       }
 
-      // Enforce uniqueness (no equal usernames)
       const unameSnap = await tx.get(unameRef);
       if(unameSnap.exists() && unameSnap.data().uid !== user.uid){
         throw new Error("That username is already taken.");
       }
 
-      // Free previous username
       const prev = p.username;
       if(prev && prev !== newName){
         const prevRef = doc(db,'usernames', prev);
@@ -488,7 +538,6 @@
         }
       }
 
-      // Claim new username & write profile
       tx.set(unameRef, { uid: user.uid, claimedAt: serverTimestamp() });
       tx.set(pRef, {
         email: user.email || null,
@@ -499,7 +548,9 @@
     });
   }
 
+  let lastFocusGlobal = null;
   function openAuthModal(){
+    lastFocusGlobal = document.activeElement;
     const user = auth.currentUser;
     $("#authError").textContent="";
     document.querySelector('#authModal .modal-content .accountBox')?.remove();
@@ -638,6 +689,7 @@
   // expose trap helpers for other modals
   window.__focusTrap = { activate: activateFocusTrap, deactivate: deactivateFocusTrap };
 </script>
+
 <!-- ===== Site logic + confetti + info + tracklist modals ===== -->
 <script defer>
   (function initTheme(){
@@ -655,6 +707,22 @@
     document.querySelectorAll('.section').forEach(s=>io.observe(s));
   })();
 
+  // Active link aria-current using IO
+  (function activeNavInit(){
+    const sections=[...document.querySelectorAll('.section')];
+    const links=[...document.querySelectorAll('.nav-link')];
+    const byId=Object.fromEntries(links.map(l=>[l.dataset.target,l]));
+    const navIO=new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        if(e.isIntersecting){
+          links.forEach(l=>l.removeAttribute('aria-current'));
+          byId[e.target.id]?.setAttribute('aria-current','true');
+        }
+      });
+    },{threshold:0.5});
+    sections.forEach(s=>navIO.observe(s));
+  })();
+
   /* Smooth home via brand click + tiny bounce */
   document.getElementById('brandHome').addEventListener('click', ()=>{
     const brand = document.getElementById('brandHome');
@@ -666,6 +734,7 @@
     if(menu.classList.contains('show')){ menu.classList.remove('show'); btn.setAttribute('aria-expanded','false'); }
   });
 
+  // If you need a fixed drop moment, replace with a UTC timestamp:
   function next26th(from=new Date()){
     const y=from.getFullYear(), m=from.getMonth();
     const candidate=new Date(y,m,26,0,0,0);
@@ -677,7 +746,7 @@
   const ctx = confettiCanvas.getContext('2d');
   let confettiRunning=false;
   function resizeCanvas(){ confettiCanvas.width=window.innerWidth; confettiCanvas.height=window.innerHeight; }
-  window.addEventListener('resize', resizeCanvas, {passive:true}); resizeCanvas();
+  window.addEventListener('resize', resizeCanvas); resizeCanvas();
 
   function launchConfetti(duration=3000, count=200){
     if(confettiRunning) return;
@@ -776,7 +845,9 @@
 
   /* Tracklist modal (popup) */
   const tracklistModal = document.getElementById('tracklistModal');
+  let openerTracklist = null;
   function openTracklistModal(edition='standard'){
+    openerTracklist = document.activeElement;
     const title = document.getElementById('tracklistTitle');
     const body  = document.getElementById('tracklistBody');
     title.textContent = edition==='definitive' ? 'Tracklist — MALUCO (Definitive)' : 'Tracklist — MALUCO';
@@ -799,7 +870,7 @@
     requestAnimationFrame(()=>{
       tracklistModal.classList.add('show'); tracklistModal.setAttribute('aria-hidden','false');
       window.__focusTrap?.activate(tracklistModal);
-      tracklistModal.querySelector('button.btn')?.focus();
+      tracklistModal.querySelector('.modal-content')?.focus();
     });
   }
   function closeTracklistModal(){
@@ -807,6 +878,7 @@
     tracklistModal.classList.remove('show'); tracklistModal.setAttribute('aria-hidden','true');
     document.body.style.overflow='';
     setTimeout(()=>{ tracklistModal.style.display='none'; },300);
+    openerTracklist?.focus?.();
   }
   window.openTracklistModal = openTracklistModal;
   window.closeTracklistModal = closeTracklistModal;
@@ -814,7 +886,9 @@
 
   /* Info modal */
   const infoModal = document.getElementById('infoModal');
+  let openerInfo = null;
   function openInfo(edition='standard'){
+    openerInfo = document.activeElement;
     const title = document.getElementById('infoTitle');
     const body  = document.getElementById('infoBody');
     const isDef = edition==='definitive';
@@ -837,7 +911,7 @@
     requestAnimationFrame(()=>{
       infoModal.classList.add('show'); infoModal.setAttribute('aria-hidden','false');
       window.__focusTrap?.activate(infoModal);
-      infoModal.querySelector('button.btn')?.focus();
+      infoModal.querySelector('.modal-content')?.focus();
     });
   }
   function closeInfo(){
@@ -845,6 +919,7 @@
     infoModal.classList.remove('show'); infoModal.setAttribute('aria-hidden','true');
     document.body.style.overflow='';
     setTimeout(()=>{ infoModal.style.display='none'; },300);
+    openerInfo?.focus?.();
   }
   window.openInfo = openInfo; window.closeInfo = closeInfo;
   infoModal.addEventListener('click', (e)=>{ if(e.target.id==='infoModal') closeInfo(); });
@@ -869,9 +944,10 @@
   }
   window.toggleMenu=toggleMenu;
 
-  // Nav link smooth + underline + pulse + close mobile
+  // Nav link smooth + underline + pulse + close mobile (keep new-tab gestures)
   document.querySelectorAll('.nav-link').forEach(link=>{
     link.addEventListener('click', (e)=>{
+      if(e.metaKey || e.ctrlKey || e.shiftKey) return;
       e.preventDefault();
       link.classList.add('clicked'); setTimeout(()=>link.classList.remove('clicked'),400);
       const id=link.getAttribute('data-target'); const section=document.getElementById(id);
@@ -884,7 +960,7 @@
     });
   });
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts (keydown events can't be passive)
   window.addEventListener('keydown',(e)=>{
     const tag=(e.target.tagName||'').toLowerCase();
     if(tag==='input' || tag==='textarea') return;
@@ -905,7 +981,7 @@
       if(infoOpen) closeInfo();
       if(tlOpen) closeTracklistModal();
     }
-  },{passive:true});
+  });
 
   // Konami
   (function konamiInit(){
@@ -916,7 +992,7 @@
       const normalized=(key.length===1)?key:e.key;
       pos=(normalized===seq[pos])?pos+1:(normalized===seq[0]?1:0);
       if(pos===seq.length){ document.body.style.background='linear-gradient(120deg,#6dc8eb,#66c2ef)'; pos=0; }
-    },{passive:true});
+    });
   })();
 </script>
 </body>
