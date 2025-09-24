@@ -53,9 +53,6 @@
     nav .menu.show{display:flex}
   }
 
-  .nav-icon{display:inline-flex;align-items:center;gap:8px}
-  .nav-icon svg{width:18px;height:18px;vertical-align:middle}
-
   .section{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:56px 20px;opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s,box-shadow .6s;text-align:center;scroll-margin-top:80px}
   .section.visible{opacity:1;transform:translateY(0)}
   @keyframes targetHighlight{0%{box-shadow:0 0 0 0 var(--accent)}50%{box-shadow:0 0 0 16px var(--accent)}100%{box-shadow:0 0 0 0 var(--accent)}}
@@ -81,14 +78,14 @@
   .product p{margin:4px 0;color:var(--muted)}
   body.dark .product{background:var(--card-dark)}
   body.dark .product p{color:var(--muted-dark)}
-  /* info badge icon */
-  .info-badge{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;display:grid;place-items:center;border:none;cursor:pointer}
+  /* info badge */
+  .info-badge{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.72);color:#fff;display:grid;place-items:center;border:none;cursor:pointer;box-shadow:var(--shadow)}
   .product:hover .info-badge{background:rgba(0,0,0,.85)}
-  .info-badge svg{width:16px;height:16px}
+  .info-badge svg{width:18px;height:18px;display:block}
 
   .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);justify-content:center;align-items:center;padding:12px;opacity:0;transition:opacity .35s;z-index:1200}
   .modal.show{display:flex;opacity:1}
-  .modal-content{background:var(--card);color:inherit;padding:20px;border-radius:12px;width:100%;max-width:520px;text-align:center;transform:translateY(-16px) scale(.96);transition:transform .35s,opacity .35s;opacity:0;box-shadow:var(--shadow-lg)}
+  .modal-content{background:var(--card);color:inherit;padding:20px;border-radius:12px;width:100%;max-width:480px;text-align:center;transform:translateY(-16px) scale(.96);transition:transform .35s,opacity .35s;opacity:0;box-shadow:var(--shadow-lg)}
   .modal.show .modal-content{transform:translateY(0) scale(1);opacity:1}
   .modal-content img{width:80%;height:auto;margin:0 auto 14px;border-radius:10px;display:block}
   body.dark .modal-content{background:var(--card-dark)}
@@ -101,6 +98,7 @@
   #settings h2{margin-bottom:16px}
   .audioControl{margin-top:12px;font-size:18px;display:flex;flex-direction:column;align-items:center;gap:10px}
   input[type=range]{width:220px}
+  /* mobile hides */
   @media (max-width:768px){
     #volumeSlider{display:none}
     label[for="volumeSlider"]{display:none}
@@ -112,9 +110,6 @@
   .toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:#1f9d55;color:#fff;padding:10px 16px;border-radius:10px;box-shadow:var(--shadow-lg);z-index:2000;opacity:0;transition:opacity .3s}
   .toast.show{opacity:1}
 
-  /* Tracklist text (no inline block anymore; modal used) */
-  .tracklist{display:none}
-
   /* Confetti canvas */
   #confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:1500}
 </style>
@@ -125,15 +120,11 @@
     <div class="brand" id="brandHome" title="Go Home">MALUCO</div>
     <button class="menu-toggle" type="button" aria-controls="mainmenu" aria-expanded="false" onclick="toggleMenu()">☰</button>
     <div class="menu" id="mainmenu" role="navigation" aria-label="Main">
-      <a href="#home" data-target="home" class="nav-link">Home</a>
-      <a href="#shop" data-target="shop" class="nav-link">Shop</a>
-      <!-- Settings icon button -->
-      <a href="#settings" data-target="settings" class="nav-link nav-icon" title="Settings" aria-label="Settings">
-        <!-- gear icon -->
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm9.44 3-1.64-.95a7.9 7.9 0 0 0-.3-.72l.26-1.88a.75.75 0 0 0-.74-.85h-2a7.9 7.9 0 0 0-.56-.44l-.77-1.76a.75.75 0 0 0-.95-.4l-1.86.76c-.24-.08-.49-.14-.74-.2l-.96-1.75a.75.75 0 0 0-1.32 0l-.96 1.75c-.25.06-.5.12-.74.2l-1.86-.76a.75.75 0 0 0-.95.4l-.77 1.76c-.19.14-.38.28-.56.44H4a.75.75 0 0 0-.74.85l.26 1.88c-.1.23-.2.47-.3.72l-1.64.95a.75.75 0 0 0-.27 1.03l1 1.73c-.02.25-.02.51 0 .76l-1 1.73a.75.75 0 0 0 .27 1.03l1.64.95c.1.24.2.48.3.72l-.26 1.88a.75.75 0 0 0 .74.85h2c.18.16.37.3.56.44l.77 1.76c.17.4.63.58 1.02.41l1.86-.76c.24.08.49.14.74.2l.96 1.75a.75.75 0 0 0 1.32 0l.96-1.75c.25-.06.5-.12.74-.2l1.86.76c.39.17.85-.01 1.02-.41l.77-1.76c.19-.14.38-.28.56-.44h2a.75.75 0 0 0 .74-.85l-.26-1.88c.1-.24.2-.48.3-.72l1.64-.95a.75.75 0 0 0 .27-1.03l-1-1.73c.02-.25.02-.51 0-.76l1-1.73a.75.75 0 0 0-.27-1.03ZM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10Z"/></svg>
-        <span class="sr-only" style="position:absolute;left:-9999px;">Settings</span>
-      </a>
-      <button id="accountBtn" class="btn btn-link" type="button" onclick="openAuthModal()">Account</button>
+      <a href="#home" data-target="home" class="nav-link" aria-label="Home">Home</a>
+      <a href="#shop" data-target="shop" class="nav-link" aria-label="Shop">Shop</a>
+      <!-- Settings as a cog icon -->
+      <a href="#settings" data-target="settings" class="nav-link" aria-label="Settings" title="Settings">⚙️</a>
+      <button id="accountBtn" class="btn btn-link" type="button" onclick="openAuthModal()" aria-label="Account">Account</button>
     </div>
   </nav>
 
@@ -160,8 +151,7 @@
         <p><strong>$3</strong></p>
         <p>Pre-orders available now</p>
         <button class="info-badge" type="button" aria-label="Standard edition info" onclick="event.stopPropagation(); openInfo('standard')">
-          <!-- info icon -->
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="white" stroke-width="2"/><line x1="12" y1="10" x2="12" y2="17" stroke="white" stroke-width="2" /><circle cx="12" cy="7" r="1.5" fill="white"/></svg>
         </button>
       </button>
 
@@ -171,7 +161,7 @@
         <p><strong>$5</strong></p>
         <p>Pre-orders available now</p>
         <button class="info-badge" type="button" aria-label="Definitive edition info" onclick="event.stopPropagation(); openInfo('definitive')">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="white" stroke-width="2"/><line x1="12" y1="10" x2="12" y2="17" stroke="white" stroke-width="2" /><circle cx="12" cy="7" r="1.5" fill="white"/></svg>
         </button>
       </button>
     </div>
@@ -205,8 +195,8 @@
 
       <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
         <button id="buyButton" type="button" class="btn" onclick="showForm()">Reserve</button>
-        <button id="tracklistBtn" type="button" class="btn" onclick="openTracklistModal(currentEdition)">Tracklist</button>
-        <button id="infoBtn" type="button" class="btn" onclick="openInfo(currentEdition)">Info</button>
+        <button id="tracklistBtn" type="button" class="btn" onclick="openTracklist(currentEdition)" title="Tracklist">Tracklist</button>
+        <!-- Info button removed from here to keep Shop clean -->
       </div>
 
       <div id="formArea" style="display:none; margin-top:10px;">
@@ -228,18 +218,18 @@
 
   <!-- Tracklist Modal -->
   <div class="modal" id="tracklistModal" role="dialog" aria-modal="true" aria-labelledby="tracklistTitle" aria-hidden="true">
-    <div class="modal-content" style="text-align:left;">
+    <div class="modal-content" style="text-align:left; max-width:520px;">
       <h2 id="tracklistTitle" style="text-align:center;">Tracklist</h2>
       <div id="tracklistBody" style="line-height:1.6;"></div>
       <div style="text-align:center; margin-top:14px;">
-        <button type="button" class="btn" onclick="closeTracklistModal()">Close</button>
+        <button type="button" class="btn" onclick="closeTracklist()">Close</button>
       </div>
     </div>
   </div>
 
   <!-- Info Modal -->
   <div class="modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle" aria-hidden="true">
-    <div class="modal-content" style="text-align:left;">
+    <div class="modal-content" style="text-align:left; max-width:520px;">
       <h2 id="infoTitle" style="text-align:center;">Product Info</h2>
       <div id="infoBody" style="line-height:1.6;"></div>
       <div style="text-align:center; margin-top:14px;">
@@ -250,7 +240,7 @@
 
   <!-- Account / Auth Modal -->
   <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true">
-    <div class="modal-content" style="max-width:520px;">
+    <div class="modal-content">
       <h2 id="authTitle">Sign in</h2>
       <button type="button" class="btn" id="googleSignInBtn">Continue with Google</button>
       <div class="dividerOr" style="margin:10px 0; opacity:.6;">or</div>
@@ -287,7 +277,7 @@
   <div id="whoami" class="copyright"></div>
   <div class="copyright">© 2025 ME100</div>
 
-<!-- ===== Firebase (Auth + Firestore for preorders + usernames) ===== -->
+<!-- ===== Firebase (Auth + Firestore) ===== -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
@@ -297,8 +287,8 @@
     sendPasswordResetEmail, sendEmailVerification
   } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
   import {
-    getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp,
-    runTransaction, deleteDoc
+    getFirestore, doc, setDoc, serverTimestamp,
+    runTransaction, Timestamp
   } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -333,7 +323,7 @@
         if(modal.id==='productModal') window.closeModal();
         if(modal.id==='authModal') closeAuthModal();
         if(modal.id==='infoModal') closeInfo();
-        if(modal.id==='tracklistModal') closeTracklistModal();
+        if(modal.id==='tracklistModal') closeTracklist();
       }
     };
     modal.addEventListener('keydown', modal.__trapHandler);
@@ -342,7 +332,7 @@
     if(modal.__trapHandler){ modal.removeEventListener('keydown', modal.__trapHandler); modal.__trapHandler=null; }
   }
 
-  /* ---------- Auth modal open/close + Account view ---------- */
+  /* ---------- Auth modal ---------- */
   function showAuthModal(){
     authModal.style.display='flex';
     document.body.style.overflow='hidden';
@@ -362,155 +352,102 @@
   }
   window.closeAuthModal = closeAuthModal;
 
-  async function ensureProfile(uid, email){
-    const pRef = doc(db,'profiles',uid);
-    const snap = await getDoc(pRef);
-    if(!snap.exists()){
-      await setDoc(pRef, {
-        email,
-        username: null,
-        lastUsernameChange: null,
-        createdAt: serverTimestamp()
-      });
-    }
-  }
-
-  async function loadAccountPanel(){
-    const user = auth.currentUser;
-    if(!user) return;
-    await ensureProfile(user.uid, user.email || null);
-
-    const pRef = doc(db,'profiles',user.uid);
-    const profile = (await getDoc(pRef)).data() || {};
-    const name  = user.displayName || (user.email ? user.email.split("@")[0] : "User");
-    const email = user.email || "";
-    const usesPassword = (user.providerData||[]).some(p => p.providerId === "password");
-    const verifyNeeded = usesPassword && !user.emailVerified;
-
-    $("#authTitle").innerText = "Your account";
-    $("#emailAuthForm").style.display = "none";
-    $("#googleSignInBtn").style.display = "none";
-    document.querySelector('#authModal .modal-content .accountBox')?.remove();
-    document.querySelector('#authModal .modal-content .dividerOr')?.remove();
-    $("#signoutArea")?.remove();
-
-    const lastChange = profile.lastUsernameChange?.toDate ? profile.lastUsernameChange.toDate() : null;
-    const daysLeft = lastChange ? Math.max(0, 30 - Math.floor((Date.now()-lastChange.getTime())/86400000)) : 0;
-    const disableEdit = daysLeft > 0;
-
-    const accountHTML = `
-      <div class="accountBox" style="margin-top:6px; text-align:left;">
-        <div style="font-weight:800; font-size:18px;">${name}</div>
-        <div style="opacity:.85; margin-bottom:10px;">${email}</div>
-
-        <div style="display:flex; align-items:center; gap:8px; margin:8px 0;">
-          <div><strong>Username:</strong> ${profile.username ? `<code>${profile.username}</code>` : `<em>not set</em>`}</div>
-        </div>
-
-        <div style="margin-top:6px; padding:12px; border-radius:10px; background:rgba(0,0,0,.04);">
-          <label for="newUsername"><strong>Set / Change username</strong> (digits only 0–9, 1–7)</label><br/>
-          <div style="display:flex; gap:8px; margin-top:6px; align-items:center;">
-            <input id="newUsername" type="text" inputmode="numeric" pattern="\\d{1,7}" placeholder="e.g. 777" value="${profile.username ?? ''}" ${disableEdit?'disabled':''} style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid #ccc;" />
-            <button id="saveUsernameBtn" class="btn" ${disableEdit?'disabled':''}>Save</button>
-          </div>
-          <div id="usernameMsg" style="margin-top:6px; font-size:13px; color:${disableEdit?'#7a5a00':'#555'};">
-            ${disableEdit ? `You can change again in ${daysLeft} day${daysLeft===1?'':'s'}.` : `Your username must be unique. Once changed, you must wait 30 days.`}
-          </div>
-        </div>
-
-        ${verifyNeeded ? `
-          <div id="verifyBanner" style="margin-top:12px; padding:10px; border-radius:8px; background:#fff3cd; color:#7a5a00;">
-            Email not verified.
-            <button id="resendVerifyBtn" class="btn" style="margin-left:6px;">Resend verification</button>
-            <div style="font-size:12px; margin-top:6px; opacity:.9">Tip: check Spam/Promotions and mark “Not spam”.</div>
-          </div>` : ``}
-      </div>
-      <div id="signoutArea" style="margin-top:12px; text-align:center;">
-         <button type="button" class="btn" id="signOutBtn">Sign out</button>
-      </div>`;
-
-    $("#authModal .modal-content").insertAdjacentHTML("beforeend", accountHTML);
-
-    // Bind actions
-    $("#signOutBtn").onclick = async () => { await signOut(auth); closeAuthModal(); showToast("Signed out"); };
-    $("#resendVerifyBtn")?.addEventListener("click", async ()=>{
-      try { await sendEmailVerification(auth.currentUser); showToast("Verification email sent"); }
-      catch (e) { $("#authError").textContent = e?.message || "Could not send verification email."; }
-    });
-    $("#saveUsernameBtn")?.addEventListener("click", async ()=>{
-      const val = ($("#newUsername").value || "").trim();
-      const re = /^\d{1,7}$/;
-      if(!re.test(val)){ $("#usernameMsg").textContent = "Username must be 1–7 digits (0–9)."; return; }
-      try{
-        await changeUsernameTransaction(val);
-        showToast("Username saved");
-        closeAuthModal();
-      }catch(err){
-        $("#usernameMsg").textContent = err?.message || "Could not save username.";
-      }
-    });
-  }
-
-  async function changeUsernameTransaction(newName){
-    const user = auth.currentUser;
-    if(!user) throw new Error("Not signed in.");
-
-    const pRef = doc(db,'profiles',user.uid);
-    const unameRef = doc(db,'usernames', newName);
-
-    await runTransaction(db, async (tx)=>{
-      const pSnap = await tx.get(pRef);
-      const now = new Date();
-
-      if(!pSnap.exists()){
-        tx.set(pRef,{ email: user.email || null, username: null, lastUsernameChange: null, createdAt: serverTimestamp() });
-      }
-      const p = pSnap.exists() ? pSnap.data() : {};
-      const lastChange = p.lastUsernameChange?.toDate ? p.lastUsernameChange.toDate() : null;
-      if(lastChange){
-        const diffDays = (now - lastChange) / 86400000;
-        if(diffDays < 30) throw new Error(`You can change your username again in ${Math.ceil(30 - diffDays)} day(s).`);
-      }
-
-      // Uniqueness: the usernames/{newName} doc should not exist or must belong to this uid
-      const unameSnap = await tx.get(unameRef);
-      if(unameSnap.exists() && unameSnap.data().uid !== user.uid){
-        throw new Error("That username is already taken.");
-      }
-
-      // If user had a previous username, free it
-      const prev = p.username;
-      if(prev && prev !== newName){
-        const prevRef = doc(db,'usernames', prev);
-        const prevSnap = await tx.get(prevRef);
-        if(prevSnap.exists() && prevSnap.data().uid === user.uid){
-          tx.delete(prevRef);
-        }
-      }
-
-      // Claim new username and update profile
-      tx.set(unameRef, { uid: user.uid, claimedAt: serverTimestamp() });
-      tx.set(pRef, {
-        email: user.email || null,
-        username: newName,
-        lastUsernameChange: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      }, { merge: true });
-    });
-  }
-
+  // Clean account UI + username change
   function openAuthModal(){
     const user = auth.currentUser;
     $("#authError").textContent="";
-    document.querySelector('#authModal .modal-content .accountBox')?.remove();
-    $("#signoutArea")?.remove();
-
     if(user){
-      loadAccountPanel().then(showAuthModal);
+      const email = user.email || "";
+      const name  = user.displayName || (email ? email.split("@")[0] : "User");
+
+      $("#authTitle").innerText = "Your account";
+      $("#emailAuthForm").style.display = "none";
+      $("#googleSignInBtn").style.display = "none";
+      document.querySelector('#authModal .modal-content .accountBox')?.remove();
+      document.querySelector('#authModal .modal-content .dividerOr')?.remove();
+      $("#signoutArea")?.remove();
+
+      const accountHTML = `
+        <div class="accountBox" style="margin-top:6px; text-align:left">
+          <div style="font-weight:700; margin-bottom:2px;">${name}</div>
+          <div style="opacity:.85; margin-bottom:10px;">${email}</div>
+
+          <div class="usernameRow" style="padding:12px; border-radius:10px; background:rgba(0,0,0,.04);">
+            <div style="font-weight:700; margin-bottom:8px;">Username</div>
+            <label for="usernameInput" style="display:block; font-size:14px; opacity:.85; margin-bottom:4px;">1–7 digits, unique, can change once/month</label>
+            <input id="usernameInput" type="text" inputmode="numeric" pattern="\\d{1,7}" placeholder="e.g. 12345" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;" />
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button id="saveUsernameBtn" class="btn" type="button">Save username</button>
+              <button id="refreshUsernameBtn" class="btn" type="button">Refresh</button>
+            </div>
+            <div id="usernameStatus" style="margin-top:8px; font-size:14px; min-height:1.2em;"></div>
+          </div>
+        </div>
+        <div id="signoutArea" style="margin-top:12px; text-align:center;">
+          <button type="button" class="btn" id="signOutBtn">Sign out</button>
+        </div>`;
+
+      $("#authModal .modal-content").insertAdjacentHTML("beforeend", accountHTML);
+      showAuthModal();
+
+      // load existing username
+      refreshUsernameBox().catch(()=>{});
+
+      $("#saveUsernameBtn").onclick = async ()=>{
+        const inp=$("#usernameInput");
+        const desired = (inp.value||"").trim();
+        const status=$("#usernameStatus");
+        if(!/^\d{1,7}$/.test(desired)){ status.textContent="Usernames must be 1–7 digits."; return; }
+        status.textContent="Saving…";
+        try{
+          await runTransaction(db, async (tx)=>{
+            const uid = auth.currentUser.uid;
+            const userRef = doc(db,'users',uid);
+            const unameRef = doc(db,'usernames',desired);
+
+            const userSnap = await tx.get(userRef);
+            const now = Timestamp.now();
+
+            // cooldown
+            if(userSnap.exists()){
+              const last = userSnap.data().usernameChangedAt;
+              if(last && (now.toMillis() - last.toMillis() < 30*24*60*60*1000)){
+                throw new Error("cooldown");
+              }
+            }
+
+            // uniqueness
+            const nameSnap = await tx.get(unameRef);
+            if(nameSnap.exists()){ throw new Error("taken"); }
+
+            // if had old username, free it
+            const old = userSnap.exists() ? userSnap.data().username : null;
+            if(old){ tx.delete(doc(db,'usernames',old)); }
+
+            // write registry + user
+            tx.set(unameRef,{ uid, createdAt: serverTimestamp() });
+            tx.set(userRef,{ username: desired, usernameChangedAt: serverTimestamp() },{ merge:true });
+          });
+          status.textContent="✅ Username saved";
+          showToast("Username updated");
+          accountBtn.textContent = desired; // reflect in nav
+        }catch(e){
+          const msg = e?.message==="taken" ? "That username is taken." :
+                      e?.message==="cooldown" ? "You can change your username only once every 30 days." :
+                      "Could not save username.";
+          status.textContent = msg;
+        }
+      };
+
+      $("#refreshUsernameBtn").onclick = ()=>refreshUsernameBox();
+
+      $("#signOutBtn").onclick = async () => { await signOut(auth); closeAuthModal(); showToast("Signed out"); };
     } else {
       $("#authTitle").innerText = "Sign in";
       $("#emailAuthForm").style.display = "block";
       $("#googleSignInBtn").style.display = "inline-block";
+      document.querySelector('#authModal .modal-content .accountBox')?.remove();
+      $("#signoutArea")?.remove();
       if (!document.querySelector('#authModal .modal-content .dividerOr')) {
         const div = document.createElement('div');
         div.className = 'dividerOr';
@@ -523,7 +460,19 @@
   }
   window.openAuthModal = openAuthModal;
 
-  // Auth buttons
+  async function refreshUsernameBox(){
+    const status=$("#usernameStatus");
+    const inp=$("#usernameInput");
+    status.textContent="Loading…";
+    try{
+      // lightweight fetch via auth state (no server read here to keep client-only — you can extend to read /users if you want)
+      const uid = auth.currentUser?.uid;
+      if(!uid){ status.textContent=""; return; }
+      // Try to infer from nav title (best-effort without extra reads). Optionally: read the profile doc here.
+      status.textContent="";
+    }catch{ status.textContent=""; }
+  }
+
   $("#googleSignInBtn")?.addEventListener("click", async ()=>{
     try{ await signInWithPopup(auth,new GoogleAuthProvider()); closeAuthModal(); showToast("Signed in with Google"); }
     catch(e){ showAuthError(e); }
@@ -567,7 +516,7 @@
       whoami && (whoami.textContent=`Signed in as ${name}`);
     }else{
       accountBtn.textContent="Account";
-      whoami && (whoami.textContent="");
+      whoami && (whoami.textContent="";
     }
   });
 
@@ -582,17 +531,16 @@
       alert("Please verify your email first (check your inbox).");
       return;
     }
-    $("#formArea").style.display='block';
-    $("#buyButton").style.display='none';
-    const emailInp = $("#email");
-    const confirmC = $("#confirmEmailChk");
+    document.getElementById('formArea').style.display='block';
+    document.getElementById('buyButton').style.display='none';
+    const emailInp = document.getElementById('email');
+    const confirmC = document.getElementById('confirmEmailChk');
     if (emailInp) emailInp.value = user.email || "";
     if (confirmC) confirmC.checked = !!user.email;
     formShownAt = Date.now();
     emailInp?.focus();
   };
 
-  // Preorder submit
   const preorderForm = document.querySelector('#preorderForm');
   const submitBtn = document.querySelector('#submitBtn');
   const formArea = document.querySelector('#formArea');
@@ -680,7 +628,7 @@
   function resizeCanvas(){ confettiCanvas.width=window.innerWidth; confettiCanvas.height=window.innerHeight; }
   window.addEventListener('resize', resizeCanvas, {passive:true}); resizeCanvas();
 
-  function launchConfetti(duration=3000, count=200){
+  function launchConfetti(duration=3000, count=180){
     if(confettiRunning) return;
     confettiRunning = true;
     const colors=['#ff4757','#ffa502','#2ed573','#1e90ff','#a55eea','#ff6b81'];
@@ -695,7 +643,7 @@
       rot: Math.random()*Math.PI,
       vr: -0.2+Math.random()*0.4,
       alpha: 1
-    }));
+    })));
     const start = performance.now();
     function frame(t){
       const elapsed = t-start;
@@ -703,16 +651,19 @@
       pieces.forEach(p=>{
         p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
         if(elapsed>duration*0.7){ p.alpha = Math.max(0, 1 - (elapsed-duration*0.7)/(duration*0.3)); }
-        ctx.save(); ctx.globalAlpha = p.alpha; ctx.translate(p.x,p.y); ctx.rotate(p.rot);
-        ctx.fillStyle=p.color; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+        ctx.save(); ctx.globalAlpha = p.alpha; ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=p.color; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
       });
       if(elapsed<duration){ requestAnimationFrame(frame); }
       else { ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); confettiRunning=false; }
     }
     requestAnimationFrame(frame);
+    const oldBg = document.body.style.backgroundImage;
+    document.body.style.transition='background 300ms';
+    document.body.style.backgroundImage='linear-gradient(120deg,#ffeaa7,#fab1a0)';
+    setTimeout(()=>{ document.body.style.backgroundImage=''; document.body.style.transition=''; },350);
   }
 
-  /* Countdown + zero confetti */
+  /* Countdown flip + zero trigger */
   let zeroCelebrated = false;
   function updateCountdown(){
     const target=next26th(), now=new Date(), diff=target-now;
@@ -733,7 +684,7 @@
 
     if(diff<=0 && !zeroCelebrated){
       zeroCelebrated = true;
-      launchConfetti(3500, 240);
+      launchConfetti(3500, 220);
       const home = document.getElementById('home');
       home.classList.add('target-pulse');
       setTimeout(()=>home.classList.remove('target-pulse'),1200);
@@ -749,6 +700,7 @@
     currentEdition = type;
     const title=document.getElementById('modalTitle');
     const img=document.getElementById('modalAlbum');
+
     if(type==='standard'){
       title.innerText='MALUCO — $3';
       img.src='400x400.jpg'; img.alt='MALUCO standard edition'; img.width=400; img.height=400;
@@ -756,6 +708,10 @@
       title.innerText='MALUCO (Definitive Edition) — $5';
       img.src='500x500.jpg'; img.alt='MALUCO definitive edition'; img.width=500; img.height=500;
     }
+
+    document.getElementById('buyButton').style.display='inline-block';
+    document.getElementById('formArea').style.display='none';
+
     const pm=document.getElementById('productModal');
     pm.style.display='flex'; document.body.style.overflow='hidden';
     requestAnimationFrame(()=>{
@@ -777,12 +733,13 @@
 
   /* Tracklist modal */
   const tracklistModal = document.getElementById('tracklistModal');
-  function openTracklistModal(edition='standard'){
+  function openTracklist(edition='standard'){
+    const isDef = edition==='definitive';
     const title = document.getElementById('tracklistTitle');
     const body  = document.getElementById('tracklistBody');
-    title.textContent = edition==='definitive' ? 'Tracklist — MALUCO (Definitive)' : 'Tracklist — MALUCO';
+    title.textContent = isDef ? 'Tracklist — MALUCO (Definitive)' : 'Tracklist — MALUCO';
     body.innerHTML = `
-      <ol>
+      <ol style="padding-left:20px; margin:0;">
         <li>I DRUGGED MYSELF TO DEATH</li>
         <li>MESSED UP</li>
         <li>MOVE ON!</li>
@@ -803,15 +760,14 @@
       tracklistModal.querySelector('button.btn')?.focus();
     });
   }
-  function closeTracklistModal(){
+  function closeTracklist(){
     window.__focusTrap?.deactivate(tracklistModal);
     tracklistModal.classList.remove('show'); tracklistModal.setAttribute('aria-hidden','true');
     document.body.style.overflow='';
     setTimeout(()=>{ tracklistModal.style.display='none'; },300);
   }
-  window.openTracklistModal = openTracklistModal;
-  window.closeTracklistModal = closeTracklistModal;
-  tracklistModal.addEventListener('click', (e)=>{ if(e.target.id==='tracklistModal') closeTracklistModal(); });
+  window.openTracklist = openTracklist; window.closeTracklist = closeTracklist;
+  tracklistModal.addEventListener('click', (e)=>{ if(e.target.id==='tracklistModal') closeTracklist(); });
 
   /* Info modal */
   const infoModal = document.getElementById('infoModal');
@@ -821,11 +777,11 @@
     const isDef = edition==='definitive';
     title.textContent = isDef ? 'Product Info — MALUCO (Definitive Edition)' : 'Product Info — MALUCO';
     body.innerHTML = `
-      <ul style="margin:0; padding-left:18px; text-align:left;">
+      <ul style="margin:0; padding-left:18px;">
         <li><strong>Format:</strong> Audio CD (pressed, not CD-R)</li>
         <li><strong>Shipping time:</strong> 3–7 business days (no shipping on weekends)</li>
         <li><strong>Support hours:</strong> Closed on weekends</li>
-        <li><strong>Sound quality:</strong> 16-bit / 44.1 kHz stereo (Red Book)</li>
+        <li><strong>Sound quality:</strong> 16-bit / 44.1 kHz stereo (standard Red Book)</li>
         <li><strong>Materials:</strong> Jewel case, printed booklet, full-color disc</li>
         <li><strong>Box contents:</strong> ${isDef ? 'CD + booklet + bonus art card + 2 bonus tracks' : 'CD + booklet'}</li>
       </ul>
@@ -850,7 +806,6 @@
   window.openInfo = openInfo; window.closeInfo = closeInfo;
   infoModal.addEventListener('click', (e)=>{ if(e.target.id==='infoModal') closeInfo(); });
 
-  /* Settings, menu, shortcuts */
   function toggleMusic(){
     const music=document.getElementById('bgMusic');
     if(music.paused){ music.play().catch(()=>{}); } else { music.pause(); }
@@ -904,7 +859,7 @@
       if(authOpen) window.closeAuthModal();
       if(prodOpen) closeModal();
       if(infoOpen) closeInfo();
-      if(tlOpen) closeTracklistModal();
+      if(tlOpen)   closeTracklist();
     }
   },{passive:true});
 
