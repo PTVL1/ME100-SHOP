@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
 
-<!-- Open Graph / Twitter -->
+<!-- Open Graph / Twitter (replace example.com) -->
 <meta property="og:title" content="MALUCO" />
 <meta property="og:description" content="Pre-reservations available. See the product, choose an edition, and reserve with no cost." />
 <meta property="og:type" content="website" />
@@ -23,7 +23,7 @@
 <meta property="og:image" content="https://example.com/og-1200x630.jpg" />
 <meta name="twitter:card" content="summary_large_image" />
 
-<!-- Product JSON-LD (duplicate for each SKU as needed) -->
+<!-- Product JSON-LD -->
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -103,6 +103,41 @@
   .nav-icon svg{width:18px;height:18px;vertical-align:middle}
   .menu a[aria-current="true"]{opacity:.85}
 
+  /* Account chip + menu */
+  #accountBtn.account-chip{
+    display:inline-flex; align-items:center; gap:8px;
+    background:transparent; border-radius:999px; padding:6px 10px;
+    box-shadow:none; font-weight:700;
+  }
+  #accountBtn.account-chip:hover{ background:rgba(0,0,0,.06) }
+  body.dark #accountBtn.account-chip:hover{ background:rgba(255,255,255,.08) }
+  #accountBtn .chip-avatar{
+    width:22px; height:22px; border-radius:50%;
+    display:grid; place-items:center; font-size:12px; font-weight:800;
+    background:#1e88e5; color:#fff;
+  }
+  .acct-menu{
+    position:absolute; right:20px; top:58px; width:260px;
+    background:var(--card); color:inherit; border-radius:12px;
+    box-shadow:var(--shadow-lg); padding:10px; z-index:1300;
+    display:none; opacity:0; transform:translateY(-6px);
+    transition:opacity .18s, transform .18s;
+  }
+  .acct-menu.show{ display:block; opacity:1; transform:translateY(0) }
+  body.dark .acct-menu{ background:var(--card-dark) }
+  .acct-header{ display:flex; gap:10px; padding:8px 10px 12px; border-bottom:1px solid rgba(0,0,0,.08) }
+  body.dark .acct-header{ border-bottom:1px solid rgba(255,255,255,.08) }
+  .acct-avatar{ width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:#1e88e5;color:#fff;flex:0 0 auto; }
+  .acct-name{ font-weight:800 }
+  .acct-email{ font-size:12px; opacity:.8; word-break:break-all }
+  .acct-item{
+    width:100%; text-align:left; background:transparent; border:none;
+    padding:10px 10px; border-radius:8px; cursor:pointer; margin-top:6px;
+  }
+  .acct-item:hover{ background:rgba(0,0,0,.06) }
+  body.dark .acct-item:hover{ background:rgba(255,255,255,.08) }
+  .acct-item.danger{ color:#c0392b }
+
   .section{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:56px 20px;opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s,box-shadow .6s;text-align:center;scroll-margin-top:80px}
   .section.visible{opacity:1;transform:translateY(0)}
   @keyframes targetHighlight{0%{box-shadow:0 0 0 0 var(--accent)}50%{box-shadow:0 0 0 16px var(--accent)}100%{box-shadow:0 0 0 0 var(--accent)}}
@@ -160,11 +195,7 @@
   .toast.show{opacity:1}
 
   .tracklist{display:none}
-
   #confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:1500}
-
-  /* Make modal contents programmatically focusable for focus restore */
-  .modal-content{outline:0} .modal-content[tabindex="-1"]{outline:0}
 </style>
 </head>
 <body>
@@ -179,7 +210,21 @@
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm9.44 3-1.64-.95a7.9 7.9 0 0 0-.3-.72l.26-1.88a.75.75 0 0 0-.74-.85h-2a7.9 7.9 0 0 0-.56-.44l-.77-1.76a.75.75 0 0 0-.95-.4l-1.86.76c-.24-.08-.49-.14-.74-.2l-.96-1.75a.75.75 0 0 0-1.32 0l-.96 1.75c-.25.06-.5.12-.74.2l-1.86-.76a.75.75 0 0 0-.95.4l-.77 1.76c-.19.14-.38.28-.56.44H4a.75.75 0 0 0-.74.85l.26 1.88c-.1.23-.2.47-.3.72l-1.64.95a.75.75 0 0 0-.27 1.03l1 1.73c-.02.25-.02.51 0 .76l-1 1.73a.75.75 0 0 0 .27 1.03l1.64.95c.1.24.2.48.3.72l-.26 1.88a.75.75 0 0 0 .74.85h2c.18.16.37.3.56.44l.77 1.76c.17.4.63.58 1.02.41l1.86-.76c.24.08.49.14.74.2l.96 1.75a.75.75 0 0 0 1.32 0l.96-1.75c.25-.06.5-.12.74-.2l1.86.76c.39.17.85-.01 1.02-.41l.77-1.76c.19-.14.38-.28.56-.44h2a.75.75 0 0 0 .74-.85l-.26-1.88c.1-.24.2-.48.3-.72l1.64-.95a.75.75 0 0 0 .27-1.03l-1-1.73c.02-.25.02-.51 0-.76l1-1.73a.75.75 0 0 0-.27-1.03ZM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10Z"/></svg>
         <span class="sr-only">Settings</span>
       </a>
-      <button id="accountBtn" class="btn btn-link" type="button" onclick="openAuthModal()">Account</button>
+
+      <!-- Account button + pop menu -->
+      <button id="accountBtn" class="btn btn-link" type="button" aria-haspopup="menu" aria-expanded="false">Account</button>
+      <div id="acctMenu" class="acct-menu" role="menu" aria-hidden="true">
+        <div class="acct-header">
+          <div class="acct-avatar" id="acctAvatar" aria-hidden="true">U</div>
+          <div class="acct-id">
+            <div class="acct-name" id="acctName">User</div>
+            <div class="acct-email" id="acctEmail">you@example.com</div>
+          </div>
+        </div>
+        <button class="acct-item" role="menuitem" id="acctViewBtn">View account</button>
+        <button class="acct-item" role="menuitem" id="acctChangeUnameBtn">Change username</button>
+        <button class="acct-item danger" role="menuitem" id="acctSignOutBtn">Sign out</button>
+      </div>
     </div>
   </nav>
 
@@ -200,7 +245,6 @@
   <!-- Shop -->
   <section id="shop" class="section">
     <div class="shop-grid">
-      <!-- Product as article with role=button (no nested buttons) -->
       <article class="product" tabindex="0" role="button" aria-describedby="std-desc"
                onclick="openModal('standard')"
                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('standard')}">
@@ -340,8 +384,7 @@
 <!-- ===== Firebase (Auth + Firestore for preorders + usernames) ===== -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-  // Optional: gate analytics behind consent. If you keep it, import and call after consent.
-  // import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+  // import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js"; // enable after consent
   import {
     getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider,
     signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword,
@@ -363,12 +406,15 @@
   };
 
   const app = initializeApp(firebaseConfig);
-  // const analytics = getAnalytics(app); // enable after consent
+  // const analytics = getAnalytics(app); // gate behind consent if needed
   const auth = getAuth(app);
   const db = getFirestore(app);
 
   const $ = (sel)=>document.querySelector(sel);
   const authModal=$("#authModal"), accountBtn=$("#accountBtn"), whoami=$("#whoami"), toastEl=$("#toast");
+  const acctMenu = document.getElementById('acctMenu');
+  let acctMenuOpen = false;
+  let lastFocusGlobal = null;
 
   function showToast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); setTimeout(()=>toastEl.classList.remove('show'),2200); }
 
@@ -393,6 +439,30 @@
     if(modal.__trapHandler){ modal.removeEventListener('keydown', modal.__trapHandler); modal.__trapHandler=null; }
   }
 
+  /* ---------- Account Menu ---------- */
+  function setAcctMenuVisibility(show){
+    acctMenuOpen = show;
+    acctMenu.setAttribute('aria-hidden', String(!show));
+    accountBtn.setAttribute('aria-expanded', String(show));
+    acctMenu.classList.toggle('show', show);
+    if(show){ document.getElementById('acctViewBtn')?.focus(); }
+  }
+  function toggleAcctMenu(){ setAcctMenuVisibility(!acctMenuOpen); }
+  function closeAcctMenuIfOutside(e){
+    if(!acctMenuOpen) return;
+    const withinMenu = acctMenu.contains(e.target);
+    const onBtn = accountBtn.contains(e.target);
+    if(!withinMenu && !onBtn) setAcctMenuVisibility(false);
+  }
+  document.addEventListener('click', closeAcctMenuIfOutside);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') setAcctMenuVisibility(false); });
+
+  accountBtn.addEventListener('click', ()=>{
+    const signedIn = !!auth.currentUser;
+    if(signedIn){ toggleAcctMenu(); }
+    else{ openAuthModal(); }
+  });
+
   /* ---------- Auth modal open/close + Account view ---------- */
   function showAuthModal(){
     authModal.style.display='flex';
@@ -410,7 +480,7 @@
     authModal.setAttribute('aria-hidden','true');
     document.body.style.overflow='';
     setTimeout(()=>{ authModal.style.display='none'; },300);
-    lastFocusGlobal?.focus?.(); // restore if opened from a focused element
+    lastFocusGlobal?.focus?.();
   }
   window.closeAuthModal = closeAuthModal;
 
@@ -474,7 +544,7 @@
           <div id="verifyBanner" style="margin-top:12px; padding:10px; border-radius:8px; background:#fff3cd; color:#7a5a00;">
             Email not verified.
             <button id="resendVerifyBtn" class="btn" style="margin-left:6px;">Resend verification</button>
-            <div style="font-size:12px; margin-top:6px; opacity:.9">Tip: check Spam/Promotions and mark “Not spam”.</div>
+            <div style="font-size:12px; margin-top:6px; opacity:.9">Tip: check Spam/Promotions.</div>
           </div>` : ``}
       </div>
       <div id="signoutArea" style="margin-top:12px; text-align:center;">
@@ -524,11 +594,13 @@
         if(diffDays < 30) throw new Error(`You can change your username again in ${Math.ceil(30 - diffDays)} day(s).`);
       }
 
+      // Enforce uniqueness
       const unameSnap = await tx.get(unameRef);
       if(unameSnap.exists() && unameSnap.data().uid !== user.uid){
         throw new Error("That username is already taken.");
       }
 
+      // Free previous username
       const prev = p.username;
       if(prev && prev !== newName){
         const prevRef = doc(db,'usernames', prev);
@@ -538,6 +610,7 @@
         }
       }
 
+      // Claim new username & write profile
       tx.set(unameRef, { uid: user.uid, claimedAt: serverTimestamp() });
       tx.set(pRef, {
         email: user.email || null,
@@ -548,14 +621,13 @@
     });
   }
 
-  let lastFocusGlobal = null;
   function openAuthModal(){
     lastFocusGlobal = document.activeElement;
-    const user = auth.currentUser;
     $("#authError").textContent="";
     document.querySelector('#authModal .modal-content .accountBox')?.remove();
     $("#signoutArea")?.remove();
 
+    const user = auth.currentUser;
     if(user){
       loadAccountPanel().then(showAuthModal);
     } else {
@@ -576,12 +648,12 @@
 
   // Auth buttons
   $("#googleSignInBtn")?.addEventListener("click", async ()=>{
-    try{ await signInWithPopup(auth,new GoogleAuthProvider()); closeAuthModal(); showToast("Signed in with Google"); }
+    try{ await signInWithPopup(auth,new GoogleAuthProvider()); setAcctMenuVisibility(false); closeAuthModal(); showToast("Signed in with Google"); }
     catch(e){ showAuthError(e); }
   });
   $("#emailSignInBtn")?.addEventListener("click", async ()=>{
     const email=$("#authEmail").value.trim(), pass=$("#authPass").value;
-    try{ await signInWithEmailAndPassword(auth,email,pass); closeAuthModal(); showToast("Signed in"); }
+    try{ await signInWithEmailAndPassword(auth,email,pass); setAcctMenuVisibility(false); closeAuthModal(); showToast("Signed in"); }
     catch(e){ showAuthError(e); }
   });
   $("#emailSignUpBtn")?.addEventListener("click", async ()=>{
@@ -589,6 +661,7 @@
     try{
       await createUserWithEmailAndPassword(auth,email,pass);
       try{ await sendEmailVerification(auth.currentUser); }catch{}
+      setAcctMenuVisibility(false);
       closeAuthModal(); showToast("Account created — verify your email (check Spam)");
     }catch(e){ showAuthError(e); }
   });
@@ -612,12 +685,27 @@
   }
 
   onAuthStateChanged(auth,(user)=>{
+    const btn = accountBtn;
     if(user){
       const name=user.displayName||user.email||"User";
-      accountBtn.textContent=(name.split("@")[0]||"Account");
+      const email=user.email||"";
+      const initials=(name?.trim()?.[0]||'U').toUpperCase();
+
+      // Chip look
+      btn.classList.add('account-chip');
+      btn.innerHTML = `<span class="chip-avatar">${initials}</span><span>${(name.split("@")[0]||"Account")}</span>`;
+
+      // Fill menu header
+      document.getElementById('acctAvatar').textContent = initials;
+      document.getElementById('acctName').textContent = name;
+      document.getElementById('acctEmail').textContent = email;
+
       whoami && (whoami.textContent=`Signed in as ${name}`);
     }else{
-      accountBtn.textContent="Account";
+      // Signed out
+      btn.classList.remove('account-chip');
+      btn.textContent = "Account";
+      setAcctMenuVisibility(false);
       whoami && (whoami.textContent="");
     }
   });
@@ -734,7 +822,7 @@
     if(menu.classList.contains('show')){ menu.classList.remove('show'); btn.setAttribute('aria-expanded','false'); }
   });
 
-  // If you need a fixed drop moment, replace with a UTC timestamp:
+  // If you need a fixed drop moment, replace with a UTC timestamp
   function next26th(from=new Date()){
     const y=from.getFullYear(), m=from.getMonth();
     const candidate=new Date(y,m,26,0,0,0);
@@ -843,7 +931,7 @@
   window.openModal=openModal; window.closeModal=closeModal;
   document.getElementById('productModal').addEventListener('click', (e)=>{ if(e.target.id==='productModal') closeModal(); });
 
-  /* Tracklist modal (popup) */
+  /* Tracklist modal */
   const tracklistModal = document.getElementById('tracklistModal');
   let openerTracklist = null;
   function openTracklistModal(edition='standard'){
@@ -960,7 +1048,7 @@
     });
   });
 
-  // Keyboard shortcuts (keydown events can't be passive)
+  // Keyboard shortcuts
   window.addEventListener('keydown',(e)=>{
     const tag=(e.target.tagName||'').toLowerCase();
     if(tag==='input' || tag==='textarea') return;
