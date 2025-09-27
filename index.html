@@ -1,218 +1,340 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MALUCO — Website</title>
-<meta name="description" content="MALUCO — pre-reservations of the album (standard and definitive edition)." />
-<link rel="icon" href="favicon.ico" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Website</title>
+  <meta name="description" content="Example website" />
+  <link rel="icon" href="favicon.ico" />
 
-<!-- Theme color for mobile -->
-<meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <!-- Theme color for mobile -->
+  <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 
-<!-- Performance: preconnects -->
-<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://www.googleapis.com" crossorigin>
+  <!-- Performance: preconnects -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
 
-<!-- Open Graph / Twitter (replace example.com) -->
-<meta property="og:title" content="MALUCO" />
-<meta property="og:description" content="Pre-reservations available. See the product, choose an edition, and reserve with no cost." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://example.com/" />
-<meta property="og:image" content="https://example.com/og-1200x630.jpg" />
-<meta name="twitter:card" content="summary_large_image" />
+  <style>
+    :root {
+      --bg-light: linear-gradient(120deg, #fdfbfb, #ebedee);
+      --bg-dark: linear-gradient(120deg, #1e1e1e, #121212);
+      --text-light: #000;
+      --text-dark: #fff;
+      --muted: #3a3a3a;
+      --muted-dark: #d6d6d6;
+      --card: #fff;
+      --card-dark: #222;
+      --btn: #ccc;
+      --btn-dark: #444;
+      --btn-hover: #bbb;
+      --btn-dark-hover: #555;
+      --shadow: 0 2px 6px rgba(0,0,0,.1);
+      --shadow-lg: 0 8px 20px rgba(0,0,0,.2);
+      --focus: #6aa9ff;
+      --nav-light: #f5f5f5;
+      --nav-dark: #222;
+      --accent: #6aa9ff33;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Trebuchet MS', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      scroll-behavior: smooth;
+      transition: background .5s, color .5s;
+      overflow-x: hidden;
+    }
+    body.dark { background: var(--bg-dark); color: var(--text-dark); }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
 
-<!-- Product JSON-LD -->
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"Product",
-  "name":"MALUCO",
-  "image":["https://example.com/400x400.jpg"],
-  "description":"Standard edition CD",
-  "offers":{
-    "@type":"Offer",
-    "price":"3.00",
-    "priceCurrency":"USD",
-    "availability":"https://schema.org/PreOrder",
-    "url":"https://example.com/#shop"
-  }
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"Product",
-  "name":"MALUCO (Definitive Edition)",
-  "image":["https://example.com/500x500.jpg"],
-  "description":"Definitive edition CD with bonuses",
-  "offers":{
-    "@type":"Offer",
-    "price":"5.00",
-    "priceCurrency":"USD",
-    "availability":"https://schema.org/PreOrder",
-    "url":"https://example.com/#shop"
-  }
-}
-</script>
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
 
-<style>
-  :root{
-    --bg-light:linear-gradient(120deg,#fdfbfb,#ebedee);
-    --bg-dark:linear-gradient(120deg,#1e1e1e,#121212);
-    --text-light:#000; --text-dark:#fff;
-    --muted:#3a3a3a; --muted-dark:#d6d6d6;
-    --card:#fff; --card-dark:#222;
-    --btn:#ccc; --btn-dark:#444;
-    --btn-hover:#bbb; --btn-dark-hover:#555;
-    --shadow:0 2px 6px rgba(0,0,0,.1);
-    --shadow-lg:0 8px 20px rgba(0,0,0,.2);
-    --focus:#6aa9ff; --nav-light:#f5f5f5; --nav-dark:#222;
-    --accent:#6aa9ff33;
-  }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;font-family:'Trebuchet MS',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg-light);color:var(--text-light);scroll-behavior:smooth;transition:background .5s,color .5s;overflow-x:hidden}
-  body.dark{background:var(--bg-dark);color:var(--text-dark)}
-  :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
-  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    nav {
+      background: var(--nav-light);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+    body.dark nav { background: var(--nav-dark); }
+    .brand {
+      font-weight: 800;
+      letter-spacing: .5px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform .25s;
+      font-size: 24px;
+    }
+    .brand.bounce { transform: scale(1.06) translateY(-2px); }
+    .menu {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .menu a, .menu button.btn-link {
+      background: none;
+      border: none;
+      padding: 0;
+      text-decoration: none;
+      color: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      transition: opacity .2s;
+      cursor: pointer;
+      position: relative;
+    }
+    .menu a:hover, .menu button.btn-link:hover { opacity: .7; }
+    .menu a::after, .menu button.btn-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 100%;
+      bottom: -4px;
+      height: 2px;
+      background: currentColor;
+      transition: right .3s;
+    }
+    .menu a.clicked::after, .menu button.btn-link.clicked::after { right: 0; }
+    .menu-toggle {
+      display: block;
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: inherit;
+    }
+    @media (min-width: 769px) {
+      .menu-toggle { display: none; }
+      nav .menu { display: flex !important; }
+    }
+    @media (max-width: 768px) {
+      nav { flex-wrap: wrap; gap: 8px; }
+      nav .menu {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 8px;
+      }
+      nav .menu.show { display: flex; }
+    }
+    .nav-icon { display: inline-flex; align-items: center; gap: 8px; }
+    .nav-icon span { font-size: 18px; }
+    .menu a[aria-current="true"] { opacity: .85; }
 
-  @media (prefers-reduced-motion: reduce){
-    *{animation:none !important; transition:none !important;}
-    .flip-digit-inner{transform:none !important;}
-  }
+    /* Account chip + menu */
+    #accountBtn.account-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border-radius: 999px;
+      padding: 6px 10px;
+      box-shadow: none;
+      font-weight: 700;
+    }
+    #accountBtn.account-chip:hover { background: rgba(0,0,0,.06); }
+    body.dark #accountBtn.account-chip:hover { background: rgba(255,255,255,.08); }
+    #accountBtn .chip-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      background: #1e88e5;
+      color: #fff;
+    }
+    .acct-menu {
+      position: absolute;
+      right: 20px;
+      top: 58px;
+      width: 260px;
+      background: var(--card);
+      color: inherit;
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      padding: 10px;
+      z-index: 1300;
+      display: none;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity .18s, transform .18s;
+    }
+    .acct-menu.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    body.dark .acct-menu { background: var(--card-dark); }
+    .acct-header {
+      display: flex;
+      gap: 10px;
+      padding: 8px 10px 12px;
+      border-bottom: 1px solid rgba(0,0,0,.08);
+    }
+    body.dark .acct-header { border-bottom: 1px solid rgba(255,255,255,.08); }
+    .acct-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      background: #1e88e5;
+      color: #fff;
+      flex: 0 0 auto;
+    }
+    .acct-name { font-weight: 800; }
+    .acct-email { font-size: 12px; opacity: .8; word-break: break-all; }
+    .acct-item {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      padding: 10px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    .acct-item:hover { background: rgba(0,0,0,.06); }
+    body.dark .acct-item:hover { background: rgba(255,255,255,.08); }
+    .acct-item.danger { color: #c0392b; }
 
-  nav{background:var(--nav-light);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:var(--shadow)}
-  body.dark nav{background:var(--nav-dark)}
-  .brand{font-weight:800;letter-spacing:.5px;cursor:pointer;user-select:none;transition:transform .25s}
-  .brand.bounce{transform:scale(1.06) translateY(-2px)}
-  .menu{display:flex;gap:20px;align-items:center}
-  .menu a,.menu button.btn-link{background:none;border:none;padding:0;text-decoration:none;color:inherit;font-size:16px;font-weight:700;transition:opacity .2s;cursor:pointer;position:relative}
-  .menu a:hover,.menu button.btn-link:hover{opacity:.7}
-  .menu a::after,.menu button.btn-link::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;height:2px;background:currentColor;transition:right .3s}
-  .menu a.clicked::after,.menu button.btn-link.clicked::after{right:0}
-  .menu-toggle{display:block;background:none;border:none;font-size:28px;cursor:pointer;color:inherit}
-  @media (min-width:769px){.menu-toggle{display:none} nav .menu{display:flex!important}}
-  @media (max-width:768px){
-    nav{flex-wrap:wrap;gap:8px}
-    nav .menu{display:none;width:100%;flex-direction:column;gap:12px;margin-top:8px}
-    nav .menu.show{display:flex}
-  }
+    .section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 56px 20px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .8s, transform .8s, box-shadow .6s;
+      text-align: center;
+      scroll-margin-top: 80px;
+    }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    @keyframes targetHighlight {
+      0% { box-shadow: 0 0 0 0 var(--accent); }
+      50% { box-shadow: 0 0 0 16px var(--accent); }
+      100% { box-shadow: 0 0 0 0 var(--accent); }
+    }
+    .section.target-pulse { animation: targetHighlight 800ms ease; border-radius: 14px; }
+    #home h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 10px 0 10px; }
 
-  .nav-icon{display:inline-flex;align-items:center;gap:8px}
-  .nav-icon svg{width:18px;height:18px;vertical-align:middle}
-  .menu a[aria-current="true"]{opacity:.85}
+    button, .btn {
+      background: var(--btn);
+      color: #000;
+      border: none;
+      border-radius: 22px;
+      padding: 12px 22px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    button:hover, .btn:hover { background: var(--btn-hover); transform: translateY(-1px); }
+    body.dark button, body.dark .btn { background: var(--btn-dark); color: #fff; }
+    body.dark button:hover, body.dark .btn:hover { background: var(--btn-dark-hover); }
 
-  /* Account chip + menu */
-  #accountBtn.account-chip{
-    display:inline-flex; align-items:center; gap:8px;
-    background:transparent; border-radius:999px; padding:6px 10px;
-    box-shadow:none; font-weight:700;
-  }
-  #accountBtn.account-chip:hover{ background:rgba(0,0,0,.06) }
-  body.dark #accountBtn.account-chip:hover{ background:rgba(255,255,255,.08) }
-  #accountBtn .chip-avatar{
-    width:22px; height:22px; border-radius:50%;
-    display:grid; place-items:center; font-size:12px; font-weight:800;
-    background:#1e88e5; color:#fff;
-  }
-  .acct-menu{
-    position:absolute; right:20px; top:58px; width:260px;
-    background:var(--card); color:inherit; border-radius:12px;
-    box-shadow:var(--shadow-lg); padding:10px; z-index:1300;
-    display:none; opacity:0; transform:translateY(-6px);
-    transition:opacity .18s, transform .18s;
-  }
-  .acct-menu.show{ display:block; opacity:1; transform:translateY(0) }
-  body.dark .acct-menu{ background:var(--card-dark) }
-  .acct-header{ display:flex; gap:10px; padding:8px 10px 12px; border-bottom:1px solid rgba(0,0,0,.08) }
-  body.dark .acct-header{ border-bottom:1px solid rgba(255,255,255,.08) }
-  .acct-avatar{ width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:#1e88e5;color:#fff;flex:0 0 auto; }
-  .acct-name{ font-weight:800 }
-  .acct-email{ font-size:12px; opacity:.8; word-break:break-all }
-  .acct-item{
-    width:100%; text-align:left; background:transparent; border:none;
-    padding:10px 10px; border-radius:8px; cursor:pointer; margin-top:6px;
-  }
-  .acct-item:hover{ background:rgba(0,0,0,.06) }
-  body.dark .acct-item:hover{ background:rgba(255,255,255,.08) }
-  .acct-item.danger{ color:#c0392b }
+    #settings h2 { margin-bottom: 16px; }
+    .audioControl {
+      margin-top: 12px;
+      font-size: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type=range] { width: 220px; }
+    @media (max-width: 768px) {
+      #volumeSlider { display: none; }
+      label[for="volumeSlider"] { display: none; }
+      .shortcuts-wrap { display: none; }
+    }
 
-  .section{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:56px 20px;opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s,box-shadow .6s;text-align:center;scroll-margin-top:80px}
-  .section.visible{opacity:1;transform:translateY(0)}
-  @keyframes targetHighlight{0%{box-shadow:0 0 0 0 var(--accent)}50%{box-shadow:0 0 0 16px var(--accent)}100%{box-shadow:0 0 0 0 var(--accent)}}
-  .section.target-pulse{animation:targetHighlight 800ms ease;border-radius:14px}
+    .copyright { text-align: center; margin: 24px 0 10px; font-size: 12px; color: #888; }
 
-  #home h1{font-size:clamp(2rem,4vw,3rem);margin:10px 0 10px}
-  #countdown{font-size:1.25rem;margin:16px 0 8px;display:flex;gap:6px}
-  .flip-digit{background:var(--card);color:var(--text-light);padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);display:inline-block;perspective:1000px;position:relative;min-width:60px}
-  .flip-digit-inner{display:block;transition:transform .6s;transform-style:preserve-3d}
-  .flip-digit-top,.flip-digit-bottom{backface-visibility:hidden;display:block}
-  .flip-digit-bottom{transform:rotateX(180deg);position:absolute;inset:0}
-  body.dark .flip-digit{background:#333;color:#fff}
-  body.dark .flip-digit-top,body.dark .flip-digit-bottom{color:#fff}
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.5);
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      opacity: 0;
+      transition: opacity .35s;
+      z-index: 1200;
+    }
+    .modal.show { display: flex; opacity: 1; }
+    .modal-content {
+      background: var(--card);
+      color: inherit;
+      padding: 20px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+      transform: translateY(-16px) scale(.96);
+      transition: transform .35s, opacity .35s;
+      opacity: 0;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; }
+    body.dark .modal-content { background: var(--card-dark); }
 
-  .hero-img{border-radius:12px;box-shadow:var(--shadow);cursor:pointer;margin-top:12px;max-width:90vw;height:auto}
-
-  .shop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;width:min(1100px,92vw);margin:0 auto}
-  .product{position:relative;background:var(--card);color:inherit;text-align:center;cursor:pointer;width:100%;padding:14px;border-radius:12px;transition:transform .2s,box-shadow .2s;box-shadow:var(--shadow)}
-  .product:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
-  .product img{width:100%;height:auto;border-radius:10px;transition:transform .25s}
-  .product:hover img{transform:scale(1.03)}
-  .product h2{font-size:1.35rem;margin:10px 0 6px}
-  .product p{margin:4px 0;color:var(--muted)}
-  body.dark .product{background:var(--card-dark)}
-  body.dark .product p{color:var(--muted-dark)}
-  .info-badge{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;display:grid;place-items:center;border:none;cursor:pointer}
-  .product:hover .info-badge{background:rgba(0,0,0,.85)}
-  .info-badge svg{width:16px;height:16px}
-
-  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);justify-content:center;align-items:center;padding:12px;opacity:0;transition:opacity .35s;z-index:1200}
-  .modal.show{display:flex;opacity:1}
-  .modal-content{background:var(--card);color:inherit;padding:20px;border-radius:12px;width:100%;max-width:520px;text-align:center;transform:translateY(-16px) scale(.96);transition:transform .35s,opacity .35s;opacity:0;box-shadow:var(--shadow-lg)}
-  .modal.show .modal-content{transform:translateY(0) scale(1);opacity:1}
-  .modal-content img{width:80%;height:auto;margin:0 auto 14px;border-radius:10px;display:block}
-  .modal-content:focus{outline:none}
-  body.dark .modal-content{background:var(--card-dark)}
-
-  button,.btn{background:var(--btn);color:#000;border:none;border-radius:22px;padding:12px 22px;font-size:16px;cursor:pointer;transition:background .2s,transform .15s}
-  button:hover,.btn:hover{background:var(--btn-hover);transform:translateY(-1px)}
-  body.dark button,body.dark .btn{background:var(--btn-dark);color:#fff}
-  body.dark button:hover,body.dark .btn:hover{background:var(--btn-dark-hover)}
-
-  #settings h2{margin-bottom:16px}
-  .audioControl{margin-top:12px;font-size:18px;display:flex;flex-direction:column;align-items:center;gap:10px}
-  input[type=range]{width:220px}
-  @media (max-width:768px){
-    #volumeSlider{display:none}
-    label[for="volumeSlider"]{display:none}
-    .shortcuts-wrap{display:none}
-  }
-
-  .copyright{text-align:center;margin:24px 0 10px;font-size:12px;color:#888}
-
-  .toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:#1f9d55;color:#fff;padding:10px 16px;border-radius:10px;box-shadow:var(--shadow-lg);z-index:2000;opacity:0;transition:opacity .3s}
-  .toast.show{opacity:1}
-
-  .tracklist{display:none}
-  #confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:1500}
-</style>
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--card);
+      color: inherit;
+      padding: 12px 24px;
+      border-radius: 8px;
+      box-shadow: var(--shadow-lg);
+      z-index: 1400;
+      opacity: 0;
+      transition: opacity .3s, transform .3s;
+      font-weight: 600;
+    }
+    body.dark .toast { background: var(--card-dark); }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
 </head>
 <body>
   <!-- Navigation -->
   <nav>
-    <div class="brand" id="brandHome" title="Go Home">MALUCO</div>
-    <button class="menu-toggle" type="button" aria-controls="mainmenu" aria-expanded="false" onclick="toggleMenu()">☰</button>
+    <div class="brand" id="brandHome" title="Go Home">🏠</div>
+    <button class="menu-toggle" type="button" aria-controls="mainmenu" aria-expanded="false">☰</button>
     <div class="menu" id="mainmenu" aria-label="Main">
-      <a href="#home" data-target="home" class="nav-link" aria-current="true">Home</a>
-      <a href="#shop" data-target="shop" class="nav-link">Shop</a>
+      <a href="#home" data-target="home" class="nav-link" aria-current="true">🏠</a>
       <a href="#settings" data-target="settings" class="nav-link nav-icon" title="Settings" aria-label="Settings">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm9.44 3-1.64-.95a7.9 7.9 0 0 0-.3-.72l.26-1.88a.75.75 0 0 0-.74-.85h-2a7.9 7.9 0 0 0-.56-.44l-.77-1.76a.75.75 0 0 0-.95-.4l-1.86.76c-.24-.08-.49-.14-.74-.2l-.96-1.75a.75.75 0 0 0-1.32 0l-.96 1.75c-.25.06-.5.12-.74.2l-1.86-.76a.75.75 0 0 0-.95.4l-.77 1.76c-.19.14-.38.28-.56.44H4a.75.75 0 0 0-.74.85l.26 1.88c-.1.23-.2.47-.3.72l-1.64.95a.75.75 0 0 0-.27 1.03l1 1.73c-.02.25-.02.51 0 .76l-1 1.73a.75.75 0 0 0 .27 1.03l1.64.95c.1.24.2.48.3.72l-.26 1.88a.75.75 0 0 0 .74.85h2c.18.16.37.3.56.44l.77 1.76c.17.4.63.58 1.02.41l1.86-.76c.24.08.49.14.74.2l.96 1.75a.75.75 0 0 0 1.32 0l.96-1.75c.25-.06.5-.12.74-.2l1.86.76c.39.17.85-.01 1.02-.41l.77-1.76c.19-.14.38-.28.56-.44h2a.75.75 0 0 0 .74-.85l-.26-1.88c.1-.24.2-.48.3-.72l1.64-.95a.75.75 0 0 0 .27-1.03l-1-1.73c.02-.25.02-.51 0-.76l1-1.73a.75.75 0 0 0-.27-1.03ZM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10Z"/></svg>
+        <span>⚙</span>
         <span class="sr-only">Settings</span>
       </a>
-
-      <!-- Account button + pop menu -->
-      <button id="accountBtn" class="btn btn-link" type="button" aria-haspopup="menu" aria-expanded="false">Account</button>
+      <button id="accountBtn" class="btn btn-link" type="button" aria-haspopup="menu" aria-expanded="false">🌐</button>
       <div id="acctMenu" class="acct-menu" role="menu" aria-hidden="true">
         <div class="acct-header">
           <div class="acct-avatar" id="acctAvatar" aria-hidden="true">U</div>
@@ -230,117 +352,27 @@
 
   <!-- Home -->
   <section id="home" class="section">
-    <h1>MALUCO</h1>
-    <div id="countdown" aria-live="polite">
-      <div class="flip-digit" aria-label="Days"><div class="flip-digit-inner"><span class="flip-digit-top">0d</span><span class="flip-digit-bottom">0d</span></div></div>
-      <div class="flip-digit" aria-label="Hours"><div class="flip-digit-inner"><span class="flip-digit-top">0h</span><span class="flip-digit-bottom">0h</span></div></div>
-      <div class="flip-digit" aria-label="Minutes"><div class="flip-digit-inner"><span class="flip-digit-top">0m</span><span class="flip-digit-bottom">0m</span></div></div>
-      <div class="flip-digit" aria-label="Seconds"><div class="flip-digit-inner"><span class="flip-digit-top">0s</span><span class="flip-digit-bottom">0s</span></div></div>
-    </div>
-
-    <img class="hero-img" src="400x400.jpg" alt="MALUCO album" width="400" height="400" fetchpriority="high"
-         onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" />
-  </section>
-
-  <!-- Shop -->
-  <section id="shop" class="section">
-    <div class="shop-grid">
-      <article class="product" tabindex="0" role="button" aria-describedby="std-desc"
-               onclick="openModal('standard')"
-               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('standard')}">
-        <img src="400x400.jpg" alt="MALUCO standard edition" width="400" height="400" loading="lazy" />
-        <h2>MALUCO</h2>
-        <p id="std-desc"><strong>$3</strong> — Pre-orders available now</p>
-        <button class="info-badge" type="button" aria-label="Standard edition info"
-                onclick="event.stopPropagation(); openInfo('standard')">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z"/></svg>
-        </button>
-      </article>
-
-      <article class="product" tabindex="0" role="button" aria-describedby="def-desc"
-               onclick="openModal('definitive')"
-               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('definitive')}">
-        <img src="500x500.jpg" alt="MALUCO definitive edition" width="500" height="500" loading="lazy" />
-        <h2>MALUCO (Definitive Edition)</h2>
-        <p id="def-desc"><strong>$5</strong> — Pre-orders available now</p>
-        <button class="info-badge" type="button" aria-label="Definitive edition info"
-                onclick="event.stopPropagation(); openInfo('definitive')">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z"/></svg>
-        </button>
-      </article>
-    </div>
+    <h1>Welcome</h1>
   </section>
 
   <!-- Settings -->
   <section id="settings" class="section">
     <h2>Settings</h2>
     <div class="audioControl">
-      <button type="button" onclick="toggleMusic()">Play / Pause Music</button>
+      <button type="button" id="toggleMusicBtn">Play / Pause Music</button>
       <label for="volumeSlider">Volume:</label>
-      <input type="range" min="0" max="1" step="0.01" id="volumeSlider" onchange="setVolume(this.value)" />
-      <button type="button" onclick="toggleTheme()">Toggle Dark Theme</button>
+      <input type="range" min="0" max="1" step="0.01" id="volumeSlider" />
+      <button type="button" id="toggleThemeBtn">Toggle Dark Theme</button>
       <div class="shortcuts-wrap" style="margin-top:14px; font-size:14px; opacity:.9; text-align:left">
         <strong>Keyboard shortcuts</strong>
         <ul style="list-style: none; padding-left: 0; line-height:1.7;">
-          <li><kbd>H</kbd> Home &nbsp; <kbd>S</kbd> Shop &nbsp; <kbd>E</kbd> Settings</li>
+          <li><kbd>H</kbd> Home &nbsp; <kbd>E</kbd> Settings</li>
           <li><kbd>M</kbd> Play/Pause music &nbsp; <kbd>T</kbd> Toggle dark theme</li>
           <li><kbd>A</kbd> Account &nbsp; <kbd>Esc</kbd> Close modal</li>
         </ul>
       </div>
     </div>
   </section>
-
-  <!-- Product Modal -->
-  <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-content" tabindex="-1">
-      <h2 id="modalTitle">MALUCO — $3</h2>
-      <img id="modalAlbum" src="400x400.jpg" alt="Album" width="400" height="400" />
-      <p>This is a reservation — <strong>we won't charge you now</strong>.</p>
-
-      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-        <button id="buyButton" type="button" class="btn" onclick="showForm()">Reserve</button>
-        <button id="tracklistBtn" type="button" class="btn" onclick="openTracklistModal(currentEdition)">Tracklist</button>
-        <button id="infoBtn" type="button" class="btn" onclick="openInfo(currentEdition)">Info</button>
-      </div>
-
-      <div id="formArea" style="display:none; margin-top:10px;">
-        <form id="preorderForm" action="https://formspree.io/f/mvgwpkkq" method="POST">
-          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none">
-          <label for="email">Email</label><br />
-          <input id="email" type="email" name="email" placeholder="your@email.com" required /><br /><br />
-          <label><input id="confirmEmailChk" type="checkbox" required /> Confirm this is my email</label><br /><br />
-          <label><input type="checkbox" name="interest" required /> I want to reserve this product</label><br /><br />
-          <button id="submitBtn" type="submit" class="btn">Confirm Reservation</button>
-        </form>
-        <div id="formStatus" style="margin-top:10px;"></div>
-      </div>
-
-      <br />
-      <button type="button" class="btn" onclick="closeModal()">Close</button>
-    </div>
-  </div>
-
-  <!-- Tracklist Modal -->
-  <div class="modal" id="tracklistModal" role="dialog" aria-modal="true" aria-labelledby="tracklistTitle" aria-hidden="true">
-    <div class="modal-content" style="text-align:left;" tabindex="-1">
-      <h2 id="tracklistTitle" style="text-align:center;">Tracklist</h2>
-      <div id="tracklistBody" style="line-height:1.6;"></div>
-      <div style="text-align:center; margin-top:14px;">
-        <button type="button" class="btn" onclick="closeTracklistModal()">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Info Modal -->
-  <div class="modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle" aria-hidden="true">
-    <div class="modal-content" style="text-align:left;" tabindex="-1">
-      <h2 id="infoTitle" style="text-align:center;">Product Info</h2>
-      <div id="infoBody" style="line-height:1.6;"></div>
-      <div style="text-align:center; margin-top:14px;">
-        <button type="button" class="btn" onclick="closeInfo()">Close</button>
-      </div>
-    </div>
-  </div>
 
   <!-- Account / Auth Modal -->
   <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true">
@@ -361,9 +393,12 @@
       </form>
       <div id="authError" style="color:#c0392b; margin-top:10px; min-height:1.2em;"></div>
       <br />
-      <button type="button" class="btn" onclick="closeAuthModal()">Close</button>
+      <button type="button" class="btn" id="closeAuthModalBtn">Close</button>
     </div>
   </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <!-- Music -->
   <audio id="bgMusic" loop>
@@ -371,718 +406,541 @@
     Your browser does not support audio.
   </audio>
 
-  <!-- Confetti canvas -->
-  <canvas id="confettiCanvas"></canvas>
-
-  <!-- Toast -->
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
   <!-- Signed-in indicator -->
   <div id="whoami" class="copyright"></div>
   <div class="copyright">© 2025 ME100</div>
 
-<!-- ===== Firebase (Auth + Firestore for preorders + usernames) ===== -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-  // import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js"; // enable after consent
-  import {
-    getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider,
-    signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword,
-    sendPasswordResetEmail, sendEmailVerification
-  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-  import {
-    getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp,
-    runTransaction, deleteDoc
-  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+  <!-- Firebase and Site Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider,
+      signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+      sendPasswordResetEmail, sendEmailVerification
+    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+    import {
+      getFirestore, doc, setDoc, getDoc, runTransaction, deleteDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBUBMX0Nkaml4BoDgTBZsLv15rXd4-yaB0",
-    authDomain: "me100-shoop.firebaseapp.com",
-    projectId: "me100-shoop",
-    storageBucket: "me100-shoop.firebasestorage.app",
-    messagingSenderId: "1043376017039",
-    appId: "1:1043376017039:web:5606b92f696854658faafa",
-    measurementId: "G-LVBT7HM50B"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  // const analytics = getAnalytics(app); // gate behind consent if needed
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  const $ = (sel)=>document.querySelector(sel);
-  const authModal=$("#authModal"), accountBtn=$("#accountBtn"), whoami=$("#whoami"), toastEl=$("#toast");
-  const acctMenu = document.getElementById('acctMenu');
-  let acctMenuOpen = false;
-  let lastFocusGlobal = null;
-
-  function showToast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); setTimeout(()=>toastEl.classList.remove('show'),2200); }
-
-  /* ---------- Focus trap for modals ---------- */
-  function activateFocusTrap(modal){
-    const f = modal.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
-    if(!f.length) return; const first=f[0], last=f[f.length-1];
-    modal.__trapHandler = (e)=>{
-      if(e.key==='Tab'){
-        if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
-        else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
-      } else if(e.key==='Escape'){
-        if(modal.id==='productModal') window.closeModal();
-        if(modal.id==='authModal') closeAuthModal();
-        if(modal.id==='infoModal') closeInfo();
-        if(modal.id==='tracklistModal') closeTracklistModal();
-      }
+    const firebaseConfig = {
+      apiKey: "AIzaSyBUBMX0Nkaml4BoDgTBZsLv15rXd4-yaB0",
+      authDomain: "me100-shoop.firebaseapp.com",
+      projectId: "me100-shoop",
+      storageBucket: "me100-shoop.firebasestorage.app",
+      messagingSenderId: "1043376017039",
+      appId: "1:1043376017039:web:5606b92f696854658faafa",
+      measurementId: "G-LVBT7HM50B"
     };
-    modal.addEventListener('keydown', modal.__trapHandler);
-  }
-  function deactivateFocusTrap(modal){
-    if(modal.__trapHandler){ modal.removeEventListener('keydown', modal.__trapHandler); modal.__trapHandler=null; }
-  }
 
-  /* ---------- Account Menu ---------- */
-  function setAcctMenuVisibility(show){
-    acctMenuOpen = show;
-    acctMenu.setAttribute('aria-hidden', String(!show));
-    accountBtn.setAttribute('aria-expanded', String(show));
-    acctMenu.classList.toggle('show', show);
-    if(show){ document.getElementById('acctViewBtn')?.focus(); }
-  }
-  function toggleAcctMenu(){ setAcctMenuVisibility(!acctMenuOpen); }
-  function closeAcctMenuIfOutside(e){
-    if(!acctMenuOpen) return;
-    const withinMenu = acctMenu.contains(e.target);
-    const onBtn = accountBtn.contains(e.target);
-    if(!withinMenu && !onBtn) setAcctMenuVisibility(false);
-  }
-  document.addEventListener('click', closeAcctMenuIfOutside);
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') setAcctMenuVisibility(false); });
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  accountBtn.addEventListener('click', ()=>{
-    const signedIn = !!auth.currentUser;
-    if(signedIn){ toggleAcctMenu(); }
-    else{ openAuthModal(); }
-  });
+    const $ = (sel) => document.querySelector(sel);
+    const authModal = $("#authModal"), accountBtn = $("#accountBtn"), whoami = $("#whoami");
+    const acctMenu = $("#acctMenu");
+    let acctMenuOpen = false;
+    let lastFocusGlobal = null;
 
-  /* ---------- Auth modal open/close + Account view ---------- */
-  function showAuthModal(){
-    authModal.style.display='flex';
-    document.body.style.overflow='hidden';
-    requestAnimationFrame(()=>{
-      authModal.classList.add('show');
-      authModal.setAttribute('aria-hidden','false');
-      activateFocusTrap(authModal);
-      ($("#googleSignInBtn")||authModal.querySelector('button, input'))?.focus();
-    });
-  }
-  function closeAuthModal(){
-    deactivateFocusTrap(authModal);
-    authModal.classList.remove('show');
-    authModal.setAttribute('aria-hidden','true');
-    document.body.style.overflow='';
-    setTimeout(()=>{ authModal.style.display='none'; },300);
-    lastFocusGlobal?.focus?.();
-  }
-  window.closeAuthModal = closeAuthModal;
+    function showToast(msg) {
+      const toastEl = $("#toast");
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(() => toastEl.classList.remove('show'), 2200);
+    }
 
-  async function ensureProfile(uid, email){
-    const pRef = doc(db,'profiles',uid);
-    const snap = await getDoc(pRef);
-    if(!snap.exists()){
-      await setDoc(pRef, {
-        email,
-        username: null,
-        lastUsernameChange: null,
-        createdAt: serverTimestamp()
+    function activateFocusTrap(modal) {
+      const f = modal.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      modal.__trapHandler = (e) => {
+        if (e.key === 'Tab') {
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        } else if (e.key === 'Escape') {
+          if (modal.id === 'authModal') closeAuthModal();
+        }
+      };
+      modal.addEventListener('keydown', modal.__trapHandler);
+    }
+
+    function deactivateFocusTrap(modal) {
+      if (modal.__trapHandler) {
+        modal.removeEventListener('keydown', modal.__trapHandler);
+        modal.__trapHandler = null;
+      }
+    }
+
+    function setAcctMenuVisibility(show) {
+      acctMenuOpen = show;
+      acctMenu.setAttribute('aria-hidden', String(!show));
+      accountBtn.setAttribute('aria-expanded', String(show));
+      acctMenu.classList.toggle('show', show);
+      if (show) {
+        $("#acctViewBtn")?.focus();
+      }
+    }
+
+    function toggleAcctMenu() {
+      setAcctMenuVisibility(!acctMenuOpen);
+    }
+
+    function closeAcctMenuIfOutside(e) {
+      if (!acctMenuOpen) return;
+      const withinMenu = acctMenu.contains(e.target);
+      const onBtn = accountBtn.contains(e.target);
+      if (!withinMenu && !onBtn) setAcctMenuVisibility(false);
+    }
+
+    function showAuthModal() {
+      authModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => {
+        authModal.classList.add('show');
+        authModal.setAttribute('aria-hidden', 'false');
+        activateFocusTrap(authModal);
+        ($("#googleSignInBtn") || authModal.querySelector('button, input'))?.focus();
       });
     }
-  }
 
-  async function loadAccountPanel(){
-    const user = auth.currentUser;
-    if(!user) return;
-    await ensureProfile(user.uid, user.email || null);
-
-    const pRef = doc(db,'profiles',user.uid);
-    const profile = (await getDoc(pRef)).data() || {};
-    const name  = user.displayName || (user.email ? user.email.split("@")[0] : "User");
-    const email = user.email || "";
-    const usesPassword = (user.providerData||[]).some(p => p.providerId === "password");
-    const verifyNeeded = usesPassword && !user.emailVerified;
-
-    $("#authTitle").innerText = "Your account";
-    $("#emailAuthForm").style.display = "none";
-    $("#googleSignInBtn").style.display = "none";
-    document.querySelector('#authModal .modal-content .accountBox')?.remove();
-    document.querySelector('#authModal .modal-content .dividerOr')?.remove();
-    $("#signoutArea")?.remove();
-
-    const lastChange = profile.lastUsernameChange?.toDate ? profile.lastUsernameChange.toDate() : null;
-    const daysLeft = lastChange ? Math.max(0, 30 - Math.floor((Date.now()-lastChange.getTime())/86400000)) : 0;
-    const disableEdit = daysLeft > 0;
-
-    const accountHTML = `
-      <div class="accountBox" style="margin-top:6px; text-align:left;">
-        <div style="font-weight:800; font-size:18px;">${name}</div>
-        <div style="opacity:.85; margin-bottom:10px;">${email}</div>
-
-        <div style="display:flex; align-items:center; gap:8px; margin:8px 0;">
-          <div><strong>Username:</strong> ${profile.username ? `<code>${profile.username}</code>` : `<em>not set</em>`}</div>
-        </div>
-
-        <div style="margin-top:6px; padding:12px; border-radius:10px; background:rgba(0,0,0,.04);">
-          <label for="newUsername"><strong>Set / Change username</strong> (digits only 0–9, 1–7)</label><br/>
-          <div style="display:flex; gap:8px; margin-top:6px; align-items:center;">
-            <input id="newUsername" type="text" inputmode="numeric" pattern="\\d{1,7}" placeholder="e.g. 777" value="${profile.username ?? ''}" ${disableEdit?'disabled':''} style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid #ccc;" />
-            <button id="saveUsernameBtn" class="btn" ${disableEdit?'disabled':''}>Save</button>
-          </div>
-          <div id="usernameMsg" style="margin-top:6px; font-size:13px; color:${disableEdit?'#7a5a00':'#555'};">
-            ${disableEdit ? `You can change again in ${daysLeft} day${daysLeft===1?'':'s'}.` : `Your username must be unique. Once changed, you must wait 30 days.`}
-          </div>
-        </div>
-
-        ${verifyNeeded ? `
-          <div id="verifyBanner" style="margin-top:12px; padding:10px; border-radius:8px; background:#fff3cd; color:#7a5a00;">
-            Email not verified.
-            <button id="resendVerifyBtn" class="btn" style="margin-left:6px;">Resend verification</button>
-            <div style="font-size:12px; margin-top:6px; opacity:.9">Tip: check Spam/Promotions.</div>
-          </div>` : ``}
-      </div>
-      <div id="signoutArea" style="margin-top:12px; text-align:center;">
-         <button type="button" class="btn" id="signOutBtn">Sign out</button>
-      </div>`;
-
-    $("#authModal .modal-content").insertAdjacentHTML("beforeend", accountHTML);
-
-    // Bind actions
-    $("#signOutBtn").onclick = async () => { await signOut(auth); closeAuthModal(); showToast("Signed out"); };
-    $("#resendVerifyBtn")?.addEventListener("click", async ()=>{
-      try { await sendEmailVerification(auth.currentUser); showToast("Verification email sent"); }
-      catch (e) { $("#authError").textContent = e?.message || "Could not send verification email."; }
-    });
-    $("#saveUsernameBtn")?.addEventListener("click", async ()=>{
-      const val = ($("#newUsername").value || "").trim();
-      const re = /^\d{1,7}$/;
-      if(!re.test(val)){ $("#usernameMsg").textContent = "Username must be 1–7 digits (0–9)."; return; }
-      try{
-        await changeUsernameTransaction(val);
-        showToast("Username saved");
-        closeAuthModal();
-      }catch(err){
-        $("#usernameMsg").textContent = err?.message || "Could not save username.";
-      }
-    });
-  }
-
-  async function changeUsernameTransaction(newName){
-    const user = auth.currentUser;
-    if(!user) throw new Error("Not signed in.");
-
-    const pRef = doc(db,'profiles',user.uid);
-    const unameRef = doc(db,'usernames', newName);
-
-    await runTransaction(db, async (tx)=>{
-      const pSnap = await tx.get(pRef);
-      const now = new Date();
-
-      if(!pSnap.exists()){
-        tx.set(pRef,{ email: user.email || null, username: null, lastUsernameChange: null, createdAt: serverTimestamp() });
-      }
-      const p = pSnap.exists() ? pSnap.data() : {};
-      const lastChange = p.lastUsernameChange?.toDate ? p.lastUsernameChange.toDate() : null;
-      if(lastChange){
-        const diffDays = (now - lastChange) / 86400000;
-        if(diffDays < 30) throw new Error(`You can change your username again in ${Math.ceil(30 - diffDays)} day(s).`);
-      }
-
-      // Enforce uniqueness
-      const unameSnap = await tx.get(unameRef);
-      if(unameSnap.exists() && unameSnap.data().uid !== user.uid){
-        throw new Error("That username is already taken.");
-      }
-
-      // Free previous username
-      const prev = p.username;
-      if(prev && prev !== newName){
-        const prevRef = doc(db,'usernames', prev);
-        const prevSnap = await tx.get(prevRef);
-        if(prevSnap.exists() && prevSnap.data().uid === user.uid){
-          tx.delete(prevRef);
-        }
-      }
-
-      // Claim new username & write profile
-      tx.set(unameRef, { uid: user.uid, claimedAt: serverTimestamp() });
-      tx.set(pRef, {
-        email: user.email || null,
-        username: newName,
-        lastUsernameChange: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      }, { merge: true });
-    });
-  }
-
-  function openAuthModal(){
-    lastFocusGlobal = document.activeElement;
-    $("#authError").textContent="";
-    document.querySelector('#authModal .modal-content .accountBox')?.remove();
-    $("#signoutArea")?.remove();
-
-    const user = auth.currentUser;
-    if(user){
-      loadAccountPanel().then(showAuthModal);
-    } else {
-      $("#authTitle").innerText = "Sign in";
-      $("#emailAuthForm").style.display = "block";
-      $("#googleSignInBtn").style.display = "inline-block";
-      if (!document.querySelector('#authModal .modal-content .dividerOr')) {
-        const div = document.createElement('div');
-        div.className = 'dividerOr';
-        div.style.cssText = 'margin:10px 0; opacity:.6;';
-        div.textContent = 'or';
-        $("#authModal .modal-content").insertBefore(div, $("#emailAuthForm"));
-      }
-      showAuthModal();
+    function closeAuthModal() {
+      deactivateFocusTrap(authModal);
+      authModal.classList.remove('show');
+      authModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        authModal.style.display = 'none';
+      }, 300);
+      lastFocusGlobal?.focus?.();
     }
-  }
-  window.openAuthModal = openAuthModal;
 
-  // Auth buttons
-  $("#googleSignInBtn")?.addEventListener("click", async ()=>{
-    try{ await signInWithPopup(auth,new GoogleAuthProvider()); setAcctMenuVisibility(false); closeAuthModal(); showToast("Signed in with Google"); }
-    catch(e){ showAuthError(e); }
-  });
-  $("#emailSignInBtn")?.addEventListener("click", async ()=>{
-    const email=$("#authEmail").value.trim(), pass=$("#authPass").value;
-    try{ await signInWithEmailAndPassword(auth,email,pass); setAcctMenuVisibility(false); closeAuthModal(); showToast("Signed in"); }
-    catch(e){ showAuthError(e); }
-  });
-  $("#emailSignUpBtn")?.addEventListener("click", async ()=>{
-    const email=$("#authEmail").value.trim(), pass=$("#authPass").value;
-    try{
-      await createUserWithEmailAndPassword(auth,email,pass);
-      try{ await sendEmailVerification(auth.currentUser); }catch{}
-      setAcctMenuVisibility(false);
-      closeAuthModal(); showToast("Account created — verify your email (check Spam)");
-    }catch(e){ showAuthError(e); }
-  });
-  $("#resetBtn")?.addEventListener("click", async ()=>{
-    const email=$("#authEmail").value.trim();
-    if(!email){ $("#authError").textContent="Enter your email above first."; return; }
-    try{ await sendPasswordResetEmail(auth,email); $("#authError").textContent=""; showToast("Password reset email sent"); }
-    catch(e){ showAuthError(e); }
-  });
-
-  function showAuthError(err){
-    const map={
-      "auth/popup-closed-by-user":"Sign-in window was closed.",
-      "auth/account-exists-with-different-credential":"This email is linked to another sign-in method.",
-      "auth/invalid-credential":"Invalid credentials.",
-      "auth/invalid-login-credentials":"Invalid email or password.",
-      "auth/email-already-in-use":"Email already in use.",
-      "auth/weak-password":"Password should be at least 6 characters."
-    };
-    $("#authError").textContent = map[err?.code] || err?.message || "Something went wrong.";
-  }
-
-  onAuthStateChanged(auth,(user)=>{
-    const btn = accountBtn;
-    if(user){
-      const name=user.displayName||user.email||"User";
-      const email=user.email||"";
-      const initials=(name?.trim()?.[0]||'U').toUpperCase();
-
-      // Chip look
-      btn.classList.add('account-chip');
-      btn.innerHTML = `<span class="chip-avatar">${initials}</span><span>${(name.split("@")[0]||"Account")}</span>`;
-
-      // Fill menu header
-      document.getElementById('acctAvatar').textContent = initials;
-      document.getElementById('acctName').textContent = name;
-      document.getElementById('acctEmail').textContent = email;
-
-      whoami && (whoami.textContent=`Signed in as ${name}`);
-    }else{
-      // Signed out
-      btn.classList.remove('account-chip');
-      btn.textContent = "Account";
-      setAcctMenuVisibility(false);
-      whoami && (whoami.textContent="");
-    }
-  });
-
-  /* ---------- Reserve gate + autofill email ---------- */
-  let formShownAt = 0;
-
-  window.showForm = function(){
-    const user = auth.currentUser;
-    if(!user){ openAuthModal(); return; }
-    const usesPassword = (user.providerData||[]).some(p=>p.providerId==="password");
-    if(usesPassword && !user.emailVerified){
-      alert("Please verify your email first (check your inbox).");
-      return;
-    }
-    $("#formArea").style.display='block';
-    $("#buyButton").style.display='none';
-    const emailInp = $("#email");
-    const confirmC = $("#confirmEmailChk");
-    if (emailInp) emailInp.value = user.email || "";
-    if (confirmC) confirmC.checked = !!user.email;
-    formShownAt = Date.now();
-    emailInp?.focus();
-  };
-
-  // Preorder submit
-  const preorderForm = document.querySelector('#preorderForm');
-  const submitBtn = document.querySelector('#submitBtn');
-  const formArea = document.querySelector('#formArea');
-  const formStatus = document.querySelector('#formStatus');
-
-  preorderForm?.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    if(preorderForm.querySelector('input[name="_gotcha"]')?.value) return;
-    if(!formShownAt || (Date.now()-formShownAt)<3000){
-      formStatus.textContent = "Please take a moment before submitting.";
-      return;
-    }
-    submitBtn.disabled = true;
-    const oldText = submitBtn.textContent;
-    submitBtn.textContent="Submitting…";
-    const fd = new FormData(preorderForm);
-    try{
-      const user = auth.currentUser;
-      if(user){
-        const isDef = document.getElementById('modalTitle').innerText.includes('Definitive');
-        await setDoc(doc(db,'preorders',`${user.uid}-${Date.now()}`),{
-          uid:user.uid,email:fd.get('email'),
-          sku:isDef?'definitive':'standard',
-          priceUSD:isDef?5:3,
-          createdAt:serverTimestamp()
+    async function ensureProfile(uid, email) {
+      const pRef = doc(db, 'profiles', uid);
+      const snap = await getDoc(pRef);
+      if (!snap.exists()) {
+        await setDoc(pRef, {
+          email,
+          username: null,
+          lastUsernameChange: null,
+          createdAt: serverTimestamp()
         });
       }
-      const res = await fetch(preorderForm.action,{ method:'POST', body:fd, headers:{Accept:'application/json'} });
-      if(res.ok){
-        formArea.innerHTML = '<p style="font-weight:700">✅ Reservation received! Check your inbox for confirmation.</p>';
-        showToast("Reservation received");
-      }else{
-        formStatus.textContent="Could not submit reservation. Please try again.";
-        submitBtn.disabled=false; submitBtn.textContent=oldText;
-      }
-    }catch(err){
-      console.warn(err);
-      formStatus.textContent="Something went wrong. Please try again.";
-      submitBtn.disabled=false; submitBtn.textContent=oldText;
     }
-  });
 
-  // expose trap helpers for other modals
-  window.__focusTrap = { activate: activateFocusTrap, deactivate: deactivateFocusTrap };
-</script>
+    async function loadAccountPanel() {
+      const user = auth.currentUser;
+      if (!user) return;
+      await ensureProfile(user.uid, user.email || null);
 
-<!-- ===== Site logic + confetti + info + tracklist modals ===== -->
-<script defer>
-  (function initTheme(){
-    try{
-      const saved=localStorage.getItem('theme');
-      const prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if((saved==='dark')||(!saved&&prefersDark)) document.body.classList.add('dark');
-    }catch(e){}
-  })();
+      const pRef = doc(db, 'profiles', user.uid);
+      const profile = (await getDoc(pRef)).data() || {};
+      const name = user.displayName || (user.email ? user.email.split("@")[0] : "User");
+      const email = user.email || "";
+      const usesPassword = (user.providerData || []).some(p => p.providerId === "password");
+      const verifyNeeded = usesPassword && !user.emailVerified;
 
-  (function revealOnScroll(){
-    const io=new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
-    },{rootMargin:'0px 0px -100px 0px'});
-    document.querySelectorAll('.section').forEach(s=>io.observe(s));
-  })();
+      $("#authTitle").innerText = "Your account";
+      $("#emailAuthForm").style.display = "none";
+      $("#googleSignInBtn").style.display = "none";
+      document.querySelector('#authModal .modal-content .accountBox')?.remove();
+      document.querySelector('#authModal .modal-content .dividerOr')?.remove();
+      $("#signoutArea")?.remove();
 
-  // Active link aria-current using IO
-  (function activeNavInit(){
-    const sections=[...document.querySelectorAll('.section')];
-    const links=[...document.querySelectorAll('.nav-link')];
-    const byId=Object.fromEntries(links.map(l=>[l.dataset.target,l]));
-    const navIO=new IntersectionObserver(es=>{
-      es.forEach(e=>{
-        if(e.isIntersecting){
-          links.forEach(l=>l.removeAttribute('aria-current'));
-          byId[e.target.id]?.setAttribute('aria-current','true');
+      const lastChange = profile.lastUsernameChange?.toDate ? profile.lastUsernameChange.toDate() : null;
+      const daysLeft = lastChange ? Math.max(0, 30 - Math.floor((Date.now() - lastChange.getTime()) / 86400000)) : 0;
+      const disableEdit = daysLeft > 0;
+
+      const accountHTML = `
+        <div class="accountBox" style="margin-top:6px; text-align:left;">
+          <div style="font-weight:800; font-size:18px;">${name}</div>
+          <div style="opacity:.85; margin-bottom:10px;">${email}</div>
+          <div style="display:flex; align-items:center; gap:8px; margin:8px 0;">
+            <div><strong>Username:</strong> ${profile.username ? <code>${profile.username}</code> : <em>not set</em>}</div>
+          </div>
+          <div style="margin-top:6px; padding:12px; border-radius:10px; background:rgba(0,0,0,.04);">
+            <label for="newUsername"><strong>Set / Change username</strong> (digits only 0–9, 1–7)</label><br/>
+            <div style="display:flex; gap:8px; margin-top:6px; align-items:center;">
+              <input id="newUsername" type="text" inputmode="numeric" pattern="\\d{1,7}" placeholder="e.g. 777" value="${profile.username ?? ''}" ${disableEdit ? 'disabled' : ''} style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid #ccc;" />
+              <button id="saveUsernameBtn" class="btn" ${disableEdit ? 'disabled' : ''}>Save</button>
+            </div>
+            <div id="usernameMsg" style="margin-top:6px; font-size:13px; color:${disableEdit ? '#7a5a00' : '#555'};">
+              ${disableEdit ? You can change again in ${daysLeft} day${daysLeft === 1 ? '' : 's'}. : Your username must be unique. Once changed, you must wait 30 days.}
+            </div>
+          </div>
+          ${verifyNeeded ? `
+            <div id="verifyBanner" style="margin-top:12px; padding:10px; border-radius:8px; background:#fff3cd; color:#7a5a00;">
+              Email not verified.
+              <button id="resendVerifyBtn" class="btn" style="margin-left:6px;">Resend verification</button>
+              <div style="font-size:12px; margin-top:6px; opacity:.9">Tip: check Spam/Promotions.</div>
+            </div>` : ``}
+        </div>
+        <div id="signoutArea" style="margin-top:12px; text-align:center;">
+          <button type="button" class="btn" id="signOutBtn">Sign out</button>
+        </div>`;
+
+      $("#authModal .modal-content").insertAdjacentHTML("beforeend", accountHTML);
+
+      $("#signOutBtn").onclick = async () => {
+        await signOut(auth);
+        closeAuthModal();
+        showToast("Signed out");
+      };
+      $("#resendVerifyBtn")?.addEventListener("click", async () => {
+        try {
+          await sendEmailVerification(auth.currentUser);
+          showToast("Verification email sent");
+        } catch (e) {
+          $("#authError").textContent = e?.message || "Could not send verification email.";
         }
       });
-    },{threshold:0.5});
-    sections.forEach(s=>navIO.observe(s));
-  })();
-
-  /* Smooth home via brand click + tiny bounce */
-  document.getElementById('brandHome').addEventListener('click', ()=>{
-    const brand = document.getElementById('brandHome');
-    brand.classList.add('bounce');
-    setTimeout(()=>brand.classList.remove('bounce'),300);
-    document.getElementById('home').scrollIntoView({behavior:'smooth', block:'start'});
-    setTimeout(()=>{ const s=document.getElementById('home'); s.classList.add('target-pulse'); setTimeout(()=>s.classList.remove('target-pulse'),800); },200);
-    const menu=document.getElementById('mainmenu'); const btn=document.querySelector('.menu-toggle');
-    if(menu.classList.contains('show')){ menu.classList.remove('show'); btn.setAttribute('aria-expanded','false'); }
-  });
-
-  // If you need a fixed drop moment, replace with a UTC timestamp
-  function next26th(from=new Date()){
-    const y=from.getFullYear(), m=from.getMonth();
-    const candidate=new Date(y,m,26,0,0,0);
-    return (from<=candidate)?candidate:new Date(y,m+1,26,0,0,0);
-  }
-
-  /* Confetti engine */
-  const confettiCanvas = document.getElementById('confettiCanvas');
-  const ctx = confettiCanvas.getContext('2d');
-  let confettiRunning=false;
-  function resizeCanvas(){ confettiCanvas.width=window.innerWidth; confettiCanvas.height=window.innerHeight; }
-  window.addEventListener('resize', resizeCanvas); resizeCanvas();
-
-  function launchConfetti(duration=3000, count=200){
-    if(confettiRunning) return;
-    confettiRunning = true;
-    const colors=['#ff4757','#ffa502','#2ed573','#1e90ff','#a55eea','#ff6b81'];
-    const pieces = Array.from({length:count}, ()=>({
-      x: Math.random()*confettiCanvas.width,
-      y: -20 - Math.random()*confettiCanvas.height*0.2,
-      w: 6+Math.random()*6,
-      h: 10+Math.random()*12,
-      color: colors[(Math.random()*colors.length)|0],
-      vy: 2+Math.random()*4,
-      vx: -2+Math.random()*4,
-      rot: Math.random()*Math.PI,
-      vr: -0.2+Math.random()*0.4,
-      alpha: 1
-    }));
-    const start = performance.now();
-    function frame(t){
-      const elapsed = t-start;
-      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
-      pieces.forEach(p=>{
-        p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
-        if(elapsed>duration*0.7){ p.alpha = Math.max(0, 1 - (elapsed-duration*0.7)/(duration*0.3)); }
-        ctx.save(); ctx.globalAlpha = p.alpha; ctx.translate(p.x,p.y); ctx.rotate(p.rot);
-        ctx.fillStyle=p.color; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+      $("#saveUsernameBtn")?.addEventListener("click", async () => {
+        const val = ($("#newUsername").value || "").trim();
+        const re = /^\d{1,7}$/;
+        if (!re.test(val)) {
+          $("#usernameMsg").textContent = "Username must be 1–7 digits (0–9).";
+          return;
+        }
+        try {
+          await changeUsernameTransaction(val);
+          showToast("Username saved");
+          closeAuthModal();
+        } catch (err) {
+          $("#usernameMsg").textContent = err?.message || "Could not save username.";
+        }
       });
-      if(elapsed<duration){ requestAnimationFrame(frame); }
-      else { ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); confettiRunning=false; }
     }
-    requestAnimationFrame(frame);
-  }
 
-  /* Countdown + zero confetti */
-  let zeroCelebrated = false;
-  function updateCountdown(){
-    const target=next26th(), now=new Date(), diff=target-now;
-    const days=Math.max(0,Math.floor(diff/86400000));
-    const hours=Math.max(0,Math.floor((diff%86400000)/3600000));
-    const minutes=Math.max(0,Math.floor((diff%3600000)/60000));
-    const seconds=Math.max(0,Math.floor((diff%60000)/1000));
-    const values=[`${days}d`,`${hours}h`,`${minutes}m`,`${seconds}s`];
+    async function changeUsernameTransaction(newName) {
+      const user = auth.currentUser;
+      if (!user) throw new Error("Not signed in.");
 
-    document.querySelectorAll(".flip-digit").forEach((digit,i)=>{
-      const inner=digit.querySelector('.flip-digit-inner'), top=inner.querySelector('.flip-digit-top'), bottom=inner.querySelector('.flip-digit-bottom');
-      if(top.innerText!==values[i]){
-        bottom.innerText=values[i];
-        inner.style.transform='rotateX(-180deg)';
-        setTimeout(()=>{ top.innerText=values[i]; inner.style.transform='rotateX(0deg)'; },300);
+      const pRef = doc(db, 'profiles', user.uid);
+      const unameRef = doc(db, 'usernames', newName);
+
+      await runTransaction(db, async (tx) => {
+        const pSnap = await tx.get(pRef);
+        const now = new Date();
+
+        if (!pSnap.exists()) {
+          tx.set(pRef, { email: user.email || null, username: null, lastUsernameChange: null, createdAt: serverTimestamp() });
+        }
+        const p = pSnap.exists() ? pSnap.data() : {};
+        const lastChange = p.lastUsernameChange?.toDate ? p.lastUsernameChange.toDate() : null;
+        if (lastChange) {
+          const diffDays = (now - lastChange) / 86400000;
+          if (diffDays < 30) throw new Error(You can change your username again in ${Math.ceil(30 - diffDays)} day(s).);
+        }
+
+        const unameSnap = await tx.get(unameRef);
+        if (unameSnap.exists() && unameSnap.data().uid !== user.uid) {
+          throw new Error("That username is already taken.");
+        }
+
+        const prev = p.username;
+        if (prev && prev !== newName) {
+          const prevRef = doc(db, 'usernames', prev);
+          const prevSnap = await tx.get(prevRef);
+          if (prevSnap.exists() && prevSnap.data().uid === user.uid) {
+            tx.delete(prevRef);
+          }
+        }
+
+        tx.set(unameRef, { uid: user.uid, claimedAt: serverTimestamp() });
+        tx.set(pRef, {
+          email: user.email || null,
+          username: newName,
+          lastUsernameChange: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      });
+    }
+
+    function openAuthModal() {
+      lastFocusGlobal = document.activeElement;
+      $("#authError").textContent = "";
+      document.querySelector('#authModal .modal-content .accountBox')?.remove();
+      $("#signoutArea")?.remove();
+
+      const user = auth.currentUser;
+      if (user) {
+        loadAccountPanel().then(showAuthModal);
+      } else {
+        $("#authTitle").innerText = "Sign in";
+        $("#emailAuthForm").style.display = "block";
+        $("#googleSignInBtn").style.display = "inline-block";
+        if (!document.querySelector('#authModal .modal-content .dividerOr')) {
+          const div = document.createElement('div');
+          div.className = 'dividerOr';
+          div.style.cssText = 'margin:10px 0; opacity:.6;';
+          div.textContent = 'or';
+          $("#authModal .modal-content").insertBefore(div, $("#emailAuthForm"));
+        }
+        showAuthModal();
+      }
+    }
+
+    function showAuthError(err) {
+      const map = {
+        "auth/popup-closed-by-user": "Sign-in window was closed.",
+        "auth/account-exists-with-different-credential": "This email is linked to another sign-in method.",
+        "auth/invalid-credential": "Invalid credentials.",
+        "auth/invalid-login-credentials": "Invalid email or password.",
+        "auth/email-already-in-use": "Email already in use.",
+        "auth/weak-password": "Password should be at least 6 characters."
+      };
+      $("#authError").textContent = map[err?.code] || err?.message || "Something went wrong.";
+    }
+
+    document.addEventListener('click', closeAcctMenuIfOutside);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setAcctMenuVisibility(false);
+    });
+
+    $("#accountBtn").addEventListener('click', () => {
+      const signedIn = !!auth.currentUser;
+      if (signedIn) {
+        toggleAcctMenu();
+      } else {
+        openAuthModal();
       }
     });
 
-    if(diff<=0 && !zeroCelebrated){
-      zeroCelebrated = true;
-      launchConfetti(3500, 240);
-      const home = document.getElementById('home');
-      home.classList.add('target-pulse');
-      setTimeout(()=>home.classList.remove('target-pulse'),1200);
-    }
-  }
-  setInterval(updateCountdown,1000); updateCountdown();
-
-  /* Product modal */
-  let lastFocus;
-  window.currentEdition = 'standard';
-  function openModal(type){
-    lastFocus=document.activeElement;
-    currentEdition = type;
-    const title=document.getElementById('modalTitle');
-    const img=document.getElementById('modalAlbum');
-    if(type==='standard'){
-      title.innerText='MALUCO — $3';
-      img.src='400x400.jpg'; img.alt='MALUCO standard edition'; img.width=400; img.height=400;
-    }else{
-      title.innerText='MALUCO (Definitive Edition) — $5';
-      img.src='500x500.jpg'; img.alt='MALUCO definitive edition'; img.width=500; img.height=500;
-    }
-    const pm=document.getElementById('productModal');
-    pm.style.display='flex'; document.body.style.overflow='hidden';
-    requestAnimationFrame(()=>{
-      pm.classList.add('show'); pm.setAttribute('aria-hidden','false');
-      window.__focusTrap?.activate(pm);
-      document.getElementById('buyButton').focus();
-    });
-  }
-  function closeModal(){
-    const pm=document.getElementById('productModal');
-    window.__focusTrap?.deactivate(pm);
-    pm.classList.remove('show'); pm.setAttribute('aria-hidden','true');
-    document.body.style.overflow='';
-    setTimeout(()=>{ pm.style.display='none'; },300);
-    if(lastFocus) lastFocus.focus();
-  }
-  window.openModal=openModal; window.closeModal=closeModal;
-  document.getElementById('productModal').addEventListener('click', (e)=>{ if(e.target.id==='productModal') closeModal(); });
-
-  /* Tracklist modal */
-  const tracklistModal = document.getElementById('tracklistModal');
-  let openerTracklist = null;
-  function openTracklistModal(edition='standard'){
-    openerTracklist = document.activeElement;
-    const title = document.getElementById('tracklistTitle');
-    const body  = document.getElementById('tracklistBody');
-    title.textContent = edition==='definitive' ? 'Tracklist — MALUCO (Definitive)' : 'Tracklist — MALUCO';
-    body.innerHTML = `
-      <ol>
-        <li>I DRUGGED MYSELF TO DEATH</li>
-        <li>MESSED UP</li>
-        <li>MOVE ON!</li>
-        <li>FALL BENEATH MY SPELL</li>
-        <li>YOUR HEART HAS BEEN BROKEN???</li>
-        <li>ALONE</li>
-        <li>DO YOU LOVE ME?</li>
-        <li>ONE MORE CHANCE</li>
-        <li>EVERY TIME I NEED UUU</li>
-        <li>FEEL THE MUSIC - BONUS</li>
-        <li>RING EARING - BONUS</li>
-      </ol>`;
-    tracklistModal.style.display='flex';
-    document.body.style.overflow='hidden';
-    requestAnimationFrame(()=>{
-      tracklistModal.classList.add('show'); tracklistModal.setAttribute('aria-hidden','false');
-      window.__focusTrap?.activate(tracklistModal);
-      tracklistModal.querySelector('.modal-content')?.focus();
-    });
-  }
-  function closeTracklistModal(){
-    window.__focusTrap?.deactivate(tracklistModal);
-    tracklistModal.classList.remove('show'); tracklistModal.setAttribute('aria-hidden','true');
-    document.body.style.overflow='';
-    setTimeout(()=>{ tracklistModal.style.display='none'; },300);
-    openerTracklist?.focus?.();
-  }
-  window.openTracklistModal = openTracklistModal;
-  window.closeTracklistModal = closeTracklistModal;
-  tracklistModal.addEventListener('click', (e)=>{ if(e.target.id==='tracklistModal') closeTracklistModal(); });
-
-  /* Info modal */
-  const infoModal = document.getElementById('infoModal');
-  let openerInfo = null;
-  function openInfo(edition='standard'){
-    openerInfo = document.activeElement;
-    const title = document.getElementById('infoTitle');
-    const body  = document.getElementById('infoBody');
-    const isDef = edition==='definitive';
-    title.textContent = isDef ? 'Product Info — MALUCO (Definitive Edition)' : 'Product Info — MALUCO';
-    body.innerHTML = `
-      <ul style="margin:0; padding-left:18px; text-align:left;">
-        <li><strong>Format:</strong> Audio CD (pressed, not CD-R)</li>
-        <li><strong>Shipping time:</strong> 0-2 on the definitive and 6–8 business days on standard (no shipping on weekends)</li>
-        <li><strong>Support hours:</strong> Closed on weekends</li>
-        <li><strong>Sound quality:</strong> 16-bit / 44.1 kHz stereo (Red Book)</li>
-        <li><strong>Materials:</strong> Jewel case, printed booklet, full-color disc</li>
-        <li><strong>Box contents:</strong> ${isDef ? 'CD + booklet + bonus art card + 2 bonus tracks' : 'CD + booklet'}</li>
-      </ul>
-      <div style="margin-top:10px; font-size:13px; opacity:.8">
-        Note: This page is for <em>pre-reservation</em>. You won’t be charged now.
-      </div>
-    `;
-    infoModal.style.display='flex';
-    document.body.style.overflow='hidden';
-    requestAnimationFrame(()=>{
-      infoModal.classList.add('show'); infoModal.setAttribute('aria-hidden','false');
-      window.__focusTrap?.activate(infoModal);
-      infoModal.querySelector('.modal-content')?.focus();
-    });
-  }
-  function closeInfo(){
-    window.__focusTrap?.deactivate(infoModal);
-    infoModal.classList.remove('show'); infoModal.setAttribute('aria-hidden','true');
-    document.body.style.overflow='';
-    setTimeout(()=>{ infoModal.style.display='none'; },300);
-    openerInfo?.focus?.();
-  }
-  window.openInfo = openInfo; window.closeInfo = closeInfo;
-  infoModal.addEventListener('click', (e)=>{ if(e.target.id==='infoModal') closeInfo(); });
-
-  /* Settings, menu, shortcuts */
-  function toggleMusic(){
-    const music=document.getElementById('bgMusic');
-    if(music.paused){ music.play().catch(()=>{}); } else { music.pause(); }
-  }
-  function setVolume(v){ document.getElementById('bgMusic').volume=parseFloat(v); }
-  window.toggleMusic=toggleMusic; window.setVolume=setVolume;
-
-  function toggleTheme(){
-    const dark=document.body.classList.toggle('dark');
-    try{ localStorage.setItem('theme',dark?'dark':'light'); }catch(e){}
-  }
-  window.toggleTheme=toggleTheme;
-
-  function toggleMenu(){
-    const menu=document.getElementById("mainmenu"); const btn=document.querySelector(".menu-toggle");
-    const open=menu.classList.toggle("show"); btn.setAttribute("aria-expanded",String(open));
-  }
-  window.toggleMenu=toggleMenu;
-
-  // Nav link smooth + underline + pulse + close mobile (keep new-tab gestures)
-  document.querySelectorAll('.nav-link').forEach(link=>{
-    link.addEventListener('click', (e)=>{
-      if(e.metaKey || e.ctrlKey || e.shiftKey) return;
-      e.preventDefault();
-      link.classList.add('clicked'); setTimeout(()=>link.classList.remove('clicked'),400);
-      const id=link.getAttribute('data-target'); const section=document.getElementById(id);
-      if(section){
-        section.scrollIntoView({ behavior:'smooth', block:'start' });
-        setTimeout(()=>{ section.classList.add('target-pulse'); setTimeout(()=>section.classList.remove('target-pulse'),800); },200);
+    $("#googleSignInBtn")?.addEventListener("click", async () => {
+      try {
+        await signInWithPopup(auth, new GoogleAuthProvider());
+        setAcctMenuVisibility(false);
+        closeAuthModal();
+        showToast("Signed in with Google");
+      } catch (e) {
+        showAuthError(e);
       }
-      const menu=document.getElementById('mainmenu'); const btn=document.querySelector('.menu-toggle');
-      if(menu.classList.contains('show')){ menu.classList.remove('show'); btn.setAttribute('aria-expanded','false'); }
     });
-  });
 
-  // Keyboard shortcuts
-  window.addEventListener('keydown',(e)=>{
-    const tag=(e.target.tagName||'').toLowerCase();
-    if(tag==='input' || tag==='textarea') return;
-    const key=e.key.toLowerCase();
-    if(key==='h'){ document.getElementById('home').scrollIntoView({behavior:'smooth'}); }
-    else if(key==='s'){ document.getElementById('shop').scrollIntoView({behavior:'smooth'}); }
-    else if(key==='e'){ document.getElementById('settings').scrollIntoView({behavior:'smooth'}); }
-    else if(key==='m'){ toggleMusic(); }
-    else if(key==='t'){ toggleTheme(); }
-    else if(key==='a'){ openAuthModal(); }
-    else if(key==='escape'){
-      const authOpen = document.getElementById('authModal').classList.contains('show');
-      const prodOpen = document.getElementById('productModal').classList.contains('show');
-      const infoOpen = document.getElementById('infoModal').classList.contains('show');
-      const tlOpen   = document.getElementById('tracklistModal').classList.contains('show');
-      if(authOpen) window.closeAuthModal();
-      if(prodOpen) closeModal();
-      if(infoOpen) closeInfo();
-      if(tlOpen) closeTracklistModal();
-    }
-  });
-
-  // Konami
-  (function konamiInit(){
-    const seq=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-    let pos=0;
-    window.addEventListener('keydown',(e)=>{
-      const key=e.key.length===1?e.key.toLowerCase():e.key;
-      const normalized=(key.length===1)?key:e.key;
-      pos=(normalized===seq[pos])?pos+1:(normalized===seq[0]?1:0);
-      if(pos===seq.length){ document.body.style.background='linear-gradient(120deg,#6dc8eb,#66c2ef)'; pos=0; }
+    $("#emailSignInBtn")?.addEventListener("click", async () => {
+      const email = $("#authEmail").value.trim(), pass = $("#authPass").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        setAcctMenuVisibility(false);
+        closeAuthModal();
+        showToast("Signed in");
+      } catch (e) {
+        showAuthError(e);
+      }
     });
-  })();
-</script>
+
+    $("#emailSignUpBtn")?.addEventListener("click", async () => {
+      const email = $("#authEmail").value.trim(), pass = $("#authPass").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, pass);
+        try {
+          await sendEmailVerification(auth.currentUser);
+        } catch {}
+        setAcctMenuVisibility(false);
+        closeAuthModal();
+        showToast("Account created — verify your email (check Spam)");
+      } catch (e) {
+        showAuthError(e);
+      }
+    });
+
+    $("#resetBtn")?.addEventListener("click", async () => {
+      const email = $("#authEmail").value.trim();
+      if (!email) {
+        $("#authError").textContent = "Enter your email above first.";
+        return;
+      }
+      try {
+        await sendPasswordResetEmail(auth, email);
+        $("#authError").textContent = "";
+        showToast("Password reset email sent");
+      } catch (e) {
+        showAuthError(e);
+      }
+    });
+
+    $("#closeAuthModalBtn")?.addEventListener("click", closeAuthModal);
+
+    $("#acctViewBtn")?.addEventListener("click", () => {
+      openAuthModal();
+      setAcctMenuVisibility(false);
+    });
+
+    $("#acctChangeUnameBtn")?.addEventListener("click", () => {
+      openAuthModal();
+      setAcctMenuVisibility(false);
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      const btn = $("#accountBtn");
+      if (user) {
+        const name = user.displayName || (user.email ? user.email.split("@")[0] : "User");
+        const email = user.email || "";
+        const initials = (name?.trim()?.[0] || 'U').toUpperCase();
+
+        btn.classList.add('account-chip');
+        btn.innerHTML = <span class="chip-avatar">${initials}</span><span>${(name.split("@")[0] || "Account")}</span>;
+        $("#acctAvatar").textContent = initials;
+        $("#acctName").textContent = name;
+        $("#acctEmail").textContent = email;
+        whoami && (whoami.textContent = Signed in as ${name});
+      } else {
+        btn.classList.remove('account-chip');
+        btn.innerHTML = '🌐';
+        setAcctMenuVisibility(false);
+        whoami && (whoami.textContent = "");
+      }
+    });
+
+    // Theme initialization
+    (function initTheme() {
+      try {
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if ((saved === 'dark') || (!saved && prefersDark)) document.body.classList.add('dark');
+      } catch (e) {}
+    })();
+
+    $("#toggleThemeBtn")?.addEventListener('click', () => {
+      const dark = document.body.classList.toggle('dark');
+      try {
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      } catch (e) {}
+    });
+
+    // Navigation
+    (function revealOnScroll() {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) e.target.classList.add('visible');
+        });
+      }, { rootMargin: '0px 0px -100px 0px' });
+      document.querySelectorAll('.section').forEach(s => io.observe(s));
+    })();
+
+    (function activeNavInit() {
+      const sections = [...document.querySelectorAll('.section')];
+      const links = [...document.querySelectorAll('.nav-link')];
+      const byId = Object.fromEntries(links.map(l => [l.dataset.target, l]));
+      const navIO = new IntersectionObserver(es => {
+        es.forEach(e => {
+          if (e.isIntersecting) {
+            links.forEach(l => l.removeAttribute('aria-current'));
+            byId[e.target.id]?.setAttribute('aria-current', 'true');
+          }
+        });
+      }, { threshold: 0.5 });
+      sections.forEach(s => navIO.observe(s));
+    })();
+
+    $("#brandHome").addEventListener('click', () => {
+      const brand = $("#brandHome");
+      brand.classList.add('bounce');
+      setTimeout(() => brand.classList.remove('bounce'), 300);
+      $("#home").scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        const s = $("#home");
+        s.classList.add('target-pulse');
+        setTimeout(() => s.classList.remove('target-pulse'), 800);
+      }, 200);
+      const menu = $("#mainmenu");
+      const btn = $(".menu-toggle");
+      if (menu.classList.contains('show')) {
+        menu.classList.remove('show');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+        e.preventDefault();
+        link.classList.add('clicked');
+        setTimeout(() => link.classList.remove('clicked'), 400);
+        const id = link.getAttribute('data-target');
+        const section = document.getElementById(id);
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setTimeout(() => {
+            section.classList.add('target-pulse');
+            setTimeout(() => section.classList.remove('target-pulse'), 800);
+          }, 200);
+        }
+        const menu = $("#mainmenu");
+        const btn = $(".menu-toggle");
+        if (menu.classList.contains('show')) {
+          menu.classList.remove('show');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    $(".menu-toggle")?.addEventListener('click', () => {
+      const menu = $("#mainmenu");
+      const btn = $(".menu-toggle");
+      const open = menu.classList.toggle("show");
+      btn.setAttribute("aria-expanded", String(open));
+    });
+
+    // Audio controls
+    $("#toggleMusicBtn")?.addEventListener('click', () => {
+      const music = $("#bgMusic");
+      if (music.paused) {
+        music.play().catch(() => {});
+      } else {
+        music.pause();
+      }
+    });
+
+    $("#volumeSlider")?.addEventListener('change', (e) => {
+      $("#bgMusic").volume = parseFloat(e.target.value);
+    });
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+      const tag = (e.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return;
+      const key = e.key.toLowerCase();
+      if (key === 'h') {
+        $("#home").scrollIntoView({ behavior: 'smooth' });
+      } else if (key === 'e') {
+        $("#settings").scrollIntoView({ behavior: 'smooth' });
+      } else if (key === 'm') {
+        const music = $("#bgMusic");
+        if (music.paused) {
+          music.play().catch(() => {});
+        } else {
+          music.pause();
+        }
+      } else if (key === 't') {
+        const dark = document.body.classList.toggle('dark');
+        try {
+          localStorage.setItem('theme', dark ? 'dark' : 'light');
+        } catch (e) {}
+      } else if (key === 'a') {
+        openAuthModal();
+      } else if (key === 'escape') {
+        const authOpen = $("#authModal").classList.contains('show');
+        if (authOpen) closeAuthModal();
+      }
+    });
+
+    // Konami code
+    const seq = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let pos = 0;
+    window.addEventListener('keydown', (e) => {
+      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      const normalized = (key.length === 1) ? key : e.key;
+      pos = (normalized === seq[pos]) ? pos + 1 : (normalized === seq[0] ? 1 : 0);
+      if (pos === seq.length) {
+        document.body.style.background = 'linear-gradient(120deg,#6dc8eb,#66c2ef)';
+        pos = 0;
+      }
+    });
+  </script>
 </body>
 </html>
-
